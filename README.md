@@ -6,4 +6,4 @@
 - Justino Orlando Sachilombo - 202302527 - DSML
 - Krsto Kustudic - 202509015 - GUI
 - Hugo Castro - 202403131 - GUI
-- Mª Leonor Beirão - 201806798
+- Mª Leonor Beirão - 201806798 - Review Work
