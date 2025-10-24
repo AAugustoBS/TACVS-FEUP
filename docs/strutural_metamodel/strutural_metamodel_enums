@@ -1,0 +1,33 @@
+ItemState: Draft, Active, Reserved, Completed, Archived
+
+Condition: New, LikeNew, Good, Fair, Poor
+
+ItemKind: Product, Service
+
+ExchangeMode (set): Price, Exchange, Donation
+
+OfferType: PriceOffer, ExchangeOffer, Request
+
+OfferStatus: Pending, Accepted, Rejected, Withdrawn, Expired
+
+ReservationStatus: Active, Released, Expired
+
+TxMode: Sale, Exchange, Donation
+
+DeliveryMode: InPerson, Mail, Locker
+
+TxStatus: Completed, Cancelled
+
+MessageKind: Text, Image, System
+
+ReportReason: Spam, Fraud, Offensive, Safety, Other
+
+ReportStatus: Open, UnderReview, Resolved, Ignored
+
+PaymentMethod (Portugal): MBWay, Multibanco, PayPal, None
+
+Money (Value Object):
+
+amount : Decimal(12,2)
+
+currency : String(3) (default "EUR")

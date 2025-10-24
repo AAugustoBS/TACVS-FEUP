@@ -1,0 +1,185 @@
+@startuml
+hide circle
+skinparam classAttributeIconSize 0
+
+class Community {
+  +id : UUID
+  +name : String
+  +description : String
+  +logoUrl : String
+  +rulesMarkdown : String
+  +allowSubcommunities : Boolean
+}
+
+class SubCommunity {
+  +id : UUID
+  +name : String
+  +description : String
+}
+
+class User {
+  +id : UUID
+  +username : String
+  +fullName : String
+  +email : String
+  +phone : String
+  +avatarUrl : String
+  +createdAt : DateTime
+  +isAdmin : Boolean
+  +isModerator : Boolean
+  +avgRating : Real <<derived>>
+  +ratingCount : Integer <<derived>>
+  +status : {Active|Suspended}
+}
+
+class Category {
+  +id : UUID
+  +name : String
+  +icon : String
+}
+
+class Location {
+  +id : UUID
+  +label : String
+  +address : String
+  +lat : Real
+  +lon : Real
+}
+
+class Money {
+  +amount : Decimal(12,2)
+  +currency : String(3)
+}
+
+class Item {
+  +id : UUID
+  +title : String
+  +description : String
+  +mediaUrls : String[*]
+  +tags : String[*]
+  +createdAt : DateTime
+  +updatedAt : DateTime
+  +state : ItemState
+  +condition : Condition
+  +kind : ItemKind
+  +exchangeModes : ExchangeMode[*]
+  +quantity : Integer
+  +unit : String
+  +price : Money
+  +minExchangeValue : Money
+  +expiresAt : Date
+}
+
+class ItemVariant {
+  +name : String
+  +value : String
+}
+
+class Offer {
+  +id : UUID
+  +type : OfferType
+  +amount : Money
+  +message : String
+  +createdAt : DateTime
+  +status : OfferStatus
+}
+
+class Reservation {
+  +id : UUID
+  +reservedFrom : DateTime
+  +reservedUntil : DateTime
+  +status : ReservationStatus
+}
+
+class Transaction {
+  +id : UUID
+  +closedAt : DateTime
+  +mode : TxMode
+  +agreedPrice : Money
+  +delivery : DeliveryMode
+  +receiptUrl : String
+  +paymentMethod : PaymentMethod
+  +status : TxStatus
+}
+
+class Rating {
+  +id : UUID
+  +stars : Integer
+  +comment : String
+  +createdAt : DateTime
+}
+
+class Conversation {
+  +id : UUID
+  +createdAt : DateTime
+}
+
+class Message {
+  +id : UUID
+  +content : String
+  +sentAt : DateTime
+  +kind : MessageKind
+  +attachments : String[*]
+}
+
+class Report {
+  +id : UUID
+  +reason : ReportReason
+  +details : String
+  +createdAt : DateTime
+  +status : ReportStatus
+}
+
+class PaymentProvider {
+  +name : String
+  +type : String
+  +publicKey : String
+  +secretRef : String
+}
+
+' Associations
+Community "1" -- "0..*" SubCommunity : contains
+Community "1" -- "0..*" User : members
+Community "1" -- "0..*" Category
+Community "1" -- "0..*" Location
+Community "0..1" -- "1" PaymentProvider
+
+SubCommunity "1" -- "0..*" User : members
+SubCommunity "1" -- "0..*" Item
+
+User "1" -- "0..*" Item : owner
+User "1" -- "0..*" Rating : asRater
+User "1" -- "0..*" Rating : asRated
+User "1" -- "0..*" Transaction : asBuyer
+User "1" -- "0..*" Transaction : asSeller
+User "1" -- "0..*" Report : asReporter
+
+Category "1" -- "0..*" Item
+Location "1" -- "0..*" Item
+
+Item "1" -- "0..*" ItemVariant
+Item "1" -- "0..*" Offer
+Item "1" -- "0..*" Reservation
+Item "1" -- "0..*" Report
+Item "1" -- "0..*" Conversation
+
+Conversation "1" -- "0..*" Message
+Conversation "2..*" -- "2..*" User : participants
+Message "1" -- "1" User : author
+
+Offer "1" -- "1" Item
+Offer "1" -- "1" User : buyer
+Offer "1" -- "1" User : seller
+
+Reservation "1" -- "1" Item
+Reservation "1" -- "1" User : buyer
+
+Transaction "1" -- "1" Item
+Transaction "1" -- "1" User : seller
+Transaction "1" -- "1" User : buyer
+Transaction "0..*" -- "0..*" Rating
+
+Report "1" -- "0..1" User : reportedUser
+Report "1" -- "0..1" Item
+
+@enduml

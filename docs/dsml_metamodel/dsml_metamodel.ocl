@@ -1,0 +1,36 @@
+-- Listings: at least one trade mode
+context Listings inv MinOneTradeMode:
+self.priceMode or self.exchangeMode or self.donationMode
+
+
+-- Payments: XOR (exactly one)
+context Payments inv PaymentsExclusive:
+let count = (if self.mbway then 1 else 0 endif) + (if self.multibanco then 1 else 0 endif) + (if self.paypal then 1 else 0 endif) + (if self.none then 1 else 0 endif) in
+count = 1
+
+
+-- Payments require price mode
+context Payments inv PaymentsRequirePrice:
+(self.mbway or self.multibanco or self.paypal) implies
+AppConfig.allInstances()->forAll(a | not a.listings.oclIsUndefined() and a.listings.priceMode)
+
+
+-- Messaging images only if chat is enabled
+context Messaging inv ImagesRequireChat:
+self.imagesInChat implies self.chat
+
+
+-- Ratings cannot be both simple and bidirectional
+context Ratings inv RatingsExclusive:
+not (self.simple and self.bidirectional)
+
+
+-- AppConfig requires basic theming and naming
+context AppConfig inv NameAndColorsDefined:
+not self.appName.oclIsUndefined() and self.appName.size() > 0 and
+not self.primaryColor.oclIsUndefined() and not self.secondaryColor.oclIsUndefined()
+
+
+-- If anonymous messages are enabled, chat must be enabled
+context AccessPolicies inv AnonMessagesRequireChat:
+self.anonymousMessages implies AppConfig.allInstances()->forAll(a | not a.messaging.oclIsUndefined() and a.messaging.chat)
