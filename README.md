@@ -1,4 +1,4 @@
-# TACVS-FEUP
+# TACVS-FEUP (G8)
 
 - Antonio Augusto Brito de Sousa - 202000705 - Structural Model
 - Lucas Borborema Nakajima - 202001337 - Structural Model
