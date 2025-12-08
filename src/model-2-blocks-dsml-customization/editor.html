@@ -593,7 +593,7 @@
           .replace(/'/g, '&apos;');
       }
 
-      function configToXmi(config, nsURI) {
+      function configToXmiV0(config, nsURI) {
         const ns = nsURI || 'http://your/custom/nsURI';
 
         const rootAttrs = [
@@ -663,6 +663,123 @@
         return xml;
       }
 
+      function configToXmi(config, nsURI) {
+        const ns = nsURI || 'http://www.example.org/custom';
+
+        function escapeXml(value) {
+          return String(value ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&apos;');
+        }
+
+        const rootAttrs = [
+          'appName',
+          'shortName',
+          'logoUrl',
+          'primaryColor',
+          'secondaryColor'
+        ];
+
+        // Accounts
+        const accounts = Object.assign({
+          localLogin: false,
+          oauthLogin: false,
+          phoneVerification: false,
+          moderators: false
+        }, config.accounts || {});
+
+        // Listings
+        const listings = Object.assign({
+          products: true,
+          services: false,
+          priceMode: false,
+          exchangeMode: false,
+          donationMode: false,
+          expiry: false,
+          variants: false,
+          currency: "EUR",
+          minPrice: 0,
+          maxPrice: 0
+        }, config.listings || {});
+
+        // Messaging
+        const messaging = Object.assign({
+          chat: false,
+          imagesInChat: false
+        }, config.messaging || {});
+
+        // Ratings
+        const ratings = Object.assign({
+          simple: false,
+          bidirectional: false
+        }, config.ratings || {});
+
+        // Payments
+        const payments = Object.assign({
+          mbway: false,
+          multibanco: false,
+          paypal: false,
+          none: false,
+          publicKey: "",
+          secretRef: ""
+        }, config.payments || {});
+
+        // Logistics
+        const logistics = Object.assign({
+          inPerson: false,
+          mail: false,
+          locker: false
+        }, config.logistics || {});
+
+        // Subcommunities
+        const subcommunities = Object.assign({
+          enabled: false
+        }, config.subcommunities || {});
+
+        // AccessPolicies
+        const accessPolicies = Object.assign({
+          anonymousBrowse: false,
+          anonymousMessages: false
+        }, config.accessPolicies || {});
+
+        // Transformar objetos "flat" em atributos XML
+        function buildAttrs(obj) {
+          return Object.entries(obj)
+            .filter(([_, v]) => v !== undefined && v !== null)
+            .map(([k, v]) => ` ${k}="${escapeXml(v)}"`)
+            .join('');
+        }
+
+        let xml = '';
+        xml += '<?xml version="1.0" encoding="UTF-8"?>\n';
+        xml += `<custom:AppConfig xmi:version="2.0"`;
+        xml += ` xmlns:xmi="http://www.omg.org/XMI"`;
+        xml += ` xmlns:custom="${escapeXml(ns)}"`;
+
+        // atributos da raiz
+        rootAttrs.forEach(attr => {
+          if (config[attr] !== undefined && config[attr] !== null) {
+            xml += ` ${attr}="${escapeXml(config[attr])}"`;
+          }
+        });
+        xml += '>\n';
+
+        xml += `  <accounts${buildAttrs(accounts)}/>\n`;
+        xml += `  <listings${buildAttrs(listings)}/>\n`;
+        xml += `  <messaging${buildAttrs(messaging)}/>\n`;
+        xml += `  <ratings${buildAttrs(ratings)}/>\n`;
+        xml += `  <payments${buildAttrs(payments)}/>\n`;
+        xml += `  <logistics${buildAttrs(logistics)}/>\n`;
+        xml += `  <subcommunities${buildAttrs(subcommunities)}/>\n`;
+        xml += `  <accessPolicies${buildAttrs(accessPolicies)}/>\n`;
+
+        xml += '</custom:AppConfig>\n';
+        return xml;
+      }
+
       function downloadXmi() {
         const config = buildConfigFromWorkspace(workspace);
         if (!config) {
@@ -675,8 +792,7 @@
           return;
         }
 
-        // se tiveres nsURI do EPackage importado:
-        const nsURI = window.currentMetaModelNsURI || 'http://your/custom/nsURI';
+        const nsURI = window.currentMetaModelNsURI || '';
 
         const xmiText = configToXmi(config, nsURI);
 
@@ -698,10 +814,9 @@
         });
       }
 
-      // Mostrar / esconder painel de recriação dos blocks e toolbox
       function toggleGeneratorPanel() {
         const panel = document.getElementById('generatorPanel');
-        // usa computedStyle para não depender só de style inline
+        
         const isHidden = window.getComputedStyle(panel).display === 'none';
 
         if (isHidden) {
@@ -715,7 +830,6 @@
         }
       }
 
-      // Helpers
       function genSetStatus(msg) {
         const el = document.getElementById('genStatus');
         if (el) el.textContent = msg;
@@ -732,7 +846,6 @@
         return eType;
       }
 
-      // Parse .ecore → meta simples
       function genParseEcore(text) {
         const parser = new DOMParser();
         const xml = parser.parseFromString(text, "application/xml");
@@ -808,7 +921,6 @@
         };
       }
 
-      // Gerar código dsml_blocks.js
       function genBlockColour(name) {
         return 200 + ((name.charCodeAt(0) * 17) % 55);
       }
@@ -855,8 +967,7 @@
               out += `        .appendField(new Blockly.FieldTextInput(""), "${fieldName}");\n`;
             }
           });
-
-          // referências containment → statement input
+          
           cls.references.forEach(ref => {
             if (!ref.containment) return;
             const inputName = ref.name.toUpperCase();
@@ -878,7 +989,6 @@
         return out;
       }
 
-      // Gerar XML da toolbox
       function genBuildToolboxXml(meta) {
         const { classNames } = meta;
         let xml = '<xml id="dsml_toolbox" style="display:none">\n';
@@ -891,7 +1001,6 @@
         return xml;
       }
 
-      // Download & copy helpers
       function genDownloadFile(filename, content) {
         const blob = new Blob([content], { type: "text/plain" });
         const url = URL.createObjectURL(blob);
@@ -911,7 +1020,6 @@
         alert("Conteúdo copiado para a área de transferência.");
       }
 
-      // Handler principal do botão "Gerar artefactos"
       async function genGenerateArtifacts() {
         const input = document.getElementById('genEcoreInput');
         const file = input.files && input.files[0];
@@ -943,27 +1051,25 @@
         }
       }
 
-function hideBlocklyUI() {
-  const elements = document.querySelectorAll(
-    '.blocklyToolboxDiv, .blocklyFlyout, .blocklyWidgetDiv'
-  );
-  elements.forEach(el => {
-    // guarda o display anterior para restaurar depois
-    el.dataset._displayBeforeHide = el.style.display || '';
-    el.style.display = 'none';
-  });
-}
+      function hideBlocklyUI() {
+        const elements = document.querySelectorAll(
+          '.blocklyToolboxDiv, .blocklyFlyout, .blocklyWidgetDiv'
+        );
+        elements.forEach(el => {
+          el.dataset._displayBeforeHide = el.style.display || '';
+          el.style.display = 'none';
+        });
+      }
 
-function showBlocklyUI() {
-  const elements = document.querySelectorAll(
-    '.blocklyToolboxDiv, .blocklyFlyout, .blocklyWidgetDiv'
-  );
-  elements.forEach(el => {
-    const prev = el.dataset._displayBeforeHide;
-    el.style.display = (prev !== undefined) ? prev : '';
-  });
-}
-
+      function showBlocklyUI() {
+        const elements = document.querySelectorAll(
+          '.blocklyToolboxDiv, .blocklyFlyout, .blocklyWidgetDiv'
+        );
+        elements.forEach(el => {
+          const prev = el.dataset._displayBeforeHide;
+          el.style.display = (prev !== undefined) ? prev : '';
+        });
+      }
 
     </script>
 
