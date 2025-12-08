@@ -1,0 +1,29 @@
+<xml id="dsml_toolbox" style="display:none">
+  <category name="AppConfig" colour="210">
+    <block type="AppConfig"></block>
+  </category>
+  <category name="Accounts" colour="230">
+    <block type="Accounts"></block>
+  </category>
+  <category name="Listings" colour="250">
+    <block type="Listings"></block>
+  </category>
+  <category name="Messaging" colour="270">
+    <block type="Messaging"></block>
+  </category>
+  <category name="Ratings" colour="290">
+    <block type="Ratings"></block>
+  </category>
+  <category name="Payments" colour="310">
+    <block type="Payments"></block>
+  </category>
+  <category name="Logistics" colour="330">
+    <block type="Logistics"></block>
+  </category>
+  <category name="Subcommunities" colour="350">
+    <block type="Subcommunities"></block>
+  </category>
+  <category name="AccessPolicies" colour="10">
+    <block type="AccessPolicies"></block>
+  </category>
+</xml>

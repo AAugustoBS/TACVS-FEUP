@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>DSML Editor - Community Configuration</title>
+    <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+    <script src="blocks/dsml_blocks.js"></script>
+    <script src="dsml_export.js"></script>
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #ECEFF1;
+      }
+
+      /* HEADER / MENU SUPERIOR */
+      #header {
+        height: 56px;
+        background: linear-gradient(90deg, #263238, #37474F);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        font-size: 14px;
+        gap: 16px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+        z-index: 5;
+      }
+
+      #header-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-right: auto;
+      }
+
+      #logo-circle {
+        width: 28px;
+        height: 28px;
+        border-radius: 999px;
+        background: radial-gradient(circle at 30% 30%, #FFCA28, #FF9800);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 16px;
+        color: #263238;
+      }
+
+      #header-title {
+        font-weight: 600;
+        font-size: 15px;
+      }
+
+      #header-subtitle {
+        font-size: 11px;
+        opacity: 0.8;
+      }
+
+      #header-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .btn {
+        border: none;
+        padding: 6px 12px;
+        border-radius: 999px;
+        cursor: pointer;
+        font-size: 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.15s ease-in-out;
+        white-space: nowrap;
+      }
+
+      .btn span.icon {
+        font-size: 14px;
+      }
+
+      .btn-primary {
+        background: #00BCD4;
+        color: #00363a;
+        font-weight: 600;
+      }
+
+      .btn-primary:hover {
+        background: #26C6DA;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      }
+
+      .btn-ghost {
+        background: transparent;
+        color: #ECEFF1;
+        border: 1px solid rgba(255,255,255,0.2);
+      }
+
+      .btn-ghost:hover {
+        background: rgba(255,255,255,0.1);
+        transform: translateY(-1px);
+      }
+
+      .btn-danger {
+        background: transparent;
+        color: #FFCDD2;
+        border: 1px solid rgba(244,67,54,0.5);
+      }
+
+      .btn-danger:hover {
+        background: rgba(244,67,54,0.18);
+        transform: translateY(-1px);
+      }
+
+      /* LAYOUT PRINCIPAL */
+      #main {
+        display: grid;
+        grid-template-columns: 4fr 1fr;
+        height: calc(100% - 56px);
+      }
+
+      #blocklyDiv {
+        height: 100%;
+        width: 100%;
+        background: #CFD8DC;
+      }
+
+      #output-panel {
+        border-left: 1px solid #B0BEC5;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        background: #FAFAFA;
+      }
+
+      #output-header {
+        padding: 8px 10px;
+        background: #ECEFF1;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #CFD8DC;
+      }
+
+      #output-header-title {
+        font-weight: 600;
+        color: #455A64;
+      }
+
+      #output-content {
+        flex: 1;
+        padding: 8px;
+      }
+
+      #exportedJson {
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        font-family: "Consolas", "Courier New", monospace;
+        font-size: 11px;
+        resize: vertical;
+        border-radius: 6px;
+        border: 1px solid #CFD8DC;
+        padding: 6px;
+        background: #FFFFFF;
+      }
+
+      /* MODAL / CAIXA CENTRAL */
+      #modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.35);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+      }
+
+      #modal-box {
+        width: 360px;
+        max-width: 90%;
+        background: #FFFFFF;
+        border-radius: 10px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+        padding: 16px 16px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        animation: popIn 0.18s ease-out;
+      }
+
+      #modal-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #263238;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      #modal-title span.icon {
+        font-size: 18px;
+      }
+
+      #modal-message {
+        font-size: 12px;
+        color: #455A64;
+        line-height: 1.4;
+      }
+
+      #modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 4px;
+      }
+
+      .modal-btn {
+        border: none;
+        padding: 5px 12px;
+        border-radius: 999px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: all 0.15s;
+      }
+
+      .modal-btn-primary {
+        background: #00ACC1;
+        color: #E0F7FA;
+        font-weight: 600;
+      }
+
+      .modal-btn-primary:hover {
+        background: #26C6DA;
+      }
+
+      .modal-btn-secondary {
+        background: transparent;
+        border: 1px solid #B0BEC5;
+        color: #546E7A;
+      }
+
+      .modal-btn-secondary:hover {
+        background: #ECEFF1;
+      }
+
+      @keyframes popIn {
+        from {
+          opacity: 0;
+          transform: translateY(8px) scale(0.97);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      /* LOADER OVERLAY */
+      #loader-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.35);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1001; /* acima do modal */
+      }
+
+      #loader-box {
+        background: #FFFFFF;
+        border-radius: 10px;
+        padding: 16px 18px 14px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 220px;
+      }
+
+      #loader-spinner {
+        width: 22px;
+        height: 22px;
+        border-radius: 999px;
+        border: 3px solid #B0BEC5;
+        border-top-color: #00ACC1;
+        animation: spin 0.7s linear infinite;
+      }
+
+      #loader-text {
+        font-size: 13px;
+        color: #37474F;
+      }
+
+      @keyframes spin {
+        from { transform: rotate(0deg); }
+        to   { transform: rotate(360deg); }
+      }
+
+    </style>
+  </head>
+  <body>
+    <!-- MODAL CUSTOMIZADO -->
+    <div id="modal-overlay">
+      <div id="modal-box">
+        <div id="modal-title">
+          <span class="icon" id="modal-icon">⚠️</span>
+          <span id="modal-title-text">Aviso</span>
+        </div>
+        <div id="modal-message"></div>
+        <div id="modal-actions">
+          <button id="modal-cancel" class="modal-btn modal-btn-secondary">Cancelar</button>
+          <button id="modal-confirm" class="modal-btn modal-btn-primary">OK</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOADER -->
+    <div id="loader-overlay">
+      <div id="loader-box">
+        <div id="loader-spinner"></div>
+        <div id="loader-text">A gerar ficheiro XMI</div>
+      </div>
+    </div>
+
+    <!-- HEADER / MENU -->
+    <div id="header">
+      <div id="header-left">
+        <div id="logo-circle">C</div>
+        <div>
+          <div id="header-title">Community DSML Editor</div>
+          <div id="header-subtitle">Configure a generated app using visual blocks</div>
+        </div>
+      </div>
+
+      <div id="header-right">
+        <button class="btn btn-ghost" onclick="centerOnAppConfig()">
+          <span class="icon">🎯</span><span>Center AppConfig</span>
+        </button>
+        <button class="btn btn-danger" onclick="clearWorkspace()">
+          <span class="icon">🧹</span><span>Clear</span>
+        </button>
+        <button class="btn btn-ghost" onclick="exportConfig()">
+          <span class="icon">📤</span><span>Export JSON</span>
+        </button>
+        <button class="btn btn-ghost" onclick="downloadConfig()">
+          <span class="icon">💾</span><span>Download JSON</span>
+        </button>
+        <!-- Se tiveres backend Node para XMI, este fica ativo -->
+        <button class="btn btn-primary" onclick="downloadXmi()">
+          <span class="icon">⚙️</span><span>Download XMI</span>
+        </button>
+        <button class="btn btn-ghost" onclick="toggleGeneratorPanel()">
+          <span class="icon">🧩</span><span>Gerar artefactos DSML</span>
+        </button>
+
+      </div>
+    </div>
+
+    <!-- WORKSPACE + OUTPUT -->
+    <div id="main">
+      <div id="blocklyDiv"></div>
+      <div id="output-panel">
+        <div id="output-header">
+          <span id="output-header-title">Exported configuration (JSON)</span>
+          <button class="btn btn-ghost" style="padding: 3px 10px; font-size: 11px;" onclick="copyJson()">
+            <span class="icon">📋</span><span>Copy</span>
+          </button>
+        </div>
+        <div id="output-content">
+          <textarea id="exportedJson" readonly></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOOLBOX DSML -->
+    <xml id="dsml_toolbox" style="display:none">
+      <category name="AppConfig" colour="210">
+        <block type="AppConfig"></block>
+      </category>
+      <category name="Accounts" colour="230">
+        <block type="Accounts"></block>
+      </category>
+      <category name="Listings" colour="250">
+        <block type="Listings"></block>
+      </category>
+      <category name="Messaging" colour="270">
+        <block type="Messaging"></block>
+      </category>
+      <category name="Ratings" colour="290">
+        <block type="Ratings"></block>
+      </category>
+      <category name="Payments" colour="310">
+        <block type="Payments"></block>
+      </category>
+      <category name="Logistics" colour="330">
+        <block type="Logistics"></block>
+      </category>
+      <category name="Subcommunities" colour="350">
+        <block type="Subcommunities"></block>
+      </category>
+      <category name="AccessPolicies" colour="10">
+        <block type="AccessPolicies"></block>
+      </category>
+    </xml>
+
+        <script>
+      // INIT WORKSPACE
+      var workspace = Blockly.inject('blocklyDiv', {
+        toolbox: document.getElementById('dsml_toolbox'),
+        trashcan: true,
+        scrollbars: true,
+        zoom: {
+          controls: true,
+          wheel: true,
+          startScale: 0.9
+        }
+      });
+
+      // MODAL INFRA
+      const modalOverlay = document.getElementById('modal-overlay');
+      const modalTitleText = document.getElementById('modal-title-text');
+      const modalIcon = document.getElementById('modal-icon');
+      const modalMessage = document.getElementById('modal-message');
+      const modalConfirmBtn = document.getElementById('modal-confirm');
+      const modalCancelBtn = document.getElementById('modal-cancel');
+
+      let currentModalMode = 'info'; // 'info' | 'confirm'
+      let currentConfirmHandler = null;
+
+      function showModal(options) {
+        const {
+          title = 'Aviso',
+          icon = '⚠️',
+          message = '',
+          mode = 'info', // info | confirm
+          onConfirm = null
+        } = options || {};
+
+        currentModalMode = mode;
+        currentConfirmHandler = typeof onConfirm === 'function' ? onConfirm : null;
+
+        modalTitleText.textContent = title;
+        modalIcon.textContent = icon;
+        modalMessage.textContent = message;
+
+        if (mode === 'info') {
+          modalCancelBtn.style.display = 'none';
+        } else {
+          modalCancelBtn.style.display = 'inline-block';
+        }
+
+        modalOverlay.style.display = 'flex';
+      }
+
+      function hideModal() {
+        modalOverlay.style.display = 'none';
+        currentConfirmHandler = null;
+      }
+
+      modalConfirmBtn.addEventListener('click', () => {
+        if (currentModalMode === 'confirm' && currentConfirmHandler) {
+          currentConfirmHandler();
+        }
+        hideModal();
+      });
+
+      modalCancelBtn.addEventListener('click', () => {
+        hideModal();
+      });
+
+      // Fecha modal ao clicar fora da caixa
+      modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) {
+          hideModal();
+        }
+      });
+
+      // LOADER INFRA
+      const loaderOverlay = document.getElementById('loader-overlay');
+
+      function showLoader() {
+        loaderOverlay.style.display = 'flex';
+      }
+
+      function hideLoader() {
+        loaderOverlay.style.display = 'none';
+      }
+
+      // AÇÕES DO HEADER / BOTÕES
+      function clearWorkspace() {
+        showModal({
+          title: 'Limpar workspace?',
+          icon: '🧹',
+          message: 'Isto irá remover todos os blocos da configuração atual. Tens a certeza que queres limpar o workspace?',
+          mode: 'confirm',
+          onConfirm: () => {
+            workspace.clear();
+            document.getElementById('exportedJson').value = "";
+          }
+        });
+      }
+
+      function centerOnAppConfig() {
+        const appBlocks = workspace.getBlocksByType("AppConfig", false);
+        if (appBlocks.length === 0) {
+          showModal({
+            title: 'Nenhum AppConfig encontrado',
+            icon: 'ℹ️',
+            message: 'Adiciona um bloco AppConfig a partir da categoria "AppConfig" antes de tentar centrar.',
+            mode: 'info'
+          });
+          return;
+        }
+        workspace.centerOnBlock(appBlocks[0].id);
+      }
+
+      function exportConfig() {
+        const config = buildConfigFromWorkspace(workspace);
+        if (!config) {
+          showModal({
+            title: 'Configuração incompleta',
+            icon: '⚠️',
+            message: 'Por favor adiciona exatamente um bloco AppConfig no workspace para exportar a configuração.',
+            mode: 'info'
+          });
+          return;
+        }
+        const jsonText = JSON.stringify(config, null, 2);
+        document.getElementById('exportedJson').value = jsonText;
+        showModal({
+          title: 'Configuração exportada',
+          icon: '✅',
+          message: 'A configuração foi exportada para JSON. Podes copiar ou fazer download no painel da direita.',
+          mode: 'info'
+        });
+      }
+
+      function downloadConfig() {
+        const text = document.getElementById('exportedJson').value;
+        if (!text) {
+          showModal({
+            title: 'Nada para descarregar',
+            icon: '⚠️',
+            message: 'Exporta primeiro a configuração para JSON antes de fazer download.',
+            mode: 'info'
+          });
+          return;
+        }
+        const blob = new Blob([text], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = "community_config.json";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      function copyJson() {
+        const ta = document.getElementById('exportedJson');
+        if (!ta.value) {
+          showModal({
+            title: 'Nada para copiar',
+            icon: '⚠️',
+            message: 'Exporta primeiro a configuração para JSON antes de copiar.',
+            mode: 'info'
+          });
+          return;
+        }
+        ta.select();
+        document.execCommand('copy');
+        showModal({
+          title: 'Copiado',
+          icon: '📋',
+          message: 'A configuração JSON foi copiada para a área de transferência.',
+          mode: 'info'
+        });
+      }
+
+      function escapeXml(value) {
+        return String(value ?? '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&apos;');
+      }
+
+      function configToXmi(config, nsURI) {
+        const ns = nsURI || 'http://your/custom/nsURI';
+
+        const rootAttrs = [
+          'appName',
+          'shortName',
+          'logoUrl',
+          'primaryColor',
+          'secondaryColor'
+        ];
+
+        function escapeXml(value) {
+          return String(value ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&apos;');
+        }
+
+        function scalarEntries(obj) {
+          if (!obj || typeof obj !== 'object') return [];
+          return Object.entries(obj).filter(([_, v]) =>
+            v !== null &&
+            v !== undefined &&
+            (typeof v === 'string' ||
+            typeof v === 'number' ||
+            typeof v === 'boolean')
+          );
+        }
+
+        function appendSection(sectionName, sectionObj, indent) {
+          const entries = scalarEntries(sectionObj);
+          if (!entries.length) return;
+
+          let line = `${indent}<${sectionName}`;
+          for (const [key, val] of entries) {
+            line += ` ${key}="${escapeXml(val)}"`;
+          }
+          line += '/>\n';
+          xml += line;
+        }
+
+        let xml = '';
+        xml += '<?xml version="1.0" encoding="UTF-8"?>\n';
+        xml += `<custom:AppConfig xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:custom="${escapeXml(ns)}"`;
+
+        // Atributos da raiz
+        for (const attr of rootAttrs) {
+          if (config[attr] !== undefined && config[attr] !== null) {
+            xml += ` ${attr}="${escapeXml(config[attr])}"`;
+          }
+        }
+
+        xml += '>\n';
+
+        // Secções internas (chave -> valor)
+        appendSection('accounts',        config.accounts,        '  ');
+        appendSection('listings',        config.listings,        '  ');
+        appendSection('messaging',       config.messaging,       '  ');
+        appendSection('ratings',         config.ratings,         '  ');
+        appendSection('payments',        config.payments,        '  ');
+        appendSection('logistics',       config.logistics,       '  ');
+        appendSection('subcommunities',  config.subcommunities,  '  ');
+        appendSection('accessPolicies',  config.accessPolicies,  '  ');
+
+        xml += '</custom:AppConfig>\n';
+        return xml;
+      }
+
+      function downloadXmi() {
+        const config = buildConfigFromWorkspace(workspace);
+        if (!config) {
+          showModal({
+            title: 'Configuração incompleta',
+            icon: '⚠️',
+            message: 'Por favor adiciona exatamente um bloco AppConfig no workspace antes de gerar XMI.',
+            mode: 'info'
+          });
+          return;
+        }
+
+        // se tiveres nsURI do EPackage importado:
+        const nsURI = window.currentMetaModelNsURI || 'http://your/custom/nsURI';
+
+        const xmiText = configToXmi(config, nsURI);
+
+        const blob = new Blob([xmiText], { type: 'application/xml' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'community_config.custom.xmi';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        showModal({
+          title: 'XMI gerado',
+          icon: '✅',
+          message: 'O ficheiro community_config.custom.xmi foi gerado e descarregado com sucesso.',
+          mode: 'info'
+        });
+      }
+
+      // Mostrar / esconder painel de recriação dos blocks e toolbox
+      function toggleGeneratorPanel() {
+        const panel = document.getElementById('generatorPanel');
+        // usa computedStyle para não depender só de style inline
+        const isHidden = window.getComputedStyle(panel).display === 'none';
+
+        if (isHidden) {
+          // abrir painel
+          panel.style.display = 'block';
+          hideBlocklyUI();
+        } else {
+          // fechar painel
+          panel.style.display = 'none';
+          showBlocklyUI();
+        }
+      }
+
+      // Helpers
+      function genSetStatus(msg) {
+        const el = document.getElementById('genStatus');
+        if (el) el.textContent = msg;
+      }
+
+      function genNormalizeEType(eType) {
+        if (!eType) return "EString";
+        let idx = eType.lastIndexOf("#//");
+        if (idx >= 0) return eType.substring(idx + 3);
+        idx = eType.lastIndexOf("/");
+        if (idx >= 0) return eType.substring(idx + 1);
+        idx = eType.lastIndexOf(":");
+        if (idx >= 0) return eType.substring(idx + 1);
+        return eType;
+      }
+
+      // Parse .ecore → meta simples
+      function genParseEcore(text) {
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(text, "application/xml");
+        const ECORE_NS = "http://www.eclipse.org/emf/2002/Ecore";
+
+        let pkg = xml.getElementsByTagNameNS(ECORE_NS, "EPackage")[0];
+        if (!pkg) pkg = xml.documentElement;
+
+        const nsURI = pkg.getAttribute("nsURI") || "";
+        const nsPrefix = pkg.getAttribute("nsPrefix") || "custom";
+        const packageName = pkg.getAttribute("name") || "Model";
+
+        const classes = {};
+        const classifiers = xml.getElementsByTagName("eClassifiers");
+
+        for (let i = 0; i < classifiers.length; i++) {
+          const ec = classifiers[i];
+          const xsiType = ec.getAttribute("xsi:type") || ec.getAttribute("xsi:Type") || "";
+          if (!/EClass$/.test(xsiType)) continue;
+
+          const name = ec.getAttribute("name");
+          if (!name) continue;
+          if (ec.getAttribute("abstract") === "true") continue;
+
+          const metaClass = {
+            name,
+            attributes: [],
+            references: []
+          };
+
+          const children = Array.from(ec.childNodes).filter(n => n.nodeType === 1);
+          children.forEach(ch => {
+            const xsiT = ch.getAttribute("xsi:type") || ch.getAttribute("xsi:Type") || "";
+            const fname = ch.getAttribute("name");
+            if (!fname) return;
+
+            const isAttr = /EAttribute$/.test(xsiT);
+            const isRef  = /EReference$/.test(xsiT);
+            if (!isAttr && !isRef) return;
+
+            const eType = genNormalizeEType(ch.getAttribute("eType"));
+
+            if (isAttr) {
+              metaClass.attributes.push({ name: fname, eType });
+            } else if (isRef) {
+              metaClass.references.push({
+                name: fname,
+                type: eType,
+                containment: ch.getAttribute("containment") === "true",
+                upperBound: ch.getAttribute("upperBound") || "1"
+              });
+            }
+          });
+
+          classes[name] = metaClass;
+        }
+
+        const classNames = Object.keys(classes);
+
+        function inferRootClassName() {
+          if (classes["AppConfig"]) return "AppConfig";
+          if (classes[packageName]) return packageName;
+          return classNames.length ? classNames[0] : null;
+        }
+
+        return {
+          nsURI,
+          nsPrefix,
+          packageName,
+          classes,
+          classNames,
+          rootClassName: inferRootClassName()
+        };
+      }
+
+      // Gerar código dsml_blocks.js
+      function genBlockColour(name) {
+        return 200 + ((name.charCodeAt(0) * 17) % 55);
+      }
+
+      function genJsStringLiteral(str) {
+        if (str == null) return "";
+        return String(str).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+      }
+
+      function genBuildBlocksJs(meta) {
+        const { nsURI, nsPrefix, classNames, classes } = meta;
+        let out = "";
+        out += `// Auto-generated from DSML metamodel\n`;
+        out += `// nsURI: ${nsURI}\n`;
+        out += `// nsPrefix: ${nsPrefix}\n\n`;
+        out += `"use strict";\n\n`;
+        out += `if (typeof Blockly === "undefined") {\n`;
+        out += `  throw new Error("Blockly tem de estar carregado antes de dsml_blocks.js");\n`;
+        out += `}\n\n`;
+
+        classNames.forEach(name => {
+          const cls = classes[name];
+
+          out += `Blockly.Blocks["${name}"] = {\n`;
+          out += `  init: function() {\n`;
+          out += `    this.appendDummyInput()\n`;
+          out += `        .appendField("${genJsStringLiteral(name)}");\n`;
+
+          cls.attributes.forEach(attr => {
+            const fieldName = attr.name.toUpperCase();
+            const t = attr.eType || "EString";
+
+            if (/EBoolean$/i.test(t)) {
+              out += `    this.appendDummyInput()\n`;
+              out += `        .appendField("${genJsStringLiteral(attr.name)}")\n`;
+              out += `        .appendField(new Blockly.FieldCheckbox("FALSE"), "${fieldName}");\n`;
+            } else if (/EInt$|ELong$|EShort$|EByte$|EDouble$|EFloat$|EBigDecimal$/i.test(t)) {
+              out += `    this.appendDummyInput()\n`;
+              out += `        .appendField("${genJsStringLiteral(attr.name)}")\n`;
+              out += `        .appendField(new Blockly.FieldNumber(0), "${fieldName}");\n`;
+            } else {
+              out += `    this.appendDummyInput()\n`;
+              out += `        .appendField("${genJsStringLiteral(attr.name)}")\n`;
+              out += `        .appendField(new Blockly.FieldTextInput(""), "${fieldName}");\n`;
+            }
+          });
+
+          // referências containment → statement input
+          cls.references.forEach(ref => {
+            if (!ref.containment) return;
+            const inputName = ref.name.toUpperCase();
+            const checkType = ref.type || null;
+            out += `    this.appendStatementInput("${inputName}")\n`;
+            if (checkType) {
+              out += `        .setCheck("${genJsStringLiteral(checkType)}")\n`;
+            }
+            out += `        .appendField("${genJsStringLiteral(ref.name)}");\n`;
+          });
+
+          out += `    this.setColour(${genBlockColour(name)});\n`;
+          out += `    this.setTooltip("Block for ${genJsStringLiteral(name)}");\n`;
+          out += `    this.setHelpUrl("");\n`;
+          out += `  }\n`;
+          out += `};\n\n`;
+        });
+
+        return out;
+      }
+
+      // Gerar XML da toolbox
+      function genBuildToolboxXml(meta) {
+        const { classNames } = meta;
+        let xml = '<xml id="dsml_toolbox" style="display:none">\n';
+        classNames.forEach(name => {
+          xml += `  <category name="${name}" colour="210">\n`;
+          xml += `    <block type="${name}"></block>\n`;
+          xml += `  </category>\n`;
+        });
+        xml += "</xml>\n";
+        return xml;
+      }
+
+      // Download & copy helpers
+      function genDownloadFile(filename, content) {
+        const blob = new Blob([content], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      function genCopyToClipboard(textareaId) {
+        const ta = document.getElementById(textareaId);
+        ta.select();
+        document.execCommand("copy");
+        alert("Conteúdo copiado para a área de transferência.");
+      }
+
+      // Handler principal do botão "Gerar artefactos"
+      async function genGenerateArtifacts() {
+        const input = document.getElementById('genEcoreInput');
+        const file = input.files && input.files[0];
+        if (!file) {
+          alert("Seleciona primeiro um ficheiro .ecore.");
+          return;
+        }
+
+        try {
+          const text = await file.text();
+          const meta = genParseEcore(text);
+          const numClasses = meta.classNames.length;
+
+          if (!numClasses) {
+            genSetStatus("❌ Nenhuma EClass não abstrata encontrada no .ecore.");
+            return;
+          }
+
+          genSetStatus(`✅ Metamodelo lido. ${numClasses} classes encontradas. Root: ${meta.rootClassName || "?"}.`);
+
+          const blocksJs = genBuildBlocksJs(meta);
+          const toolboxXml = genBuildToolboxXml(meta);
+
+          document.getElementById('genBlocksJs').value = blocksJs;
+          document.getElementById('genToolboxXml').value = toolboxXml;
+        } catch (e) {
+          console.error(e);
+          genSetStatus("❌ Erro ao ler ou interpretar o .ecore.");
+        }
+      }
+
+function hideBlocklyUI() {
+  const elements = document.querySelectorAll(
+    '.blocklyToolboxDiv, .blocklyFlyout, .blocklyWidgetDiv'
+  );
+  elements.forEach(el => {
+    // guarda o display anterior para restaurar depois
+    el.dataset._displayBeforeHide = el.style.display || '';
+    el.style.display = 'none';
+  });
+}
+
+function showBlocklyUI() {
+  const elements = document.querySelectorAll(
+    '.blocklyToolboxDiv, .blocklyFlyout, .blocklyWidgetDiv'
+  );
+  elements.forEach(el => {
+    const prev = el.dataset._displayBeforeHide;
+    el.style.display = (prev !== undefined) ? prev : '';
+  });
+}
+
+
+    </script>
+
+<div id="generatorPanel" style="display:none; position:fixed; inset:56px 0 0; background:#ECEFF1; z-index:9999; padding:12px; overflow:auto;">
+    <h2 style="margin:4px 0 8px; font-size:14px;">Gerador de Artefactos DSML (.ecore → dsml_blocks.js + dsml_toolbox.xml)</h2>
+
+    <div style="margin-bottom:8px; font-size:12px; color:#37474F;">
+      1) Escolhe o ficheiro <code>.ecore</code> do teu DSML.<br>
+      2) Clica em <strong>Gerar artefactos</strong>.<br>
+      3) Faz download ou copia o conteúdo para <code>blocks/dsml_blocks.js</code> e <code>toolbox/dsml_toolbox.xml</code>.
+    </div>
+
+    <div style="margin-bottom:10px; display:flex; flex-wrap:wrap; gap:8px; align-items:center; font-size:12px;">
+      <input type="file" id="genEcoreInput" accept=".ecore,.xml" />
+      <button onclick="genGenerateArtifacts()">Gerar artefactos</button>
+      <button onclick="toggleGeneratorPanel()">Fechar</button>
+
+    </div>
+
+    <div id="genStatus" style="font-size:12px; margin-bottom:10px; color:#455A64;">
+      Nenhum metamodelo carregado.
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+      <div style="background:#FAFAFA; border-radius:6px; padding:8px; box-shadow:0 1px 3px rgba(0,0,0,0.16);">
+        <div style="font-size:12px; font-weight:600; margin-bottom:4px;">blocks/dsml_blocks.js</div>
+        <textarea id="genBlocksJs" style="width:100%; min-height:220px; font-family:monospace; font-size:11px;"></textarea>
+        <div style="margin-top:6px; display:flex; gap:6px; flex-wrap:wrap;">
+          <button onclick="genDownloadFile('blocks/dsml_blocks.js', document.getElementById('genBlocksJs').value)">Download</button>
+          <button onclick="genCopyToClipboard('genBlocksJs')">Copiar</button>
+        </div>
+      </div>
+
+      <div style="background:#FAFAFA; border-radius:6px; padding:8px; box-shadow:0 1px 3px rgba(0,0,0,0.16);">
+        <div style="font-size:12px; font-weight:600; margin-bottom:4px;">toolbox/dsml_toolbox.xml</div>
+        <textarea id="genToolboxXml" style="width:100%; min-height:220px; font-family:monospace; font-size:11px;"></textarea>
+        <div style="margin-top:6px; display:flex; gap:6px; flex-wrap:wrap;">
+          <button onclick="genDownloadFile('toolbox/dsml_toolbox.xml', document.getElementById('genToolboxXml').value)">Download</button>
+          <button onclick="genCopyToClipboard('genToolboxXml')">Copiar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </body>
+</html>
