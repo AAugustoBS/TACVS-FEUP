@@ -1,0 +1,596 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    name="core"
+    nsURI="http://www.example.org/core"
+    nsPrefix="core">
+
+  <!-- ===================== ENUMS ===================== -->
+
+  <eClassifiers xsi:type="ecore:EEnum" name="ItemState">
+    <eLiterals name="Draft"/>
+    <eLiterals name="Active"/>
+    <eLiterals name="Reserved"/>
+    <eLiterals name="Completed"/>
+    <eLiterals name="Archived"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EEnum" name="Condition">
+    <eLiterals name="New"/>
+    <eLiterals name="LikeNew"/>
+    <eLiterals name="Good"/>
+    <eLiterals name="Fair"/>
+    <eLiterals name="Poor"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EEnum" name="ItemKind">
+    <eLiterals name="Product"/>
+    <eLiterals name="Service"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EEnum" name="ExchangeMode">
+    <eLiterals name="Price"/>
+    <eLiterals name="Exchange"/>
+    <eLiterals name="Donation"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EEnum" name="OfferType">
+    <eLiterals name="PriceOffer"/>
+    <eLiterals name="ExchangeOffer"/>
+    <eLiterals name="Request"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EEnum" name="OfferStatus">
+    <eLiterals name="Pending"/>
+    <eLiterals name="Accepted"/>
+    <eLiterals name="Rejected"/>
+    <eLiterals name="Withdrawn"/>
+    <eLiterals name="Expired"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EEnum" name="ReservationStatus">
+    <eLiterals name="Active"/>
+    <eLiterals name="Released"/>
+    <eLiterals name="Expired"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EEnum" name="TxMode">
+    <eLiterals name="Sale"/>
+    <eLiterals name="Exchange"/>
+    <eLiterals name="Donation"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EEnum" name="DeliveryMode">
+    <eLiterals name="InPerson"/>
+    <eLiterals name="Mail"/>
+    <eLiterals name="Locker"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EEnum" name="TxStatus">
+    <eLiterals name="Completed"/>
+    <eLiterals name="Cancelled"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EEnum" name="MessageKind">
+    <eLiterals name="Text"/>
+    <eLiterals name="Image"/>
+    <eLiterals name="System"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EEnum" name="ReportReason">
+    <eLiterals name="Spam"/>
+    <eLiterals name="Fraud"/>
+    <eLiterals name="Offensive"/>
+    <eLiterals name="Safety"/>
+    <eLiterals name="Other"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EEnum" name="ReportStatus">
+    <eLiterals name="Open"/>
+    <eLiterals name="UnderReview"/>
+    <eLiterals name="Resolved"/>
+    <eLiterals name="Ignored"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EEnum" name="PaymentMethod">
+    <eLiterals name="MBWay"/>
+    <eLiterals name="Multibanco"/>
+    <eLiterals name="PayPal"/>
+    <eLiterals name="None"/>
+  </eClassifiers>
+
+  <eClassifiers xsi:type="ecore:EEnum" name="UserStatus">
+    <eLiterals name="Active"/>
+    <eLiterals name="Suspended"/>
+  </eClassifiers>
+
+  <!-- ===================== CLASSES ===================== -->
+
+  <!-- Money (value object) -->
+  <eClassifiers xsi:type="ecore:EClass" name="Money">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="amount"
+                         eType="ecore:EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="currency"
+                         eType="ecore:EString" defaultValueLiteral="EUR"/>
+  </eClassifiers>
+
+  <!-- Community -->
+  <eClassifiers xsi:type="ecore:EClass" name="Community">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="logoUrl"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="rulesMarkdown"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="allowSubcommunities"
+                         eType="ecore:EBoolean"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subcommunities"
+                         eType="#//SubCommunity" containment="true"
+                         upperBound="-1" eOpposite="#//SubCommunity/community"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="members"
+                         eType="#//User" containment="true"
+                         upperBound="-1" eOpposite="#//User/community"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="categories"
+                         eType="#//Category" containment="true"
+                         upperBound="-1" eOpposite="#//Category/community"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="locations"
+                         eType="#//Location" containment="true"
+                         upperBound="-1" eOpposite="#//Location/community"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="paymentProvider"
+                         eType="#//PaymentProvider" containment="true"
+                         lowerBound="0" upperBound="1"
+                         eOpposite="#//PaymentProvider/community"/>
+  </eClassifiers>
+
+  <!-- SubCommunity -->
+  <eClassifiers xsi:type="ecore:EClass" name="SubCommunity">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description"
+                         eType="ecore:EString"/>
+
+    <!-- container Community -->
+    <eStructuralFeatures xsi:type="ecore:EReference" name="community"
+                         eType="#//Community" lowerBound="1"
+                         eOpposite="#//Community/subcommunities"
+                         containment="false"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="members"
+                         eType="#//User" upperBound="-1"
+                         eOpposite="#//User/subcommunities"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="items"
+                         eType="#//Item" containment="true"
+                         upperBound="-1" eOpposite="#//Item/subcommunity"/>
+  </eClassifiers>
+
+  <!-- User -->
+  <eClassifiers xsi:type="ecore:EClass" name="User">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="username"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="fullName"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="email"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="phone"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="avatarUrl"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="createdAt"
+                         eType="ecore:EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isAdmin"
+                         eType="ecore:EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isModerator"
+                         eType="ecore:EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="avgRating"
+                         eType="ecore:EDouble" derived="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ratingCount"
+                         eType="ecore:EInt" derived="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status"
+                         eType="#//UserStatus"/>
+
+    <!-- container Community -->
+    <eStructuralFeatures xsi:type="ecore:EReference" name="community"
+                         eType="#//Community" lowerBound="1"
+                         eOpposite="#//Community/members"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subcommunities"
+                         eType="#//SubCommunity" upperBound="-1"
+                         eOpposite="#//SubCommunity/members"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="items"
+                         eType="#//Item" upperBound="-1"
+                         eOpposite="#//Item/owner"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ratingsGiven"
+                         eType="#//Rating" upperBound="-1"
+                         eOpposite="#//Rating/rater"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ratingsReceived"
+                         eType="#//Rating" upperBound="-1"
+                         eOpposite="#//Rating/rated"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="transactionsAsBuyer"
+                         eType="#//Transaction" upperBound="-1"
+                         eOpposite="#//Transaction/buyer"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="transactionsAsSeller"
+                         eType="#//Transaction" upperBound="-1"
+                         eOpposite="#//Transaction/seller"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reportsAsReporter"
+                         eType="#//Report" upperBound="-1"
+                         eOpposite="#//Report/reporter"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reportsAsReported"
+                         eType="#//Report" upperBound="-1"
+                         eOpposite="#//Report/reportedUser"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="conversations"
+                         eType="#//Conversation" upperBound="-1"
+                         eOpposite="#//Conversation/participants"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="messages"
+                         eType="#//Message" upperBound="-1"
+                         eOpposite="#//Message/author"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="offersAsBuyer"
+                         eType="#//Offer" upperBound="-1"
+                         eOpposite="#//Offer/buyer"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="offersAsSeller"
+                         eType="#//Offer" upperBound="-1"
+                         eOpposite="#//Offer/seller"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reservations"
+                         eType="#//Reservation" upperBound="-1"
+                         eOpposite="#//Reservation/buyer"/>
+  </eClassifiers>
+
+  <!-- Category -->
+  <eClassifiers xsi:type="ecore:EClass" name="Category">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="icon"
+                         eType="ecore:EString"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="community"
+                         eType="#//Community" lowerBound="1"
+                         eOpposite="#//Community/categories"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="items"
+                         eType="#//Item" upperBound="-1"
+                         eOpposite="#//Item/category"/>
+  </eClassifiers>
+
+  <!-- Location -->
+  <eClassifiers xsi:type="ecore:EClass" name="Location">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="label"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="address"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lat"
+                         eType="ecore:EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lon"
+                         eType="ecore:EDouble"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="community"
+                         eType="#//Community" lowerBound="1"
+                         eOpposite="#//Community/locations"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="items"
+                         eType="#//Item" upperBound="-1"
+                         eOpposite="#//Item/location"/>
+  </eClassifiers>
+
+  <!-- Item -->
+  <eClassifiers xsi:type="ecore:EClass" name="Item">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="title"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="mediaUrls"
+                         eType="ecore:EString" upperBound="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="tags"
+                         eType="ecore:EString" upperBound="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="createdAt"
+                         eType="ecore:EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="updatedAt"
+                         eType="ecore:EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="state"
+                         eType="#//ItemState"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="condition"
+                         eType="#//Condition"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="kind"
+                         eType="#//ItemKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="exchangeModes"
+                         eType="#//ExchangeMode" upperBound="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="quantity"
+                         eType="ecore:EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unit"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="price"
+                         eType="#//Money" containment="true" lowerBound="0"
+                         upperBound="1"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="minExchangeValue"
+                         eType="#//Money" containment="true" lowerBound="0"
+                         upperBound="1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="expiresAt"
+                         eType="ecore:EDate"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subcommunity"
+                         eType="#//SubCommunity" lowerBound="1"
+                         eOpposite="#//SubCommunity/items"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="owner"
+                         eType="#//User" lowerBound="1"
+                         eOpposite="#//User/items"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="category"
+                         eType="#//Category" lowerBound="0" upperBound="1"
+                         eOpposite="#//Category/items"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="location"
+                         eType="#//Location" lowerBound="0" upperBound="1"
+                         eOpposite="#//Location/items"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="variants"
+                         eType="#//ItemVariant" containment="true"
+                         upperBound="-1" eOpposite="#//ItemVariant/item"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="offers"
+                         eType="#//Offer" containment="true"
+                         upperBound="-1" eOpposite="#//Offer/item"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reservations"
+                         eType="#//Reservation" containment="true"
+                         upperBound="-1" eOpposite="#//Reservation/item"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="transactions"
+                         eType="#//Transaction" upperBound="-1"
+                         eOpposite="#//Transaction/item"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ratings"
+                         eType="#//Rating" upperBound="-1"
+                         eOpposite="#//Rating/item"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reports"
+                         eType="#//Report" upperBound="-1"
+                         eOpposite="#//Report/item"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="conversations"
+                         eType="#//Conversation" upperBound="-1"
+                         eOpposite="#//Conversation/item"/>
+  </eClassifiers>
+
+  <!-- ItemVariant -->
+  <eClassifiers xsi:type="ecore:EClass" name="ItemVariant">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value"
+                         eType="ecore:EString"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="item"
+                         eType="#//Item" lowerBound="1"
+                         eOpposite="#//Item/variants"/>
+  </eClassifiers>
+
+  <!-- Offer -->
+  <eClassifiers xsi:type="ecore:EClass" name="Offer">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type"
+                         eType="#//OfferType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="amount"
+                         eType="#//Money" containment="true"
+                         lowerBound="0" upperBound="1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="message"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="createdAt"
+                         eType="ecore:EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status"
+                         eType="#//OfferStatus"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="item"
+                         eType="#//Item" lowerBound="1"
+                         eOpposite="#//Item/offers"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="buyer"
+                         eType="#//User" lowerBound="1"
+                         eOpposite="#//User/offersAsBuyer"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="seller"
+                         eType="#//User" lowerBound="1"
+                         eOpposite="#//User/offersAsSeller"/>
+  </eClassifiers>
+
+  <!-- Reservation -->
+  <eClassifiers xsi:type="ecore:EClass" name="Reservation">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="reservedFrom"
+                         eType="ecore:EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="reservedUntil"
+                         eType="ecore:EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status"
+                         eType="#//ReservationStatus"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="item"
+                         eType="#//Item" lowerBound="1"
+                         eOpposite="#//Item/reservations"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="buyer"
+                         eType="#//User" lowerBound="1"
+                         eOpposite="#//User/reservations"/>
+  </eClassifiers>
+
+  <!-- Transaction -->
+  <eClassifiers xsi:type="ecore:EClass" name="Transaction">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="closedAt"
+                         eType="ecore:EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="mode"
+                         eType="#//TxMode"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="agreedPrice"
+                         eType="#//Money" containment="true"
+                         lowerBound="0" upperBound="1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="delivery"
+                         eType="#//DeliveryMode"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="receiptUrl"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="paymentMethod"
+                         eType="#//PaymentMethod"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status"
+                         eType="#//TxStatus"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="item"
+                         eType="#//Item" lowerBound="1"
+                         eOpposite="#//Item/transactions"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="seller"
+                         eType="#//User" lowerBound="1"
+                         eOpposite="#//User/transactionsAsSeller"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="buyer"
+                         eType="#//User" lowerBound="1"
+                         eOpposite="#//User/transactionsAsBuyer"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ratings"
+                         eType="#//Rating" upperBound="-1"
+                         eOpposite="#//Rating/transaction"/>
+  </eClassifiers>
+
+  <!-- Rating -->
+  <eClassifiers xsi:type="ecore:EClass" name="Rating">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="stars"
+                         eType="ecore:EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="comment"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="createdAt"
+                         eType="ecore:EDate"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="transaction"
+                         eType="#//Transaction" lowerBound="0" upperBound="1"
+                         eOpposite="#//Transaction/ratings"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="item"
+                         eType="#//Item" lowerBound="0" upperBound="1"
+                         eOpposite="#//Item/ratings"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rater"
+                         eType="#//User" lowerBound="1"
+                         eOpposite="#//User/ratingsGiven"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rated"
+                         eType="#//User" lowerBound="1"
+                         eOpposite="#//User/ratingsReceived"/>
+  </eClassifiers>
+
+  <!-- Conversation -->
+  <eClassifiers xsi:type="ecore:EClass" name="Conversation">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="createdAt"
+                         eType="ecore:EDate"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="item"
+                         eType="#//Item" lowerBound="1"
+                         eOpposite="#//Item/conversations"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="messages"
+                         eType="#//Message" containment="true"
+                         upperBound="-1" eOpposite="#//Message/conversation"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="participants"
+                         eType="#//User" upperBound="-1"
+                         eOpposite="#//User/conversations"/>
+  </eClassifiers>
+
+  <!-- Message -->
+  <eClassifiers xsi:type="ecore:EClass" name="Message">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="content"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sentAt"
+                         eType="ecore:EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="kind"
+                         eType="#//MessageKind"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="attachments"
+                         eType="ecore:EString" upperBound="-1"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="conversation"
+                         eType="#//Conversation" lowerBound="1"
+                         eOpposite="#//Conversation/messages"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="author"
+                         eType="#//User" lowerBound="1"
+                         eOpposite="#//User/messages"/>
+  </eClassifiers>
+
+  <!-- Report -->
+  <eClassifiers xsi:type="ecore:EClass" name="Report">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="reason"
+                         eType="#//ReportReason"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="details"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="createdAt"
+                         eType="ecore:EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status"
+                         eType="#//ReportStatus"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reporter"
+                         eType="#//User" lowerBound="1"
+                         eOpposite="#//User/reportsAsReporter"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="reportedUser"
+                         eType="#//User" lowerBound="0" upperBound="1"
+                         eOpposite="#//User/reportsAsReported"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="item"
+                         eType="#//Item" lowerBound="0" upperBound="1"
+                         eOpposite="#//Item/reports"/>
+  </eClassifiers>
+
+  <!-- PaymentProvider -->
+  <eClassifiers xsi:type="ecore:EClass" name="PaymentProvider">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="publicKey"
+                         eType="ecore:EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="secretRef"
+                         eType="ecore:EString"/>
+
+    <eStructuralFeatures xsi:type="ecore:EReference" name="community"
+                         eType="#//Community" lowerBound="1"
+                         eOpposite="#//Community/paymentProvider"/>
+  </eClassifiers>
+
+</ecore:EPackage>
