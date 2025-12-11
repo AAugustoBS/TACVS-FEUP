@@ -1,0 +1,10 @@
+"""
+Requirements for BESSER Web UI Generator
+"""
+
+# Core dependencies
+besser-framework>=0.5.2
+jinja2>=3.0.0
+
+# Optional: for enhanced features
+# lxml>=4.9.0  # Better XML parsing (optional)

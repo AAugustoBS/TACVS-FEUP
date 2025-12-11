@@ -1,0 +1,199 @@
+/**
+ * {{ screen.title }} Page
+ * Generated from {{ screen.name }} screen definition
+ */
+
+import { ComponentRegistry } from '../components.js';
+{% if screen.has_component_type('ListView') %}
+import { ItemApi } from '../api.js';
+{% endif %}
+{% if screen.has_component_type('DetailView') %}
+import { ItemApi } from '../api.js';
+{% endif %}
+{% if screen.has_component_type('ChatComponent') %}
+import { ChatApi } from '../api.js';
+{% endif %}
+
+export class {{ screen.name | camel_case }}Page {
+    constructor(params = {}) {
+        this.params = params;
+        this.components = new ComponentRegistry();
+        this.data = {};
+    }
+    
+    /**
+     * Initialize page after rendering
+     */
+    async init() {
+        console.log('Initializing {{ screen.name }} page', this.params);
+        
+        {% if screen.has_component_type('ActionButton') %}
+        // Setup action button handlers
+        this.setupActionHandlers();
+        {% endif %}
+        
+        {% if screen.has_component_type('ChatComponent') %}
+        // Setup chat functionality
+        this.setupChat();
+        {% endif %}
+    }
+    
+    /**
+     * Fetch page data
+     */
+    async fetchData() {
+        try {
+            {% if screen.has_component_type('ListView') %}
+            // Fetch list items
+            this.data.items = await ItemApi.getAll();
+            {% endif %}
+            
+            {% if screen.has_component_type('DetailView') %}
+            // Fetch item details
+            if (this.params.id) {
+                this.data.item = await ItemApi.getById(this.params.id);
+            }
+            {% endif %}
+            
+            {% if screen.has_component_type('ChatComponent') %}
+            // Fetch chat messages
+            if (this.params.conversationId) {
+                this.data.messages = await ChatApi.getMessages(this.params.conversationId);
+            }
+            {% endif %}
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            this.data.error = 'Failed to load data';
+        }
+    }
+    
+    /**
+     * Render page content
+     */
+    async render() {
+        // Fetch data before rendering
+        await this.fetchData();
+        
+        if (this.data.error) {
+            return `
+                <div class="error">
+                    <h3>Error</h3>
+                    <p>${this.data.error}</p>
+                </div>
+            `;
+        }
+        
+        return `
+            <div class="page page-{{ screen.name | kebab_case }}">
+                <div class="page-header">
+                    <h1 class="page-title">{{ screen.title }}</h1>
+                </div>
+                
+                <div class="page-content">
+                    {% for component in screen.components %}
+                    {% if component.type == 'ListView' %}
+                    ${this.components.render('ListView', {
+                        items: this.data.items || [],
+                        entity: '{{ component.entity }}',
+                        showImage: {{ component.show_image | lower }},
+                        showPrice: {{ component.show_price | lower }},
+                        showLocation: {{ component.show_location | lower }},
+                        showRating: {{ component.show_rating | lower }},
+                        id: '{{ component.html_id }}'
+                    })}
+                    {% elif component.type == 'DetailView' %}
+                    ${this.components.render('DetailView', {
+                        item: this.data.item,
+                        entity: '{{ component.entity }}',
+                        id: '{{ component.html_id }}'
+                    })}
+                    {% elif component.type == 'ActionButton' %}
+                    ${this.components.render('ActionButton', {
+                        label: '{{ component.label }}',
+                        icon: '{{ component.icon }}',
+                        actionType: '{{ component.action_type.lower() }}' === 'navigate' ? 'primary' : 'secondary',
+                        targetPath: '{{ component.target_path }}',
+                        id: '{{ component.html_id }}'
+                    })}
+                    {% elif component.type == 'ChatComponent' %}
+                    ${this.components.render('ChatComponent', {
+                        messages: this.data.messages || [],
+                        conversationId: this.params.conversationId || '',
+                        id: '{{ component.html_id }}'
+                    })}
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        `;
+    }
+    
+    {% if screen.has_component_type('ActionButton') %}
+    /**
+     * Setup action button handlers
+     */
+    setupActionHandlers() {
+        {% for component in screen.components %}
+        {% if component.type == 'ActionButton' %}
+        const btn{{ loop.index }} = document.getElementById('{{ component.html_id }}');
+        if (btn{{ loop.index }}) {
+            btn{{ loop.index }}.addEventListener('click', () => {
+                {% if component.action_type == 'NAVIGATE' %}
+                window.location.hash = '{{ component.target_path }}';
+                {% else %}
+                this.handle{{ component.label | pascal_case }}Action();
+                {% endif %}
+            });
+        }
+        {% endif %}
+        {% endfor %}
+    }
+    {% endif %}
+    
+    {% if screen.has_component_type('ChatComponent') %}
+    /**
+     * Setup chat functionality
+     */
+    setupChat() {
+        const conversationId = this.params.conversationId;
+        
+        // Setup send message handler
+        window.sendMessage = async (convId) => {
+            const input = document.getElementById(`chat-input-${convId}`);
+            const messagesContainer = document.getElementById(`chat-messages-${convId}`);
+            
+            if (input && input.value.trim()) {
+                const text = input.value.trim();
+                
+                // Add message to UI
+                const messageHtml = `
+                    <div class="chat-message sent">
+                        <div class="chat-bubble">${text}</div>
+                        <div class="chat-timestamp">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                    </div>
+                `;
+                messagesContainer.insertAdjacentHTML('beforeend', messageHtml);
+                
+                // Clear input
+                input.value = '';
+                
+                // Scroll to bottom
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                
+                // Send to API (in production)
+                try {
+                    await ChatApi.sendMessage(convId, text);
+                } catch (error) {
+                    console.error('Error sending message:', error);
+                }
+            }
+        };
+        
+        // Scroll to bottom of messages
+        const messagesContainer = document.getElementById(`chat-messages-${conversationId}`);
+        if (messagesContainer) {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+    }
+    {% endif %}
+}
