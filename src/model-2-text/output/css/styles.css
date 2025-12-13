@@ -2,8 +2,8 @@
 
 :root {
     /* Theme Colors */
-    --primary-color: #2196F3;
-    --secondary-color: #FFC107;
+    --primary-color: #F06292;
+    --secondary-color: #4A148C;
     
     /* Derived Colors */
     --primary-light: color-mix(in srgb, var(--primary-color) 80%, white);

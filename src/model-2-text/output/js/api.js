@@ -1,6 +1,6 @@
 /**
  * API Service
- * Handles all API communication for {{ gui.name }}
+ * Handles all API communication for Ballet Swap
  */
 
 const API_BASE_URL = 'http://localhost:3000/api'; // Configure your backend URL

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 BESSER Web UI Generator - Main Script
 Template-Based Model-to-Text Generator using BESSER Framework + Jinja2
@@ -9,12 +10,12 @@ Example:
     python generate.py ../example.gui.xmi ./output/ballet-swap
 """
 
+from __future__ import print_function
 import sys
 import os
-from pathlib import Path
 
 # Add current directory to Python path for imports
-sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from web_ui_generator import WebUIGenerator
 
@@ -60,15 +61,18 @@ def print_usage():
     print(usage)
 
 
-def validate_model_file(model_path: str) -> bool:
+def validate_model_file(model_path):
     """Validate that model file exists and has correct extension"""
     if not os.path.exists(model_path):
-        print(f"❌ Error: Model file not found: {model_path}")
+        print("Error: Model file not found: " + model_path)
         return False
     
     if not model_path.endswith(('.xml', '.xmi')):
-        print(f"⚠️  Warning: Model file should have .xml or .xmi extension")
-        response = input("Continue anyway? (y/n): ")
+        print("Warning: Model file should have .xml or .xmi extension")
+        try:
+            response = raw_input("Continue anyway? (y/n): ")
+        except NameError:
+            response = input("Continue anyway? (y/n): ")
         if response.lower() != 'y':
             return False
     
@@ -81,7 +85,7 @@ def main():
     
     # Parse command line arguments
     if len(sys.argv) < 2:
-        print("❌ Error: Missing required argument")
+        print("Error: Missing required argument")
         print_usage()
         sys.exit(1)
     
@@ -97,15 +101,18 @@ def main():
         sys.exit(1)
     
     # Print configuration
-    print(f"📋 Configuration:")
-    print(f"   Model:  {os.path.abspath(model_path)}")
-    print(f"   Output: {os.path.abspath(output_dir)}")
+    print("Configuration:")
+    print("   Model:  " + os.path.abspath(model_path))
+    print("   Output: " + os.path.abspath(output_dir))
     print()
     
     # Confirm generation
-    response = input("Start generation? (y/n): ")
+    try:
+        response = raw_input("Start generation? (y/n): ")
+    except NameError:
+        response = input("Start generation? (y/n): ")
     if response.lower() != 'y':
-        print("❌ Generation cancelled")
+        print("Generation cancelled")
         sys.exit(0)
     
     print()
@@ -120,26 +127,26 @@ def main():
         
         print()
         print("=" * 60)
-        print("✅ Generation completed successfully!")
+        print("Generation completed successfully!")
         print("=" * 60)
         print()
-        print("📂 Generated files in:", os.path.abspath(output_dir))
+        print("Generated files in: " + os.path.abspath(output_dir))
         print()
-        print("🚀 Next steps:")
-        print(f"   1. cd {output_dir}")
+        print("Next steps:")
+        print("   1. cd " + output_dir)
         print("   2. python -m http.server 8000")
         print("   3. Open http://localhost:8000 in your browser")
         print()
-        print("📖 Read README.md for more information")
+        print("Read README.md for more information")
         print()
         
     except Exception as e:
         print()
         print("=" * 60)
-        print("❌ Generation failed!")
+        print("Generation failed!")
         print("=" * 60)
         print()
-        print(f"Error: {str(e)}")
+        print("Error: " + str(e))
         print()
         
         import traceback

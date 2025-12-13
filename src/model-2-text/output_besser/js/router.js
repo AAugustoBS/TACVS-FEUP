@@ -1,13 +1,14 @@
 /**
  * Router - Single Page Application Router
- * Handles client-side routing for {{ gui.name }}
+ * Handles client-side routing for CommunityPlatform
  */
 
-{% for module in gui.modules %}
-{% for screen in module.screens %}
-import { {{ screen.name | camel_case }}Page } from './pages/{{ screen.name | lower }}.js';
-{% endfor %}
-{% endfor %}
+import { ratingslistscreenPage } from './pages/ratingslistscreen.js';
+import { itemdetailsscreenPage } from './pages/itemdetailsscreen.js';
+import { blankscreenPage } from './pages/blankscreen.js';
+import { paymentscreenPage } from './pages/paymentscreen.js';
+import { itemlistscreenPage } from './pages/itemlistscreen.js';
+import { loginscreenPage } from './pages/loginscreen.js';
 
 export class Router {
     constructor() {
@@ -21,18 +22,43 @@ export class Router {
      */
     setupRoutes() {
         this.routes = [
-            {% for module in gui.modules %}
-            {% for screen in module.screens %}
             {
-                path: '/{{ screen.name | lower }}',
-                name: '{{ screen.name }}',
-                title: '{{ screen.name }}',
-                handler: {{ screen.name | camel_case }}Page,
+                path: '/ratingslistscreen',
+                name: 'RatingsListScreen',
+                title: 'RatingsListScreen',
+                handler: ratingslistscreenPage,
                 params: {}
-            }{% if not loop.last %},{% endif %}
-            {% endfor %}
-            {% endfor %}
-        ];
+            },            {
+                path: '/itemdetailsscreen',
+                name: 'ItemDetailsScreen',
+                title: 'ItemDetailsScreen',
+                handler: itemdetailsscreenPage,
+                params: {}
+            },            {
+                path: '/blankscreen',
+                name: 'BlankScreen',
+                title: 'BlankScreen',
+                handler: blankscreenPage,
+                params: {}
+            },            {
+                path: '/paymentscreen',
+                name: 'PaymentScreen',
+                title: 'PaymentScreen',
+                handler: paymentscreenPage,
+                params: {}
+            },            {
+                path: '/itemlistscreen',
+                name: 'ItemListScreen',
+                title: 'ItemListScreen',
+                handler: itemlistscreenPage,
+                params: {}
+            },            {
+                path: '/loginscreen',
+                name: 'LoginScreen',
+                title: 'LoginScreen',
+                handler: loginscreenPage,
+                params: {}
+            }        ];
     }
     
     /**
@@ -117,7 +143,7 @@ export class Router {
     async loadRoute(route, url) {
         try {
             // Update page title
-            document.title = '{{ gui.name }} - ' + route.title;
+            document.title = 'CommunityPlatform - ' + route.title;
             
             // Get main content container
             const mainContent = document.getElementById('main-content');

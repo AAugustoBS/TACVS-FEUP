@@ -1,10 +1,6 @@
-"""
-Requirements for BESSER Web UI Generator
-"""
-
 # Core dependencies
-besser-framework>=0.5.2
 jinja2>=3.0.0
 
-# Optional: for enhanced features
-# lxml>=4.9.0  # Better XML parsing (optional)
+# Optional: BESSER framework (if you want to use official BESSER models)
+# pip install git+https://github.com/BESSER-PEARL/BESSER.git
+# Note: BESSER has Django 5.1.5+ requirement which may cause conflicts

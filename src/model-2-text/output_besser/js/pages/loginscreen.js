@@ -1,11 +1,11 @@
 /**
- * {{ screen.name }} Page
- * Generated from {{ screen.name }} screen definition
+ * LoginScreen Page
+ * Generated from LoginScreen screen definition
  */
 
 import { ComponentRegistry } from '../components.js';
 
-export class {{ screen.name | camel_case }}Page {
+export class loginscreenPage {
     constructor(params = {}) {
         this.params = params;
         this.components = new ComponentRegistry();
@@ -16,7 +16,7 @@ export class {{ screen.name | camel_case }}Page {
      * Initialize page after rendering
      */
     async init() {
-        console.log('Initializing {{ screen.name }} page', this.params);
+        console.log('Initializing LoginScreen page', this.params);
     }
     
     /**
@@ -48,13 +48,13 @@ export class {{ screen.name | camel_case }}Page {
         }
         
         return `
-            <div class="page page-{{ screen.name | kebab_case }}">
+            <div class="page page-login-screen">
                 <div class="page-header">
-                    <h1 class="page-title">{{ screen.name }}</h1>
+                    <h1 class="page-title">LoginScreen</h1>
                 </div>
                 
                 <div class="page-content">
-                    <p>{{ screen.name }} page content will be rendered here</p>
+                    <p>LoginScreen page content will be rendered here</p>
                 </div>
             </div>
         `;

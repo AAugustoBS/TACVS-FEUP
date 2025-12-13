@@ -5,7 +5,35 @@ Converts XML/XMI GUI models to BESSER's B-UML structural metamodel
 
 import xml.etree.ElementTree as ET
 from typing import Dict, List, Optional
-from besser.BUML.metamodel.structural import DomainModel, Class, Property, PrimitiveDataType
+
+
+# Simplified BESSER-inspired classes (no external dependency needed)
+class DomainModel:
+    def __init__(self, name: str):
+        self.name = name
+        self.types = []
+
+
+class Class:
+    def __init__(self, name: str, model: DomainModel):
+        self.name = name
+        self.model = model
+        self.properties = []
+
+
+class Property:
+    def __init__(self, name: str, type, owner: Class, multiplicity):
+        self.name = name
+        self.type = type
+        self.owner = owner
+        self.multiplicity = multiplicity
+        if owner:
+            owner.properties.append(self)
+
+
+class PrimitiveDataType:
+    def __init__(self, type_name: str):
+        self.type_name = type_name
 
 
 class XMLToBAMLConverter:

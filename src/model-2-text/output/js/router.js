@@ -1,13 +1,11 @@
 /**
  * Router - Single Page Application Router
- * Handles client-side routing for {{ gui.name }}
+ * Handles client-side routing for Ballet Swap
  */
 
-{% for module in gui.modules %}
-{% for screen in module.screens %}
-import { {{ screen.name | camel_case }}Page } from './pages/{{ screen.name | lower }}.js';
-{% endfor %}
-{% endfor %}
+import { homePage } from './pages/home.js';
+import { itemdetailPage } from './pages/item_detail.js';
+import { chatPage } from './pages/chat.js';
 
 export class Router {
     constructor() {
@@ -21,18 +19,25 @@ export class Router {
      */
     setupRoutes() {
         this.routes = [
-            {% for module in gui.modules %}
-            {% for screen in module.screens %}
             {
-                path: '/{{ screen.name | lower }}',
-                name: '{{ screen.name }}',
-                title: '{{ screen.name }}',
-                handler: {{ screen.name | camel_case }}Page,
-                params: {}
-            }{% if not loop.last %},{% endif %}
-            {% endfor %}
-            {% endfor %}
-        ];
+                path: '/',
+                name: 'Home',
+                title: 'Ballet Swap',
+                handler: homePage,
+                params: []
+            },            {
+                path: '/items/:id',
+                name: 'ItemDetail',
+                title: 'Listing',
+                handler: itemdetailPage,
+                params: ["id"]
+            },            {
+                path: '/chat/:conversationId',
+                name: 'Chat',
+                title: 'Chat',
+                handler: chatPage,
+                params: ["conversationId"]
+            }        ];
     }
     
     /**
@@ -50,20 +55,7 @@ export class Router {
      * Handle route change
      */
     async handleRoute() {
-        let hash = window.location.hash.substring(1);
-        
-        // If no hash, use the first main page or first available route
-        if (!hash || hash === '/') {
-            const mainRoute = this.routes.find(r => r.name.includes('ItemList') || r.name.includes('List'));
-            if (mainRoute) {
-                hash = mainRoute.path;
-                window.location.hash = hash;
-            } else if (this.routes.length > 0) {
-                hash = this.routes[0].path;
-                window.location.hash = hash;
-            }
-        }
-        
+        const hash = window.location.hash.substring(1) || '/';
         const route = this.matchRoute(hash);
         
         if (route) {
@@ -117,7 +109,7 @@ export class Router {
     async loadRoute(route, url) {
         try {
             // Update page title
-            document.title = '{{ gui.name }} - ' + route.title;
+            document.title = `Ballet Swap - ${route.title}`;
             
             // Get main content container
             const mainContent = document.getElementById('main-content');

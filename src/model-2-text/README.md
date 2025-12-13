@@ -1,12 +1,12 @@
 # BESSER Web UI Generator
 
-Template-Based Model-to-Text Generator using **BESSER Framework + Jinja2** for transforming DSML GUI models into web applications (HTML+CSS+Vanilla JavaScript).
+Template-Based Model-to-Text Generator using **BESSER Framework + Jinja2** for transforming BESSER GUI models into web applications (HTML+CSS+Vanilla JavaScript).
 
 ## Architecture
 
 ### BESSER Integration
 
-This generator extends BESSER's `CodeGenerator` class to leverage the framework's infrastructure:
+This generator extends BESSER's `GeneratorInterface` class to leverage the official framework infrastructure:
 
 1. **XML to B-UML Converter** (`xml_to_buml.py`)
    - Parses XML/XMI GUI models
