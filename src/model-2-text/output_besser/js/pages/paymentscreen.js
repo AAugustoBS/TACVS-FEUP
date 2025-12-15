@@ -58,6 +58,15 @@ export class paymentscreenPage {
                         
                         <button 
                             class="btn btn-primary" 
+                            data-action="PayPalButton"
+                        >
+                            Pay with PayPal
+                        </button>
+                        
+                        
+                        
+                        <button 
+                            class="btn btn-primary" 
                             data-action="MBWayButton"
                         >
                             Pay with MBWay
@@ -70,15 +79,6 @@ export class paymentscreenPage {
                             data-action="MultibancoButton"
                         >
                             Pay with Multibanco
-                        </button>
-                        
-                        
-                        
-                        <button 
-                            class="btn btn-primary" 
-                            data-action="PayPalButton"
-                        >
-                            Pay with PayPal
                         </button>
                         
                         

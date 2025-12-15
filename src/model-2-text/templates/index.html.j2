@@ -22,9 +22,15 @@
                 </div>
                 
                 <div class="navbar-menu" id="navbar-menu">
-                    <a href="#/itemlistscreen" class="navbar-link" data-route="/itemlistscreen">Home</a>
-                    <a href="#/loginscreen" class="navbar-link" data-route="/loginscreen">Login</a>
-                    <a href="#/paymentscreen" class="navbar-link" data-route="/paymentscreen">Payments</a>
+                    {% set all_screens = [] %}
+                    {% for module in gui.modules %}
+                        {% for screen in module.screens %}
+                            {% set _ = all_screens.append(screen) %}
+                        {% endfor %}
+                    {% endfor %}
+                    {% for screen in all_screens %}
+                    <a href="#/{{ screen.name | lower }}" class="navbar-link" data-route="/{{ screen.name | lower }}">{{ screen.name }}</a>
+                    {% endfor %}
                     {% if gui.features.show_logout %}
                     <button id="logout-btn" class="navbar-link">Logout</button>
                     {% endif %}

@@ -3,12 +3,12 @@
  * Handles client-side routing for appName
  */
 
-import { itemdetailsscreenPage } from './pages/itemdetailsscreen.js';
 import { paymentscreenPage } from './pages/paymentscreen.js';
 import { blankscreenPage } from './pages/blankscreen.js';
 import { ratingslistscreenPage } from './pages/ratingslistscreen.js';
 import { itemlistscreenPage } from './pages/itemlistscreen.js';
 import { subcommunityselectorscreenPage } from './pages/subcommunityselectorscreen.js';
+import { itemdetailsscreenPage } from './pages/itemdetailsscreen.js';
 
 export class Router {
     constructor() {
@@ -23,41 +23,47 @@ export class Router {
     setupRoutes() {
         this.routes = [
             {
-                path: '/itemdetailsscreen',
-                name: 'ItemDetailsScreen',
-                title: 'ItemDetailsScreen',
-                handler: itemdetailsscreenPage,
-                params: {}
-            },            {
                 path: '/paymentscreen',
                 name: 'PaymentScreen',
                 title: 'PaymentScreen',
                 handler: paymentscreenPage,
-                params: {}
+                params: {},
+                isMain: false
             },            {
                 path: '/blankscreen',
                 name: 'BlankScreen',
                 title: 'BlankScreen',
                 handler: blankscreenPage,
-                params: {}
+                params: {},
+                isMain: false
             },            {
                 path: '/ratingslistscreen',
                 name: 'RatingsListScreen',
                 title: 'RatingsListScreen',
                 handler: ratingslistscreenPage,
-                params: {}
+                params: {},
+                isMain: false
             },            {
                 path: '/itemlistscreen',
                 name: 'ItemListScreen',
                 title: 'ItemListScreen',
                 handler: itemlistscreenPage,
-                params: {}
+                params: {},
+                isMain: true
             },            {
                 path: '/subcommunityselectorscreen',
                 name: 'SubcommunitySelectorScreen',
                 title: 'SubcommunitySelectorScreen',
                 handler: subcommunityselectorscreenPage,
-                params: {}
+                params: {},
+                isMain: false
+            },            {
+                path: '/itemdetailsscreen',
+                name: 'ItemDetailsScreen',
+                title: 'ItemDetailsScreen',
+                handler: itemdetailsscreenPage,
+                params: {},
+                isMain: false
             }        ];
     }
     
@@ -78,10 +84,15 @@ export class Router {
     async handleRoute() {
         let hash = window.location.hash.substring(1);
         
-        // If no hash, default to Home (itemlistscreen)
+        // If no hash, default to main screen (isMain) or first route
         if (!hash || hash === '/') {
-            hash = '/itemlistscreen';
-            window.location.hash = hash;
+            const mainRoute = this.routes.find(r => r.isMain);
+            const fallbackRoute = this.routes[0];
+            const target = mainRoute || fallbackRoute;
+            if (target) {
+                hash = target.path;
+                window.location.hash = hash;
+            }
         }
         
         const route = this.matchRoute(hash);

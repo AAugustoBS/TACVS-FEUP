@@ -28,7 +28,8 @@ export class Router {
                 name: '{{ screen.name }}',
                 title: '{{ screen.name }}',
                 handler: {{ screen.name | camel_case }}Page,
-                params: {}
+                params: {},
+                isMain: {{ 'true' if screen.is_main_page else 'false' }}
             }{% if not loop.last %},{% endif %}
             {% endfor %}
             {% endfor %}
@@ -52,10 +53,15 @@ export class Router {
     async handleRoute() {
         let hash = window.location.hash.substring(1);
         
-        // If no hash, default to Home (itemlistscreen)
+        // If no hash, default to main screen (isMain) or first route
         if (!hash || hash === '/') {
-            hash = '/itemlistscreen';
-            window.location.hash = hash;
+            const mainRoute = this.routes.find(r => r.isMain);
+            const fallbackRoute = this.routes[0];
+            const target = mainRoute || fallbackRoute;
+            if (target) {
+                hash = target.path;
+                window.location.hash = hash;
+            }
         }
         
         const route = this.matchRoute(hash);
