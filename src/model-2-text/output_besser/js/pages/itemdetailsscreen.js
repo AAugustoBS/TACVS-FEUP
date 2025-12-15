@@ -47,15 +47,15 @@ export class itemdetailsscreenPage {
             `;
         }
         
-        return `
-            <div class="page page-item-details-screen">
-                <div class="page-header">
-                    <h1 class="page-title">ItemDetailsScreen</h1>
-                </div>
+            return `
+                <div class="page page-item-details-screen">
+                    <div class="page-header">
+                        <h1 class="page-title">ItemDetailsScreen</h1>
+                    </div>
                 
-                <div class="page-content">
-                    <p>ItemDetailsScreen page content will be rendered here</p>
-                </div>
+                    <div class="page-content">
+                        <p>ItemDetailsScreen page content will be rendered here</p>
+                    </div>
             </div>
         `;
     }

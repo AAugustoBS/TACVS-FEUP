@@ -67,11 +67,15 @@ python generate.py <path_to_xml_model> [output_directory]
 ```
 
 ### Examples
-
-```bash
+### Option 1: From Python GUI Model (.py input)
+ Use the provided script with your own model file:
 # Generate from example.gui.xmi to default output directory
-python generate.py example.gui.xmi
+python generate_app.py path/to/your_model.py ./output_besser
+```
 
+Your `your_model.py` must define either:
+- `gui` variable (instance of GUIModel), or
+- `create_model()` function returning GUIModel
 # Generate to specific output directory
 python generate.py example.gui.xmi ./output/ballet-swap
 

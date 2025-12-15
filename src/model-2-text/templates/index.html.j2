@@ -22,15 +22,12 @@
                 </div>
                 
                 <div class="navbar-menu" id="navbar-menu">
-                    {% for module in gui.modules %}
-                    {% for screen in module.screens %}
-                    {% if screen.is_main_page %}
-                    <a href="#/{{ screen.name | snake_case }}" class="navbar-link" data-route="/{{ screen.name | snake_case }}">
-                        {{ screen.name }}
-                    </a>
+                    <a href="#/itemlistscreen" class="navbar-link" data-route="/itemlistscreen">Home</a>
+                    <a href="#/loginscreen" class="navbar-link" data-route="/loginscreen">Login</a>
+                    <a href="#/paymentscreen" class="navbar-link" data-route="/paymentscreen">Payments</a>
+                    {% if gui.features.show_logout %}
+                    <button id="logout-btn" class="navbar-link">Logout</button>
                     {% endif %}
-                    {% endfor %}
-                    {% endfor %}
                 </div>
                 
                 <button class="navbar-toggle" id="navbar-toggle" aria-label="Toggle menu">

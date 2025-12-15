@@ -47,15 +47,15 @@ export class itemlistscreenPage {
             `;
         }
         
-        return `
-            <div class="page page-item-list-screen">
-                <div class="page-header">
-                    <h1 class="page-title">ItemListScreen</h1>
-                </div>
+            return `
+                <div class="page page-item-list-screen">
+                    <div class="page-header">
+                        <h1 class="page-title">ItemListScreen</h1>
+                    </div>
                 
-                <div class="page-content">
-                    <p>ItemListScreen page content will be rendered here</p>
-                </div>
+                    <div class="page-content">
+                        <p>ItemListScreen page content will be rendered here</p>
+                    </div>
             </div>
         `;
     }

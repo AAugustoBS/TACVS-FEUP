@@ -52,16 +52,10 @@ export class Router {
     async handleRoute() {
         let hash = window.location.hash.substring(1);
         
-        // If no hash, use the first main page or first available route
+        // If no hash, default to Home (itemlistscreen)
         if (!hash || hash === '/') {
-            const mainRoute = this.routes.find(r => r.name.includes('ItemList') || r.name.includes('List'));
-            if (mainRoute) {
-                hash = mainRoute.path;
-                window.location.hash = hash;
-            } else if (this.routes.length > 0) {
-                hash = this.routes[0].path;
-                window.location.hash = hash;
-            }
+            hash = '/itemlistscreen';
+            window.location.hash = hash;
         }
         
         const route = this.matchRoute(hash);

@@ -47,15 +47,16 @@ export class paymentscreenPage {
             `;
         }
         
-        return `
-            <div class="page page-payment-screen">
-                <div class="page-header">
-                    <h1 class="page-title">PaymentScreen</h1>
-                </div>
+            return `
+                <div class="page page-payment-screen">
+                    <div class="page-header">
+                        <h1 class="page-title">PaymentScreen</h1>
+                    </div>
                 
-                <div class="page-content">
-                    <p>PaymentScreen page content will be rendered here</p>
-                </div>
+                    <div class="page-content">
+                        <div class="payment-options">
+                        </div>
+                    </div>
             </div>
         `;
     }

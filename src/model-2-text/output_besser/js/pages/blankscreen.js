@@ -47,15 +47,15 @@ export class blankscreenPage {
             `;
         }
         
-        return `
-            <div class="page page-blank-screen">
-                <div class="page-header">
-                    <h1 class="page-title">BlankScreen</h1>
-                </div>
+            return `
+                <div class="page page-blank-screen">
+                    <div class="page-header">
+                        <h1 class="page-title">BlankScreen</h1>
+                    </div>
                 
-                <div class="page-content">
-                    <p>BlankScreen page content will be rendered here</p>
-                </div>
+                    <div class="page-content">
+                        <p>BlankScreen page content will be rendered here</p>
+                    </div>
             </div>
         `;
     }

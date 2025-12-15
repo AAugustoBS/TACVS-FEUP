@@ -8,22 +8,22 @@ CommunityPlatform is a Single Page Application (SPA) built with vanilla HTML, CS
 
 ## Features
 
-- **RatingsListScreen** 
-  - Main page: False
-  - Screen size: Medium
-- **ItemDetailsScreen** 
-  - Main page: False
-  - Screen size: Medium
 - **BlankScreen** 
-  - Main page: False
-  - Screen size: Medium
-- **PaymentScreen** 
   - Main page: False
   - Screen size: Medium
 - **ItemListScreen** 
   - Main page: True
   - Screen size: Medium
+- **RatingsListScreen** 
+  - Main page: False
+  - Screen size: Medium
+- **PaymentScreen** 
+  - Main page: False
+  - Screen size: Medium
 - **LoginScreen** 
+  - Main page: False
+  - Screen size: Medium
+- **ItemDetailsScreen** 
   - Main page: False
   - Screen size: Medium
 

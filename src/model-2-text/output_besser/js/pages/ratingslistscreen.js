@@ -47,15 +47,15 @@ export class ratingslistscreenPage {
             `;
         }
         
-        return `
-            <div class="page page-ratings-list-screen">
-                <div class="page-header">
-                    <h1 class="page-title">RatingsListScreen</h1>
-                </div>
+            return `
+                <div class="page page-ratings-list-screen">
+                    <div class="page-header">
+                        <h1 class="page-title">RatingsListScreen</h1>
+                    </div>
                 
-                <div class="page-content">
-                    <p>RatingsListScreen page content will be rendered here</p>
-                </div>
+                    <div class="page-content">
+                        <p>RatingsListScreen page content will be rendered here</p>
+                    </div>
             </div>
         `;
     }

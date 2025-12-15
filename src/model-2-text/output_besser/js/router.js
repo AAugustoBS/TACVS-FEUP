@@ -3,12 +3,12 @@
  * Handles client-side routing for CommunityPlatform
  */
 
-import { ratingslistscreenPage } from './pages/ratingslistscreen.js';
-import { itemdetailsscreenPage } from './pages/itemdetailsscreen.js';
 import { blankscreenPage } from './pages/blankscreen.js';
-import { paymentscreenPage } from './pages/paymentscreen.js';
 import { itemlistscreenPage } from './pages/itemlistscreen.js';
+import { ratingslistscreenPage } from './pages/ratingslistscreen.js';
+import { paymentscreenPage } from './pages/paymentscreen.js';
 import { loginscreenPage } from './pages/loginscreen.js';
+import { itemdetailsscreenPage } from './pages/itemdetailsscreen.js';
 
 export class Router {
     constructor() {
@@ -23,28 +23,10 @@ export class Router {
     setupRoutes() {
         this.routes = [
             {
-                path: '/ratingslistscreen',
-                name: 'RatingsListScreen',
-                title: 'RatingsListScreen',
-                handler: ratingslistscreenPage,
-                params: {}
-            },            {
-                path: '/itemdetailsscreen',
-                name: 'ItemDetailsScreen',
-                title: 'ItemDetailsScreen',
-                handler: itemdetailsscreenPage,
-                params: {}
-            },            {
                 path: '/blankscreen',
                 name: 'BlankScreen',
                 title: 'BlankScreen',
                 handler: blankscreenPage,
-                params: {}
-            },            {
-                path: '/paymentscreen',
-                name: 'PaymentScreen',
-                title: 'PaymentScreen',
-                handler: paymentscreenPage,
                 params: {}
             },            {
                 path: '/itemlistscreen',
@@ -53,10 +35,28 @@ export class Router {
                 handler: itemlistscreenPage,
                 params: {}
             },            {
+                path: '/ratingslistscreen',
+                name: 'RatingsListScreen',
+                title: 'RatingsListScreen',
+                handler: ratingslistscreenPage,
+                params: {}
+            },            {
+                path: '/paymentscreen',
+                name: 'PaymentScreen',
+                title: 'PaymentScreen',
+                handler: paymentscreenPage,
+                params: {}
+            },            {
                 path: '/loginscreen',
                 name: 'LoginScreen',
                 title: 'LoginScreen',
                 handler: loginscreenPage,
+                params: {}
+            },            {
+                path: '/itemdetailsscreen',
+                name: 'ItemDetailsScreen',
+                title: 'ItemDetailsScreen',
+                handler: itemdetailsscreenPage,
                 params: {}
             }        ];
     }
@@ -78,16 +78,10 @@ export class Router {
     async handleRoute() {
         let hash = window.location.hash.substring(1);
         
-        // If no hash, use the first main page or first available route
+        // If no hash, default to Home (itemlistscreen)
         if (!hash || hash === '/') {
-            const mainRoute = this.routes.find(r => r.name.includes('ItemList') || r.name.includes('List'));
-            if (mainRoute) {
-                hash = mainRoute.path;
-                window.location.hash = hash;
-            } else if (this.routes.length > 0) {
-                hash = this.routes[0].path;
-                window.location.hash = hash;
-            }
+            hash = '/itemlistscreen';
+            window.location.hash = hash;
         }
         
         const route = this.matchRoute(hash);

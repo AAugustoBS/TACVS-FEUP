@@ -47,15 +47,31 @@ export class {{ screen.name | camel_case }}Page {
             `;
         }
         
-        return `
-            <div class="page page-{{ screen.name | kebab_case }}">
-                <div class="page-header">
-                    <h1 class="page-title">{{ screen.name }}</h1>
-                </div>
+            return `
+                <div class="page page-{{ screen.name | kebab_case }}">
+                    <div class="page-header">
+                        <h1 class="page-title">{{ screen.name }}</h1>
+                    </div>
                 
-                <div class="page-content">
-                    <p>{{ screen.name }} page content will be rendered here</p>
-                </div>
+                    <div class="page-content">
+                        {% if screen.name == 'LoginScreen' %}
+                        <div class="login-options">
+                            <button class="btn">Sign in with Email</button>
+                            <button class="btn">Sign in with Phone</button>
+                        </div>
+                        {% elif screen.name == 'PaymentScreen' %}
+                        <div class="payment-options">
+                            {% if gui.features.show_mbway %}
+                            <button class="btn">Pay with MBWay</button>
+                            {% endif %}
+                            {% if gui.features.show_multibanco %}
+                            <button class="btn">Pay with Multibanco</button>
+                            {% endif %}
+                        </div>
+                        {% else %}
+                        <p>{{ screen.name }} page content will be rendered here</p>
+                        {% endif %}
+                    </div>
             </div>
         `;
     }

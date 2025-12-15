@@ -47,15 +47,18 @@ export class loginscreenPage {
             `;
         }
         
-        return `
-            <div class="page page-login-screen">
-                <div class="page-header">
-                    <h1 class="page-title">LoginScreen</h1>
-                </div>
+            return `
+                <div class="page page-login-screen">
+                    <div class="page-header">
+                        <h1 class="page-title">LoginScreen</h1>
+                    </div>
                 
-                <div class="page-content">
-                    <p>LoginScreen page content will be rendered here</p>
-                </div>
+                    <div class="page-content">
+                        <div class="login-options">
+                            <button class="btn">Sign in with Email</button>
+                            <button class="btn">Sign in with Phone</button>
+                        </div>
+                    </div>
             </div>
         `;
     }
