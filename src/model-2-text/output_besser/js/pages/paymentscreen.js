@@ -47,16 +47,43 @@ export class paymentscreenPage {
             `;
         }
         
-            return `
-                <div class="page page-payment-screen">
-                    <div class="page-header">
-                        <h1 class="page-title">PaymentScreen</h1>
+        return `
+            <div class="page page-payment-screen">
+                <div class="page-header">
+                    <h1 class="page-title">PaymentScreen</h1>
+                </div>
+            
+                <div class="page-content">
+                    <div class="elements-container">
+                        
+                        <button 
+                            class="btn btn-primary" 
+                            data-action="MBWayButton"
+                        >
+                            Pay with MBWay
+                        </button>
+                        
+                        
+                        
+                        <button 
+                            class="btn btn-primary" 
+                            data-action="MultibancoButton"
+                        >
+                            Pay with Multibanco
+                        </button>
+                        
+                        
+                        
+                        <button 
+                            class="btn btn-primary" 
+                            data-action="PayPalButton"
+                        >
+                            Pay with PayPal
+                        </button>
+                        
+                        
                     </div>
-                
-                    <div class="page-content">
-                        <div class="payment-options">
-                        </div>
-                    </div>
+                </div>
             </div>
         `;
     }

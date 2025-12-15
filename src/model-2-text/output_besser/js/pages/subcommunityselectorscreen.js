@@ -1,11 +1,11 @@
 /**
- * RatingsListScreen Page
- * Generated from RatingsListScreen screen definition
+ * SubcommunitySelectorScreen Page
+ * Generated from SubcommunitySelectorScreen screen definition
  */
 
 import { ComponentRegistry } from '../components.js';
 
-export class ratingslistscreenPage {
+export class subcommunityselectorscreenPage {
     constructor(params = {}) {
         this.params = params;
         this.components = new ComponentRegistry();
@@ -16,7 +16,7 @@ export class ratingslistscreenPage {
      * Initialize page after rendering
      */
     async init() {
-        console.log('Initializing RatingsListScreen page', this.params);
+        console.log('Initializing SubcommunitySelectorScreen page', this.params);
     }
     
     /**
@@ -48,20 +48,25 @@ export class ratingslistscreenPage {
         }
         
         return `
-            <div class="page page-ratings-list-screen">
+            <div class="page page-subcommunity-selector-screen">
                 <div class="page-header">
-                    <h1 class="page-title">RatingsListScreen</h1>
+                    <h1 class="page-title">SubcommunitySelectorScreen</h1>
                 </div>
             
                 <div class="page-content">
                     <div class="elements-container">
                         
-                        <div class="data-list" id="item-reviews-list">
-                            <h3>ItemReviewsList</h3>
-                            <div class="list-items">
-                                <p class="placeholder-text">Reviews for this item</p>
-                            </div>
+                        <div class="form-group">
+                            <label for="subcommunity-selector-field">SubcommunitySelectorField</label>
+                            <input 
+                                type="text" 
+                                id="subcommunity-selector-field" 
+                                name="SubcommunitySelectorField"
+                                placeholder="Select subcommunity"
+                                class="form-control"
+                            />
                         </div>
+                        
                         
                     </div>
                 </div>

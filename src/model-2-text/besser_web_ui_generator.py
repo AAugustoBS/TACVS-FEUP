@@ -1,24 +1,30 @@
 """
 BESSER Web UI Generator
 Generates HTML+CSS+Vanilla JS from BESSER GUI models using Jinja2 templates
-Following the BESSER GeneratorInterface pattern (works without BESSER installed)
+Using the official BESSER GeneratorInterface
 """
 
 import os
 from jinja2 import Environment, FileSystemLoader
 
-
-class GeneratorInterface:
-    """Minimal GeneratorInterface for when BESSER is not installed"""
-    def __init__(self, model, output_dir=None):
-        self.model = model
-        self.output_dir = output_dir or "./output"
-    
-    def build_generation_path(self, file_name):
-        """Build file path for generated code"""
-        if not os.path.exists(self.output_dir):
-            os.makedirs(self.output_dir)
-        return os.path.join(self.output_dir, file_name)
+try:
+    # Try to import the official BESSER GeneratorInterface
+    from besser.generators import GeneratorInterface
+    BESSER_AVAILABLE = True
+except ImportError:
+    # Fallback to minimal interface if BESSER not installed
+    BESSER_AVAILABLE = False
+    class GeneratorInterface:
+        """Minimal GeneratorInterface fallback"""
+        def __init__(self, model, output_dir=None):
+            self.model = model
+            self.output_dir = output_dir or "./output"
+        
+        def build_generation_path(self, file_name):
+            """Build file path for generated code"""
+            if not os.path.exists(self.output_dir):
+                os.makedirs(self.output_dir)
+            return os.path.join(self.output_dir, file_name)
 
 
 class WebUIGenerator(GeneratorInterface):

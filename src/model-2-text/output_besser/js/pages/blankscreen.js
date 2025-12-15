@@ -47,15 +47,17 @@ export class blankscreenPage {
             `;
         }
         
-            return `
-                <div class="page page-blank-screen">
-                    <div class="page-header">
-                        <h1 class="page-title">BlankScreen</h1>
+        return `
+            <div class="page page-blank-screen">
+                <div class="page-header">
+                    <h1 class="page-title">BlankScreen</h1>
+                </div>
+            
+                <div class="page-content">
+                    <div class="placeholder-content">
+                        <p>This screen has no UI elements defined in the model.</p>
                     </div>
-                
-                    <div class="page-content">
-                        <p>BlankScreen page content will be rendered here</p>
-                    </div>
+                </div>
             </div>
         `;
     }

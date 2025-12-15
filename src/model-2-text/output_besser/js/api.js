@@ -1,6 +1,6 @@
 /**
  * API Service
- * Handles all API communication for CommunityPlatform
+ * Handles all API communication for appName
  */
 
 const API_BASE_URL = 'http://localhost:3000/api'; // Configure your backend URL

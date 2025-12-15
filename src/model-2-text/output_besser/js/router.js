@@ -1,14 +1,14 @@
 /**
  * Router - Single Page Application Router
- * Handles client-side routing for CommunityPlatform
+ * Handles client-side routing for appName
  */
 
-import { blankscreenPage } from './pages/blankscreen.js';
-import { itemlistscreenPage } from './pages/itemlistscreen.js';
-import { ratingslistscreenPage } from './pages/ratingslistscreen.js';
-import { paymentscreenPage } from './pages/paymentscreen.js';
-import { loginscreenPage } from './pages/loginscreen.js';
 import { itemdetailsscreenPage } from './pages/itemdetailsscreen.js';
+import { paymentscreenPage } from './pages/paymentscreen.js';
+import { blankscreenPage } from './pages/blankscreen.js';
+import { ratingslistscreenPage } from './pages/ratingslistscreen.js';
+import { itemlistscreenPage } from './pages/itemlistscreen.js';
+import { subcommunityselectorscreenPage } from './pages/subcommunityselectorscreen.js';
 
 export class Router {
     constructor() {
@@ -23,22 +23,10 @@ export class Router {
     setupRoutes() {
         this.routes = [
             {
-                path: '/blankscreen',
-                name: 'BlankScreen',
-                title: 'BlankScreen',
-                handler: blankscreenPage,
-                params: {}
-            },            {
-                path: '/itemlistscreen',
-                name: 'ItemListScreen',
-                title: 'ItemListScreen',
-                handler: itemlistscreenPage,
-                params: {}
-            },            {
-                path: '/ratingslistscreen',
-                name: 'RatingsListScreen',
-                title: 'RatingsListScreen',
-                handler: ratingslistscreenPage,
+                path: '/itemdetailsscreen',
+                name: 'ItemDetailsScreen',
+                title: 'ItemDetailsScreen',
+                handler: itemdetailsscreenPage,
                 params: {}
             },            {
                 path: '/paymentscreen',
@@ -47,16 +35,28 @@ export class Router {
                 handler: paymentscreenPage,
                 params: {}
             },            {
-                path: '/loginscreen',
-                name: 'LoginScreen',
-                title: 'LoginScreen',
-                handler: loginscreenPage,
+                path: '/blankscreen',
+                name: 'BlankScreen',
+                title: 'BlankScreen',
+                handler: blankscreenPage,
                 params: {}
             },            {
-                path: '/itemdetailsscreen',
-                name: 'ItemDetailsScreen',
-                title: 'ItemDetailsScreen',
-                handler: itemdetailsscreenPage,
+                path: '/ratingslistscreen',
+                name: 'RatingsListScreen',
+                title: 'RatingsListScreen',
+                handler: ratingslistscreenPage,
+                params: {}
+            },            {
+                path: '/itemlistscreen',
+                name: 'ItemListScreen',
+                title: 'ItemListScreen',
+                handler: itemlistscreenPage,
+                params: {}
+            },            {
+                path: '/subcommunityselectorscreen',
+                name: 'SubcommunitySelectorScreen',
+                title: 'SubcommunitySelectorScreen',
+                handler: subcommunityselectorscreenPage,
                 params: {}
             }        ];
     }
@@ -137,7 +137,7 @@ export class Router {
     async loadRoute(route, url) {
         try {
             // Update page title
-            document.title = 'CommunityPlatform - ' + route.title;
+            document.title = 'appName - ' + route.title;
             
             // Get main content container
             const mainContent = document.getElementById('main-content');

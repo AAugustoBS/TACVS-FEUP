@@ -47,15 +47,129 @@ export class itemlistscreenPage {
             `;
         }
         
-            return `
-                <div class="page page-item-list-screen">
-                    <div class="page-header">
-                        <h1 class="page-title">ItemListScreen</h1>
+        return `
+            <div class="page page-item-list-screen">
+                <div class="page-header">
+                    <h1 class="page-title">ItemListScreen</h1>
+                </div>
+            
+                <div class="page-content">
+                    <div class="elements-container">
+                        
+                        <div class="data-list" id="items-list">
+                            <h3>ItemsList</h3>
+                            <div class="list-items">
+                                <p class="placeholder-text">List of available items</p>
+                            </div>
+                        </div>
+                        
+                        
+                        <button 
+                            class="btn btn-primary" 
+                            data-action="ProfileButton"
+                        >
+                            Profile
+                        </button>
+                        
+                        
+                        
+                        <button 
+                            class="btn btn-primary" 
+                            data-action="RegisterButton"
+                        >
+                            Sign up
+                        </button>
+                        
+                        
+                        
+                        <div class="form-group">
+                            <label for="search-items-field">SearchItemsField</label>
+                            <input 
+                                type="text" 
+                                id="search-items-field" 
+                                name="SearchItemsField"
+                                placeholder="Search items"
+                                class="form-control"
+                            />
+                        </div>
+                        
+                        
+                        
+                        <div class="form-group">
+                            <label for="status-filter-field">StatusFilterField</label>
+                            <input 
+                                type="text" 
+                                id="status-filter-field" 
+                                name="StatusFilterField"
+                                placeholder="Filter items by status"
+                                class="form-control"
+                            />
+                        </div>
+                        
+                        
+                        
+                        <div class="form-group">
+                            <label for="tag-filter-field">TagFilterField</label>
+                            <input 
+                                type="text" 
+                                id="tag-filter-field" 
+                                name="TagFilterField"
+                                placeholder="Filter items by tag"
+                                class="form-control"
+                            />
+                        </div>
+                        
+                        
+                        
+                        <div class="form-group">
+                            <label for="transaction-type-filter-field">TransactionTypeFilterField</label>
+                            <input 
+                                type="text" 
+                                id="transaction-type-filter-field" 
+                                name="TransactionTypeFilterField"
+                                placeholder="Filter by transaction type"
+                                class="form-control"
+                            />
+                        </div>
+                        
+                        
+                        
+                        <button 
+                            class="btn btn-primary" 
+                            data-action="ViewItemDetailsButton"
+                        >
+                            View Details
+                        </button>
+                        
+                        
+                        
+                        <div class="form-group">
+                            <label for="community-filter-field">CommunityFilterField</label>
+                            <input 
+                                type="text" 
+                                id="community-filter-field" 
+                                name="CommunityFilterField"
+                                placeholder="Filter items by community"
+                                class="form-control"
+                            />
+                        </div>
+                        
+                        
+                        
+                        <div class="form-group">
+                            <label for="expiry-filter-field">ExpiryFilterField</label>
+                            <input 
+                                type="text" 
+                                id="expiry-filter-field" 
+                                name="ExpiryFilterField"
+                                placeholder="Filter by expiry"
+                                class="form-control"
+                            />
+                        </div>
+                        
+                        
                     </div>
-                
-                    <div class="page-content">
-                        <p>ItemListScreen page content will be rendered here</p>
-                    </div>
+                </div>
             </div>
         `;
     }

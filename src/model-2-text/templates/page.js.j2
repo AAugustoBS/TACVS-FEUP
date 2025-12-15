@@ -47,31 +47,55 @@ export class {{ screen.name | camel_case }}Page {
             `;
         }
         
-            return `
-                <div class="page page-{{ screen.name | kebab_case }}">
-                    <div class="page-header">
-                        <h1 class="page-title">{{ screen.name }}</h1>
-                    </div>
-                
-                    <div class="page-content">
-                        {% if screen.name == 'LoginScreen' %}
-                        <div class="login-options">
-                            <button class="btn">Sign in with Email</button>
-                            <button class="btn">Sign in with Phone</button>
+        return `
+            <div class="page page-{{ screen.name | kebab_case }}">
+                <div class="page-header">
+                    <h1 class="page-title">{{ screen.name }}</h1>
+                </div>
+            
+                <div class="page-content">
+                    {% if screen.view_elements %}
+                    <div class="elements-container">
+                        {% for element in screen.view_elements %}
+                        {% set element_type = element.__class__.__name__ %}
+                        
+                        {% if element_type == 'InputField' %}
+                        <div class="form-group">
+                            <label for="{{ element.name | kebab_case }}">{{ element.name }}</label>
+                            <input 
+                                type="text" 
+                                id="{{ element.name | kebab_case }}" 
+                                name="{{ element.name }}"
+                                placeholder="{{ element.description if element.description is defined else element.name }}"
+                                class="form-control"
+                            />
                         </div>
-                        {% elif screen.name == 'PaymentScreen' %}
-                        <div class="payment-options">
-                            {% if gui.features.show_mbway %}
-                            <button class="btn">Pay with MBWay</button>
-                            {% endif %}
-                            {% if gui.features.show_multibanco %}
-                            <button class="btn">Pay with Multibanco</button>
-                            {% endif %}
+                        
+                        {% elif element_type == 'Button' %}
+                        <button 
+                            class="btn btn-primary" 
+                            data-action="{{ element.name }}"
+                        >
+                            {{ element.label if element.label is defined else element.name }}
+                        </button>
+                        
+                        {% elif element_type == 'DataList' %}
+                        <div class="data-list" id="{{ element.name | kebab_case }}">
+                            <h3>{{ element.name }}</h3>
+                            <div class="list-items">
+                                <p class="placeholder-text">{{ element.description if element.description is defined else 'Loading...' }}</p>
+                            </div>
                         </div>
-                        {% else %}
-                        <p>{{ screen.name }} page content will be rendered here</p>
                         {% endif %}
+                        
+                        {% endfor %}
                     </div>
+                    {% else %}
+                    <div class="placeholder-content">
+                        <p>This screen has no UI elements defined in the model.</p>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
         `;
     }
