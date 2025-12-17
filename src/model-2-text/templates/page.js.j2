@@ -1,5 +1,6 @@
 /**
  * {{ screen.name }} Page
+ * Generated from {{ screen.name }} screen definition
  */
 
 import { ComponentRegistry } from '../components.js';
@@ -16,73 +17,118 @@ export class {{ screen.name | camel_case }}Page {
         return localStorage.getItem("isLoggedIn") === "true";
     }
 
+    async init() {
+        console.log('Initializing {{ screen.name }} page', this.params);
+
+        // Setup buttons or inputs (optional: reuse existing ComponentRegistry)
+        this.setupActionHandlers();
+        this.setupChat();
+    }
+
     async fetchData() {
-        {% if screen.name == 'ItemListScreen' %}
-        this.data.items = await ItemApi.getAll();
-        {% elif screen.name == 'ItemDetailsScreen' %}
-        if (!this.params.id) return;
-        this.data.item = await ItemApi.getById(this.params.id);
-        {% endif %}
+        try {
+            if ('{{ screen.name }}' === 'ItemListScreen') {
+                this.data.items = await ItemApi.getAll();
+            } else if ('{{ screen.name }}' === 'ItemDetailsScreen') {
+                if (this.params.id) {
+                    this.data.item = await ItemApi.getById(this.params.id);
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            this.data.error = 'Failed to load data';
+        }
     }
 
     async render() {
         // ---------- AUTH GUARD ----------
-        {% if screen.name in ['PaymentScreen', 'CheckoutScreen'] %} 
-        if (!this.isLoggedIn()) {
-            if (window.location.hash.toLowerCase() !== '#/loginscreen') {
-                window.location.hash = '#/loginscreen';
-            }
+        if (['PaymentScreen','CheckoutScreen'].includes('{{ screen.name }}') && !this.isLoggedIn()) {
+            window.location.hash = '#/loginscreen';
             return '';
         }
-        {% endif %}
 
         // ---------- ITEM DETAILS GUARD ----------
-        {% if screen.name == 'ItemDetailsScreen' %}
-        if (!this.params.id) {
-            if (window.location.hash.toLowerCase() !== '#/itemlistscreen') {
-                window.location.hash = '#/itemlistscreen';
-            }
+        if ('{{ screen.name }}' === 'ItemDetailsScreen' && !this.params.id) {
+            window.location.hash = '#/itemlistscreen';
             return '';
         }
-        {% endif %}
 
         await this.fetchData();
 
-        {% if screen.name == 'ItemListScreen' %}
-        return `
-            <h1>Items</h1>
-            <div class="list-items">
-                ${this.data.items.map(item => `
+        if (this.data.error) {
+            return `<div class="error"><h3>Error</h3><p>${this.data.error}</p></div>`;
+        }
+
+        // ---------- RENDER ORIGINAL UI ----------
+        let elementsHtml = '';
+        {% if screen.view_elements %}
+        {% for element in screen.view_elements %}
+        {% set element_type = element.__class__.__name__ %}
+
+        if ('{{ element_type }}' === 'InputField') {
+            elementsHtml += `
+                <div class="form-group">
+                    <label for="{{ element.name | kebab_case }}">{{ element.name }}</label>
+                    <input type="text" id="{{ element.name | kebab_case }}" name="{{ element.name }}"
+                        placeholder="{{ element.description if element.description is defined else element.name }}"
+                        class="form-control"/>
+                </div>`;
+        } else if ('{{ element_type }}' === 'Button') {
+            elementsHtml += `<button class="btn btn-primary" data-action="{{ element.name }}">{{ element.label if element.label is defined else element.name }}</button>`;
+        } else if ('{{ element_type }}' === 'DataList') {
+            elementsHtml += `<div class="data-list" id="{{ element.name | kebab_case }}">
+                <h3>{{ element.name }}</h3>
+                <div class="list-items">`;
+
+            // Inject dynamic item data if it's the item list screen
+            if ('{{ screen.name }}' === 'ItemListScreen') {
+                elementsHtml += this.data.items.map(item => `
                     <div class="item-card">
                         <h3>${item.title}</h3>
                         <p>${item.price} €</p>
-                        <a href="#/itemdetailsscreen?id=${item.id}">
-                            View details
-                        </a>
+                        <a href="#/itemdetailsscreen?id=${item.id}">View details</a>
                     </div>
-                `).join('')}
+                `).join('');
+            }
+
+            // Inject dynamic item data if it's the item details screen
+            if ('{{ screen.name }}' === 'ItemDetailsScreen') {
+                if (this.data.item) {
+                    elementsHtml += `
+                        <div class="item-card">
+                            <h3>${this.data.item.title}</h3>
+                            <p>${this.data.item.description}</p>
+                            <p>Price: ${this.data.item.price} €</p>
+                            <a href="#/itemlistscreen">Back to list</a>
+                        </div>
+                    `;
+                } else {
+                    elementsHtml += `<p class="placeholder-text">Item not found.</p>`;
+                }
+            }
+
+            elementsHtml += `</div></div>`;
+        }
+        {% endfor %}
+        {% endif %}
+
+        return `
+            <div class="page page-{{ screen.name | kebab_case }}">
+                <div class="page-header">
+                    <h1 class="page-title">{{ screen.name }}</h1>
+                </div>
+                <div class="page-content">
+                    ${elementsHtml || '<div class="placeholder-content"><p>This screen has no UI elements defined in the model.</p></div>'}
+                </div>
             </div>
         `;
-        {% elif screen.name == 'ItemDetailsScreen' %}
-        if (!this.data.item) {
-            if (window.location.hash.toLowerCase() !== '#/itemlistscreen') {
-                window.location.hash = '#/itemlistscreen';
-            }
-            return '';
-        }
-
-        return `
-            <h1>${this.data.item.title}</h1>
-            <p>${this.data.item.description}</p>
-            <p>Price: ${this.data.item.price} €</p>
-            <a href="#/itemlistscreen">Back to list</a>
-        `;
-        {% else %}
-        return `
-            <h1>{{ screen.name }}</h1>
-        `;
-        {% endif %}
     }
 
-    init() {}
+    setupActionHandlers() {
+        // Setup your buttons, click handlers, or other component actions here
+    }
+
+    setupChat() {
+        // Setup chat or conversation handlers here
+    }
 }

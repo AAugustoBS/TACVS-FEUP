@@ -63,8 +63,9 @@
             authContainer.innerHTML = ''; // Clear old links
             const loggedIn = localStorage.getItem("isLoggedIn") === "true";
 
+
             if (loggedIn) {
-                // Show Logout
+                // Logout button
                 const logoutBtn = document.createElement("button");
                 logoutBtn.textContent = "Logout";
                 logoutBtn.className = "navbar-link";
@@ -74,13 +75,15 @@
                     updateAuthLinks();
                 });
                 authContainer.appendChild(logoutBtn);
+
+                // Show user-only screens/buttons
+                        const btn5 = document.createElement("a");
+                        btn5.href = "#/paymentscreen";
+                        btn5.textContent = "PaymentScreen";
+                        btn5.className = "navbar-link";
+                        authContainer.appendChild(btn5);
             } else {
-                // Show Login
-                const loginLink = document.createElement("a");
-                loginLink.href = "#/loginscreen";
-                loginLink.textContent = "Login";
-                loginLink.className = "navbar-link";
-                authContainer.appendChild(loginLink);
+                // Show Login and SignUp only
             }
         }
 

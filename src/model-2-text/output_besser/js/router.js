@@ -3,12 +3,12 @@
  * Handles client-side routing for appName
  */
 
+import { subcommunityselectorscreenPage } from './pages/subcommunityselectorscreen.js';
 import { blankscreenPage } from './pages/blankscreen.js';
 import { itemdetailsscreenPage } from './pages/itemdetailsscreen.js';
 import { itemlistscreenPage } from './pages/itemlistscreen.js';
 import { paymentscreenPage } from './pages/paymentscreen.js';
 import { ratingslistscreenPage } from './pages/ratingslistscreen.js';
-import { subcommunityselectorscreenPage } from './pages/subcommunityselectorscreen.js';
 
 export class Router {
     constructor() {
@@ -20,6 +20,13 @@ export class Router {
     setupRoutes() {
         this.routes = [
             {
+                path: '/subcommunityselectorscreen',
+                name: 'SubcommunitySelectorScreen',
+                title: 'SubcommunitySelectorScreen',
+                handler: subcommunityselectorscreenPage,
+                params: {},
+                isMain: false
+            },            {
                 path: '/blankscreen',
                 name: 'BlankScreen',
                 title: 'BlankScreen',
@@ -52,13 +59,6 @@ export class Router {
                 name: 'RatingsListScreen',
                 title: 'RatingsListScreen',
                 handler: ratingslistscreenPage,
-                params: {},
-                isMain: false
-            },            {
-                path: '/subcommunityselectorscreen',
-                name: 'SubcommunitySelectorScreen',
-                title: 'SubcommunitySelectorScreen',
-                handler: subcommunityselectorscreenPage,
                 params: {},
                 isMain: false
             }        ];

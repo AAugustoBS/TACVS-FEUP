@@ -63,8 +63,15 @@
             authContainer.innerHTML = ''; // Clear old links
             const loggedIn = localStorage.getItem("isLoggedIn") === "true";
 
+            {% set all_screens = [] %}
+            {% for module in gui.modules %}
+                {% for screen in module.screens %}
+                    {% set _ = all_screens.append(screen) %}
+                {% endfor %}
+            {% endfor %}
+
             if (loggedIn) {
-                // Show Logout
+                // Logout button
                 const logoutBtn = document.createElement("button");
                 logoutBtn.textContent = "Logout";
                 logoutBtn.className = "navbar-link";
@@ -74,13 +81,28 @@
                     updateAuthLinks();
                 });
                 authContainer.appendChild(logoutBtn);
+
+                // Show user-only screens/buttons
+                {% for screen in all_screens %}
+                    {% if screen.name in ['PaymentScreen','CheckoutScreen','StartOrderScreen','SuggestExchangeScreen','AddReviewScreen'] %}
+                        const btn{{ loop.index }} = document.createElement("a");
+                        btn{{ loop.index }}.href = "#/{{ screen.name | lower }}";
+                        btn{{ loop.index }}.textContent = "{{ screen.name }}";
+                        btn{{ loop.index }}.className = "navbar-link";
+                        authContainer.appendChild(btn{{ loop.index }});
+                    {% endif %}
+                {% endfor %}
             } else {
-                // Show Login
-                const loginLink = document.createElement("a");
-                loginLink.href = "#/loginscreen";
-                loginLink.textContent = "Login";
-                loginLink.className = "navbar-link";
-                authContainer.appendChild(loginLink);
+                // Show Login and SignUp only
+                {% for screen in all_screens %}
+                    {% if screen.name in ['LoginScreen','SignUpScreen'] %}
+                        const link{{ loop.index }} = document.createElement("a");
+                        link{{ loop.index }}.href = "#/{{ screen.name | lower }}";
+                        link{{ loop.index }}.textContent = "{{ screen.name }}";
+                        link{{ loop.index }}.className = "navbar-link";
+                        authContainer.appendChild(link{{ loop.index }});
+                    {% endif %}
+                {% endfor %}
             }
         }
 
