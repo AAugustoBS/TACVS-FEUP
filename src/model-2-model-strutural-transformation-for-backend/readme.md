@@ -58,7 +58,7 @@ defines **all domain classes and enumerations**, such as:
 
 This model represents the **complete system**, without any customization or pruning.
 
-**Command:**
+**Command generic django backend:**
 ```bash
 python community_platform_puml_to_buml_generator.py
 ```
@@ -86,7 +86,7 @@ This file specifies which features are enabled or disabled, for example:
 - `ratings="true"`
 - `subcommunities="false"`
 
-**Command:**
+**Command to generate new custom buml_model:**
 ```bash
 python m2m_strutural_transformer.py
 ```
@@ -104,7 +104,7 @@ This step performs a **pruning-only transformation**, producing a **filtered dom
 
 The customized BUML model is then transformed into a **fully functional Django backend**.
 
-**Command:**
+**Command custom django backend:**
 ```bash
 python custom_community_platform_puml_to_buml_generator.py
 ```
