@@ -21,16 +21,58 @@
                     <span class="navbar-title">appName</span>
                 </div>
                 
-                <div class="navbar-menu" id="navbar-menu">
-                    <a href="#/paymentscreen" class="navbar-link" data-route="/paymentscreen">PaymentScreen</a>
-                    <a href="#/subcommunityselectorscreen" class="navbar-link" data-route="/subcommunityselectorscreen">SubcommunitySelectorScreen</a>
-                    <a href="#/blankscreen" class="navbar-link" data-route="/blankscreen">BlankScreen</a>
-                    <a href="#/ratingslistscreen" class="navbar-link" data-route="/ratingslistscreen">RatingsListScreen</a>
-                    <a href="#/itemlistscreen" class="navbar-link" data-route="/itemlistscreen">ItemListScreen</a>
-                    <a href="#/itemdetailsscreen" class="navbar-link" data-route="/itemdetailsscreen">ItemDetailsScreen</a>
-                    <button id="logout-btn" class="navbar-link">Logout</button>
+                                <div class="navbar-menu" id="navbar-menu">
+
+                        <a 
+                            href="#/paymentscreen" 
+                            class="navbar-link auth-link" 
+                            data-screen="PaymentScreen"
+                        >
+                            Payment
+                        </a>
+                        <a 
+                            href="#/ratingslistscreen" 
+                            class="navbar-link auth-link" 
+                            data-screen="RatingsListScreen"
+                        >
+                            RatingsList
+                        </a>
+                        <a 
+                            href="#/subcommunityselectorscreen" 
+                            class="navbar-link auth-link" 
+                            data-screen="SubcommunitySelectorScreen"
+                        >
+                            SubcommunitySelector
+                        </a>
+                        <a 
+                            href="#/itemlistscreen" 
+                            class="navbar-link auth-link" 
+                            data-screen="ItemListScreen"
+                        >
+                            ItemList
+                        </a>
+                        <a 
+                            href="#/blankscreen" 
+                            class="navbar-link auth-link" 
+                            data-screen="BlankScreen"
+                        >
+                            Blank
+                        </a>
+                    
+                    <!-- === MANUAL FIX: Always include Login link === -->
+                    <a 
+                        href="#/loginscreen" 
+                        class="navbar-link auth-link" 
+                        data-screen="LoginScreen"
+                    >
+                        Login
+                    </a>
+                    <!-- =========================================== -->
+                    
+                    <button id="logout-btn" class="navbar-link auth-only">
+                        Logout
+                    </button>
                 </div>
-                
                 <button class="navbar-toggle" id="navbar-toggle" aria-label="Toggle menu">
                     <span></span>
                     <span></span>
@@ -41,7 +83,6 @@
         
         <!-- Main Content Area -->
         <main id="main-content" class="main-content">
-            <!-- Dynamic content loaded here by router -->
             <div class="loading">
                 <div class="spinner"></div>
                 <p>Loading...</p>
@@ -58,5 +99,43 @@
     
     <!-- JavaScript Modules -->
     <script type="module" src="js/app.js"></script>
+
+    <script>
+        function updateAuthUI() {
+            const loggedIn = localStorage.getItem("isLoggedIn") === "true";
+
+            // Iterate over all auth links
+            document.querySelectorAll(".auth-link").forEach(link => {
+                const screen = link.dataset.screen;
+
+                // Payment and related actions only when logged in
+                if (["PaymentScreen", "CheckoutScreen", "StartOrderScreen", "SuggestExchangeScreen", "AddReviewScreen"].includes(screen)) {
+                    link.style.display = loggedIn ? "inline-block" : "none";
+                }
+                // Login / SignUp only when logged out
+                else if (["LoginScreen", "SignUpScreen"].includes(screen)) {
+                    link.style.display = loggedIn ? "none" : "inline-block";
+                }
+                // Everything else always visible
+                else {
+                    link.style.display = "inline-block";
+                }
+            });
+
+            // Logout button
+            const logoutBtn = document.getElementById("logout-btn");
+            if (logoutBtn) {
+                logoutBtn.style.display = loggedIn ? "inline-block" : "none";
+                logoutBtn.onclick = () => {
+                    localStorage.setItem("isLoggedIn", "false");
+                    window.location.hash = "#/loginscreen";
+                    updateAuthUI();
+                };
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", updateAuthUI);
+        window.addEventListener("hashchange", updateAuthUI);
+    </script>
 </body>
 </html>

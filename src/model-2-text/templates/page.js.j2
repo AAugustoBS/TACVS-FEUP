@@ -4,6 +4,7 @@
  */
 
 import { ComponentRegistry } from '../components.js';
+import { ItemApi } from '../api.js';
 
 export class {{ screen.name | camel_case }}Page {
     constructor(params = {}) {
@@ -11,106 +12,123 @@ export class {{ screen.name | camel_case }}Page {
         this.components = new ComponentRegistry();
         this.data = {};
     }
-    
-    /**
-     * Initialize page after rendering
-     */
+
+    isLoggedIn() {
+        return localStorage.getItem("isLoggedIn") === "true";
+    }
+
     async init() {
         console.log('Initializing {{ screen.name }} page', this.params);
+
+        // Setup buttons or inputs (optional: reuse existing ComponentRegistry)
+        this.setupActionHandlers();
+        this.setupChat();
     }
-    
-    /**
-     * Fetch page data
-     */
+
     async fetchData() {
         try {
-            // Data loading logic will be implemented by the application
+            if ('{{ screen.name }}' === 'ItemListScreen') {
+                this.data.items = await ItemApi.getAll();
+            } else if ('{{ screen.name }}' === 'ItemDetailsScreen') {
+                if (this.params.id) {
+                    this.data.item = await ItemApi.getById(this.params.id);
+                }
+            }
         } catch (error) {
             console.error('Error fetching data:', error);
             this.data.error = 'Failed to load data';
         }
     }
-    
-    /**
-     * Render page content
-     */
+
     async render() {
-        // Fetch data before rendering
-        await this.fetchData();
-        
-        if (this.data.error) {
-            return `
-                <div class="error">
-                    <h3>Error</h3>
-                    <p>${this.data.error}</p>
-                </div>
-            `;
+        // ---------- AUTH GUARD ----------
+        if (['PaymentScreen','CheckoutScreen'].includes('{{ screen.name }}') && !this.isLoggedIn()) {
+            window.location.hash = '#/loginscreen';
+            return '';
         }
-        
+
+        // ---------- ITEM DETAILS GUARD ----------
+        if ('{{ screen.name }}' === 'ItemDetailsScreen' && !this.params.id) {
+            window.location.hash = '#/itemlistscreen';
+            return '';
+        }
+
+        await this.fetchData();
+
+        if (this.data.error) {
+            return `<div class="error"><h3>Error</h3><p>${this.data.error}</p></div>`;
+        }
+
+        // ---------- RENDER ORIGINAL UI ----------
+        let elementsHtml = '';
+        {% if screen.view_elements %}
+        {% for element in screen.view_elements %}
+        {% set element_type = element.__class__.__name__ %}
+
+        if ('{{ element_type }}' === 'InputField') {
+            elementsHtml += `
+                <div class="form-group">
+                    <label for="{{ element.name | kebab_case }}">{{ element.name }}</label>
+                    <input type="text" id="{{ element.name | kebab_case }}" name="{{ element.name }}"
+                        placeholder="{{ element.description if element.description is defined else element.name }}"
+                        class="form-control"/>
+                </div>`;
+        } else if ('{{ element_type }}' === 'Button') {
+            elementsHtml += `<button class="btn btn-primary" data-action="{{ element.name }}">{{ element.label if element.label is defined else element.name }}</button>`;
+        } else if ('{{ element_type }}' === 'DataList') {
+            elementsHtml += `<div class="data-list" id="{{ element.name | kebab_case }}">
+                <h3>{{ element.name }}</h3>
+                <div class="list-items">`;
+
+            // Inject dynamic item data if it's the item list screen
+            if ('{{ screen.name }}' === 'ItemListScreen') {
+                elementsHtml += this.data.items.map(item => `
+                    <div class="item-card">
+                        <h3>${item.title}</h3>
+                        <p>${item.price} €</p>
+                        <a href="#/itemdetailsscreen?id=${item.id}">View details</a>
+                    </div>
+                `).join('');
+            }
+
+            // Inject dynamic item data if it's the item details screen
+            if ('{{ screen.name }}' === 'ItemDetailsScreen') {
+                if (this.data.item) {
+                    elementsHtml += `
+                        <div class="item-card">
+                            <h3>${this.data.item.title}</h3>
+                            <p>${this.data.item.description}</p>
+                            <p>Price: ${this.data.item.price} €</p>
+                            <a href="#/itemlistscreen">Back to list</a>
+                        </div>
+                    `;
+                } else {
+                    elementsHtml += `<p class="placeholder-text">Item not found.</p>`;
+                }
+            }
+
+            elementsHtml += `</div></div>`;
+        }
+        {% endfor %}
+        {% endif %}
+
         return `
             <div class="page page-{{ screen.name | kebab_case }}">
                 <div class="page-header">
                     <h1 class="page-title">{{ screen.name }}</h1>
                 </div>
-            
                 <div class="page-content">
-                    {% if screen.view_elements %}
-                    <div class="elements-container">
-                        {% for element in screen.view_elements %}
-                        {% set element_type = element.__class__.__name__ %}
-                        
-                        {% if element_type == 'InputField' %}
-                        <div class="form-group">
-                            <label for="{{ element.name | kebab_case }}">{{ element.name }}</label>
-                            <input 
-                                type="text" 
-                                id="{{ element.name | kebab_case }}" 
-                                name="{{ element.name }}"
-                                placeholder="{{ element.description if element.description is defined else element.name }}"
-                                class="form-control"
-                            />
-                        </div>
-                        
-                        {% elif element_type == 'Button' %}
-                        <button 
-                            class="btn btn-primary" 
-                            data-action="{{ element.name }}"
-                        >
-                            {{ element.label if element.label is defined else element.name }}
-                        </button>
-                        
-                        {% elif element_type == 'DataList' %}
-                        <div class="data-list" id="{{ element.name | kebab_case }}">
-                            <h3>{{ element.name }}</h3>
-                            <div class="list-items">
-                                <p class="placeholder-text">{{ element.description if element.description is defined else 'Loading...' }}</p>
-                            </div>
-                        </div>
-                        {% endif %}
-                        
-                        {% endfor %}
-                    </div>
-                    {% else %}
-                    <div class="placeholder-content">
-                        <p>This screen has no UI elements defined in the model.</p>
-                    </div>
-                    {% endif %}
+                    ${elementsHtml || '<div class="placeholder-content"><p>This screen has no UI elements defined in the model.</p></div>'}
                 </div>
             </div>
         `;
     }
-    
-    /**
-     * Setup action button handlers
-     */
+
     setupActionHandlers() {
-        // Action handlers will be implemented by the application
+        // Setup your buttons, click handlers, or other component actions here
     }
-    
-    /**
-     * Setup chat functionality
-     */
+
     setupChat() {
-        // Chat handlers will be implemented by the application
+        // Setup chat or conversation handlers here
     }
 }

@@ -4,11 +4,15 @@
  */
 
 import { paymentscreenPage } from './pages/paymentscreen.js';
-import { subcommunityselectorscreenPage } from './pages/subcommunityselectorscreen.js';
-import { blankscreenPage } from './pages/blankscreen.js';
 import { ratingslistscreenPage } from './pages/ratingslistscreen.js';
+import { subcommunityselectorscreenPage } from './pages/subcommunityselectorscreen.js';
 import { itemlistscreenPage } from './pages/itemlistscreen.js';
 import { itemdetailsscreenPage } from './pages/itemdetailsscreen.js';
+import { blankscreenPage } from './pages/blankscreen.js';
+
+/* === MANUAL FIX: Force LoginScreen import with correct class name === */
+import { loginscreenPage } from './pages/loginscreen.js';
+/* =================================================================== */
 
 export class Router {
     constructor() {
@@ -16,10 +20,7 @@ export class Router {
         this.currentRoute = null;
         this.setupRoutes();
     }
-    
-    /**
-     * Setup application routes
-     */
+
     setupRoutes() {
         this.routes = [
             {
@@ -30,24 +31,17 @@ export class Router {
                 params: {},
                 isMain: false
             },            {
-                path: '/subcommunityselectorscreen',
-                name: 'SubcommunitySelectorScreen',
-                title: 'SubcommunitySelectorScreen',
-                handler: subcommunityselectorscreenPage,
-                params: {},
-                isMain: false
-            },            {
-                path: '/blankscreen',
-                name: 'BlankScreen',
-                title: 'BlankScreen',
-                handler: blankscreenPage,
-                params: {},
-                isMain: false
-            },            {
                 path: '/ratingslistscreen',
                 name: 'RatingsListScreen',
                 title: 'RatingsListScreen',
                 handler: ratingslistscreenPage,
+                params: {},
+                isMain: false
+            },            {
+                path: '/subcommunityselectorscreen',
+                name: 'SubcommunitySelectorScreen',
+                title: 'SubcommunitySelectorScreen',
+                handler: subcommunityselectorscreenPage,
                 params: {},
                 isMain: false
             },            {
@@ -64,72 +58,82 @@ export class Router {
                 handler: itemdetailsscreenPage,
                 params: {},
                 isMain: false
-            }        ];
+            },            {
+                path: '/blankscreen',
+                name: 'BlankScreen',
+                title: 'BlankScreen',
+                handler: blankscreenPage,
+                params: {},
+                isMain: false
+            }
+            /* === MANUAL FIX: Force LoginScreen route with correct handler === */
+            ,
+            {
+                path: '/loginscreen',
+                name: 'LoginScreen',
+                title: 'LoginScreen',
+                handler: loginscreenPage,
+                params: {},
+                isMain: false
+            }
+            /* ================================================================= */
+        ];
     }
-    
-    /**
-     * Initialize router
-     */
+
     init() {
-        // Listen for hash changes
         window.addEventListener('hashchange', () => this.handleRoute());
-        
-        // Handle initial route
         this.handleRoute();
     }
-    
-    /**
-     * Handle route change
-     */
+
     async handleRoute() {
-        let hash = window.location.hash.substring(1);
-        
-        // If no hash, default to main screen (isMain) or first route
-        if (!hash || hash === '/') {
+        let hash = window.location.hash.substring(1).toLowerCase();
+
+        if (!hash || hash === '/' || hash === '') {
             const mainRoute = this.routes.find(r => r.isMain);
             const fallbackRoute = this.routes[0];
             const target = mainRoute || fallbackRoute;
             if (target) {
-                hash = target.path;
-                window.location.hash = hash;
+                window.location.hash = target.path;
+                return;
             }
         }
-        
+
         const route = this.matchRoute(hash);
-        
+
         if (route) {
             await this.loadRoute(route, hash);
         } else {
             this.show404();
         }
     }
-    
-    /**
-     * Match URL to route
-     */
+
     matchRoute(url) {
+        const [path, queryString] = url.split('?');
+        const cleanPath = path.replace(/^\/+|\/+$/g, '');
+
         for (const route of this.routes) {
-            const params = this.extractParams(route.path, url);
+            const routePath = route.path.substring(1).toLowerCase();
+            const params = this.extractParams(routePath, cleanPath);
             if (params !== null) {
+                if (queryString) {
+                    const qs = new URLSearchParams(queryString);
+                    for (const [k, v] of qs.entries()) {
+                        params[k] = v;
+                    }
+                }
                 return { ...route, params };
             }
         }
         return null;
     }
-    
-    /**
-     * Extract parameters from URL based on route pattern
-     */
+
     extractParams(pattern, url) {
         const patternParts = pattern.split('/');
         const urlParts = url.split('/');
-        
-        if (patternParts.length !== urlParts.length) {
-            return null;
-        }
-        
+
+        if (patternParts.length !== urlParts.length) return null;
+
         const params = {};
-        
         for (let i = 0; i < patternParts.length; i++) {
             if (patternParts[i].startsWith(':')) {
                 const paramName = patternParts[i].substring(1);
@@ -138,79 +142,56 @@ export class Router {
                 return null;
             }
         }
-        
         return params;
     }
-    
-    /**
-     * Load and render route
-     */
+
     async loadRoute(route, url) {
         try {
-            // Update page title
             document.title = 'appName - ' + route.title;
-            
-            // Get main content container
+
             const mainContent = document.getElementById('main-content');
-            if (!mainContent) {
-                console.error('Main content container not found');
-                return;
-            }
-            
-            // Show loading state
+            if (!mainContent) return;
+
             mainContent.innerHTML = `
                 <div class="loading">
                     <div class="spinner"></div>
                     <p>Loading...</p>
                 </div>
             `;
-            
-            // Create page instance and render
+
             const pageInstance = new route.handler(route.params);
             const content = await pageInstance.render();
-            
-            // Update content with animation
+
             mainContent.classList.add('page-exit');
-            
+
             setTimeout(() => {
                 mainContent.innerHTML = content;
                 mainContent.classList.remove('page-exit');
                 mainContent.classList.add('page-enter');
-                
-                // Initialize page
+
                 pageInstance.init();
-                
-                // Remove enter animation class
+
                 setTimeout(() => {
                     mainContent.classList.remove('page-enter');
                 }, 300);
             }, 150);
-            
+
             this.currentRoute = route;
-            
+
         } catch (error) {
             console.error('Error loading route:', error);
             this.showError('Failed to load page');
         }
     }
-    
-    /**
-     * Navigate to a path
-     */
+
     navigate(path) {
-        window.location.hash = path;
+        window.location.hash = path.toLowerCase();
     }
-    
-    /**
-     * Go back
-     */
+
     back() {
         window.history.back();
     }
-    
-    /**
-     * Show 404 page
-     */
+
     show404() {
         const mainContent = document.getElementById('main-content');
         if (mainContent) {
@@ -228,10 +209,7 @@ export class Router {
             `;
         }
     }
-    
-    /**
-     * Show error page
-     */
+
     showError(message) {
         const mainContent = document.getElementById('main-content');
         if (mainContent) {
