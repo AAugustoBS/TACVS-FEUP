@@ -21,49 +21,58 @@
                     <span class="navbar-title">appName</span>
                 </div>
                 
-                <div class="navbar-menu" id="navbar-menu">
+                                <div class="navbar-menu" id="navbar-menu">
 
                         <a 
                             href="#/paymentscreen" 
                             class="navbar-link auth-link" 
                             data-screen="PaymentScreen"
                         >
-                            PaymentScreen
+                            Payment
                         </a>
                         <a 
                             href="#/ratingslistscreen" 
                             class="navbar-link auth-link" 
                             data-screen="RatingsListScreen"
                         >
-                            RatingsListScreen
-                        </a>
-                        <a 
-                            href="#/itemlistscreen" 
-                            class="navbar-link auth-link" 
-                            data-screen="ItemListScreen"
-                        >
-                            ItemListScreen
-                        </a>
-                        <a 
-                            href="#/blankscreen" 
-                            class="navbar-link auth-link" 
-                            data-screen="BlankScreen"
-                        >
-                            BlankScreen
+                            RatingsList
                         </a>
                         <a 
                             href="#/subcommunityselectorscreen" 
                             class="navbar-link auth-link" 
                             data-screen="SubcommunitySelectorScreen"
                         >
-                            SubcommunitySelectorScreen
+                            SubcommunitySelector
                         </a>
+                        <a 
+                            href="#/itemlistscreen" 
+                            class="navbar-link auth-link" 
+                            data-screen="ItemListScreen"
+                        >
+                            ItemList
+                        </a>
+                        <a 
+                            href="#/blankscreen" 
+                            class="navbar-link auth-link" 
+                            data-screen="BlankScreen"
+                        >
+                            Blank
+                        </a>
+                    
+                    <!-- === MANUAL FIX: Always include Login link === -->
+                    <a 
+                        href="#/loginscreen" 
+                        class="navbar-link auth-link" 
+                        data-screen="LoginScreen"
+                    >
+                        Login
+                    </a>
+                    <!-- =========================================== -->
                     
                     <button id="logout-btn" class="navbar-link auth-only">
                         Logout
                     </button>
                 </div>
-
                 <button class="navbar-toggle" id="navbar-toggle" aria-label="Toggle menu">
                     <span></span>
                     <span></span>

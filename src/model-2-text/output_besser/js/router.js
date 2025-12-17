@@ -5,10 +5,14 @@
 
 import { paymentscreenPage } from './pages/paymentscreen.js';
 import { ratingslistscreenPage } from './pages/ratingslistscreen.js';
-import { itemdetailsscreenPage } from './pages/itemdetailsscreen.js';
-import { itemlistscreenPage } from './pages/itemlistscreen.js';
-import { blankscreenPage } from './pages/blankscreen.js';
 import { subcommunityselectorscreenPage } from './pages/subcommunityselectorscreen.js';
+import { itemlistscreenPage } from './pages/itemlistscreen.js';
+import { itemdetailsscreenPage } from './pages/itemdetailsscreen.js';
+import { blankscreenPage } from './pages/blankscreen.js';
+
+/* === MANUAL FIX: Force LoginScreen import with correct class name === */
+import { loginscreenPage } from './pages/loginscreen.js';
+/* =================================================================== */
 
 export class Router {
     constructor() {
@@ -34,10 +38,10 @@ export class Router {
                 params: {},
                 isMain: false
             },            {
-                path: '/itemdetailsscreen',
-                name: 'ItemDetailsScreen',
-                title: 'ItemDetailsScreen',
-                handler: itemdetailsscreenPage,
+                path: '/subcommunityselectorscreen',
+                name: 'SubcommunitySelectorScreen',
+                title: 'SubcommunitySelectorScreen',
+                handler: subcommunityselectorscreenPage,
                 params: {},
                 isMain: false
             },            {
@@ -48,20 +52,32 @@ export class Router {
                 params: {},
                 isMain: true
             },            {
+                path: '/itemdetailsscreen',
+                name: 'ItemDetailsScreen',
+                title: 'ItemDetailsScreen',
+                handler: itemdetailsscreenPage,
+                params: {},
+                isMain: false
+            },            {
                 path: '/blankscreen',
                 name: 'BlankScreen',
                 title: 'BlankScreen',
                 handler: blankscreenPage,
                 params: {},
                 isMain: false
-            },            {
-                path: '/subcommunityselectorscreen',
-                name: 'SubcommunitySelectorScreen',
-                title: 'SubcommunitySelectorScreen',
-                handler: subcommunityselectorscreenPage,
+            }
+            /* === MANUAL FIX: Force LoginScreen route with correct handler === */
+            ,
+            {
+                path: '/loginscreen',
+                name: 'LoginScreen',
+                title: 'LoginScreen',
+                handler: loginscreenPage,
                 params: {},
                 isMain: false
-            }        ];
+            }
+            /* ================================================================= */
+        ];
     }
 
     init() {
@@ -72,7 +88,7 @@ export class Router {
     async handleRoute() {
         let hash = window.location.hash.substring(1).toLowerCase();
 
-        if (!hash || hash === '/') {
+        if (!hash || hash === '/' || hash === '') {
             const mainRoute = this.routes.find(r => r.isMain);
             const fallbackRoute = this.routes[0];
             const target = mainRoute || fallbackRoute;
@@ -93,7 +109,7 @@ export class Router {
 
     matchRoute(url) {
         const [path, queryString] = url.split('?');
-        const cleanPath = path.replace(/^\/+|\/+$/g, ''); // remove leading/trailing slashes
+        const cleanPath = path.replace(/^\/+|\/+$/g, '');
 
         for (const route of this.routes) {
             const routePath = route.path.substring(1).toLowerCase();

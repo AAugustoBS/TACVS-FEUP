@@ -14,16 +14,16 @@ appName is a Single Page Application (SPA) built with vanilla HTML, CSS, and Jav
 - **RatingsListScreen** 
   - Main page: False
   - Screen size: Medium
-- **ItemDetailsScreen** 
+- **SubcommunitySelectorScreen** 
   - Main page: False
   - Screen size: Medium
 - **ItemListScreen** 
   - Main page: True
   - Screen size: Medium
-- **BlankScreen** 
+- **ItemDetailsScreen** 
   - Main page: False
   - Screen size: Medium
-- **SubcommunitySelectorScreen** 
+- **BlankScreen** 
   - Main page: False
   - Screen size: Medium
 

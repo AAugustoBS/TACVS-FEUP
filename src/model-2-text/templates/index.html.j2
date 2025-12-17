@@ -21,7 +21,7 @@
                     <span class="navbar-title">{{ gui.name }}</span>
                 </div>
                 
-                <div class="navbar-menu" id="navbar-menu">
+                                <div class="navbar-menu" id="navbar-menu">
                     {% set all_screens = [] %}
                     {% for module in gui.modules %}
                         {% for screen in module.screens %}
@@ -36,16 +36,25 @@
                             class="navbar-link auth-link" 
                             data-screen="{{ screen.name }}"
                         >
-                            {{ screen.name }}
+                            {{ screen.name | replace('Screen', '') }}
                         </a>
                         {% endif %}
                     {% endfor %}
+                    
+                    <!-- === MANUAL FIX: Always include Login link === -->
+                    <a 
+                        href="#/loginscreen" 
+                        class="navbar-link auth-link" 
+                        data-screen="LoginScreen"
+                    >
+                        Login
+                    </a>
+                    <!-- =========================================== -->
                     
                     <button id="logout-btn" class="navbar-link auth-only">
                         Logout
                     </button>
                 </div>
-
                 <button class="navbar-toggle" id="navbar-toggle" aria-label="Toggle menu">
                     <span></span>
                     <span></span>

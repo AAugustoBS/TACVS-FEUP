@@ -9,6 +9,10 @@ import { {{ screen.name | camel_case }}Page } from './pages/{{ screen.name | low
 {% endfor %}
 {% endfor %}
 
+/* === MANUAL FIX: Force LoginScreen import with correct class name === */
+import { loginscreenPage } from './pages/loginscreen.js';
+/* =================================================================== */
+
 export class Router {
     constructor() {
         this.routes = [];
@@ -30,6 +34,18 @@ export class Router {
             }{% if not loop.last %},{% endif %}
             {% endfor %}
             {% endfor %}
+
+            /* === MANUAL FIX: Force LoginScreen route with correct handler === */
+            ,
+            {
+                path: '/loginscreen',
+                name: 'LoginScreen',
+                title: 'LoginScreen',
+                handler: loginscreenPage,
+                params: {},
+                isMain: false
+            }
+            /* ================================================================= */
         ];
     }
 
@@ -41,7 +57,7 @@ export class Router {
     async handleRoute() {
         let hash = window.location.hash.substring(1).toLowerCase();
 
-        if (!hash || hash === '/') {
+        if (!hash || hash === '/' || hash === '') {
             const mainRoute = this.routes.find(r => r.isMain);
             const fallbackRoute = this.routes[0];
             const target = mainRoute || fallbackRoute;
@@ -62,7 +78,7 @@ export class Router {
 
     matchRoute(url) {
         const [path, queryString] = url.split('?');
-        const cleanPath = path.replace(/^\/+|\/+$/g, ''); // remove leading/trailing slashes
+        const cleanPath = path.replace(/^\/+|\/+$/g, '');
 
         for (const route of this.routes) {
             const routePath = route.path.substring(1).toLowerCase();
