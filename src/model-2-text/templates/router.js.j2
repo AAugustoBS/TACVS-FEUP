@@ -29,7 +29,7 @@ export class Router {
                 title: '{{ screen.name }}',
                 handler: {{ screen.name | camel_case }}Page,
                 params: {},
-                isMain: {{ 'true' if screen.is_main_page else 'false' }}
+                isMain: {{ 'true' if screen.is_main_page|default(false) else 'false' }}
             }{% if not loop.last %},{% endif %}
             {% endfor %}
             {% endfor %}
@@ -77,14 +77,23 @@ export class Router {
      * Match URL to route
      */
     matchRoute(url) {
+        const [path, queryString] = url.split('?');
+
         for (const route of this.routes) {
-            const params = this.extractParams(route.path, url);
+            const params = this.extractParams(route.path, path);
             if (params !== null) {
+                if (queryString) {
+                    const qs = new URLSearchParams(queryString);
+                    for (const [k, v] of qs.entries()) {
+                        params[k] = v;
+                    }
+                }
                 return { ...route, params };
             }
         }
         return null;
     }
+
     
     /**
      * Extract parameters from URL based on route pattern

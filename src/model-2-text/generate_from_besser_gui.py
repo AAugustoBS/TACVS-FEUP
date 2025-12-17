@@ -86,6 +86,8 @@ def mk_button(*, name: str, description: str, label: str,
     if hasattr(b, 'actionType'):
         try: b.actionType = action_type
         except Exception: pass
+    if target is not None:
+        base['targetScreen'] = target
     return b
 
 def mk_datalist(*, name: str, description: str, sources: Set[DataSourceElement]) -> DataList:
@@ -94,7 +96,9 @@ def mk_datalist(*, name: str, description: str, sources: Set[DataSourceElement])
     if 'list_sources' in p: base['list_sources'] = set(sources)
     elif 'listSources' in p: base['listSources'] = set(sources)
     elif 'sources' in p: base['sources'] = set(sources)
+    base = {'name': name, 'description': description, 'list_sources': list(sources)}
     return DataList(**_accepted_kwargs(DataList, base))
+    #return DataList(**_accepted_kwargs(DataList, base))
 
 def mk_module(*, name: str, screens: Set[Screen]) -> Module:
     base = {'name': name, 'screens': set(screens)}

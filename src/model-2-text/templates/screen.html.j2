@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ screen.name }}</title>
+</head>
+<body>
+
+<h1>{{ screen.name }}</h1>
+
+{% if screen.name == 'ItemDetailsScreen' %}
+    {% if not params or not params.id %}
+        <p>Please select an item first.</p>
+        <a href="#/itemlistscreen">Back to items</a>
+    {% endif %}
+{% endif %}
+
+{% for el in screen.view_elements %}
+
+    {% if el.__class__.__name__ == 'Button' %}
+
+        {% if el.label == 'Login' and gui.features.logged_in %}
+            {# hide login #}
+        {% elif el.label == 'Logout' and not gui.features.logged_in %}
+            {# hide logout #}
+        {% else %}
+            <a href="#/{{ el.targetScreen.name | lower }}">{{ el.label }}</a>
+        {% endif %}
+
+    {% elif el.__class__.__name__ == 'InputField' %}
+        <label>{{ el.description }}</label><br>
+
+    {% endif %}
+
+{% endfor %}
+
+</body>
+</html>

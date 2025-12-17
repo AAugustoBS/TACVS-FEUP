@@ -107,15 +107,18 @@ class WebUIGenerator(GeneratorInterface):
         print("Code generated successfully in: " + self.output_dir)
     
     def _generate_html(self):
-        """Generate HTML file from template"""
-        print("  Generating index.html...")
-        
-        template = self.env.get_template('index.html.j2')
-        file_path = self.build_generation_path("index.html")
-        
-        with open(file_path, mode="w", encoding='utf-8') as f:
-            content = template.render(gui=self.model)
-            f.write(content)
+        """Generate HTML pages for all screens."""
+        screens = self._get_screens()
+        template = self.env.get_template('screen.html.j2')
+    
+        for screen in screens:
+            file_path = self.build_generation_path(screen.name.lower() + ".html")
+            # Pass the screen to template safely
+            with open(file_path, mode="w", encoding="utf-8") as f:
+                content = template.render(gui=self.model, screen=screen)
+                f.write(content)
+            print(f"  Generated {screen.name.lower()}.html")
+
     
     def _generate_css(self):
         """Generate CSS files"""

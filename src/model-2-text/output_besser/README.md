@@ -8,22 +8,22 @@ appName is a Single Page Application (SPA) built with vanilla HTML, CSS, and Jav
 
 ## Features
 
-- **PaymentScreen** 
+- **SubcommunitySelectorScreen** 
   - Main page: False
   - Screen size: Medium
 - **BlankScreen** 
   - Main page: False
   - Screen size: Medium
-- **RatingsListScreen** 
-  - Main page: False
-  - Screen size: Medium
 - **ItemListScreen** 
   - Main page: True
   - Screen size: Medium
-- **SubcommunitySelectorScreen** 
+- **ItemDetailsScreen** 
   - Main page: False
   - Screen size: Medium
-- **ItemDetailsScreen** 
+- **PaymentScreen** 
+  - Main page: False
+  - Screen size: Medium
+- **RatingsListScreen** 
   - Main page: False
   - Screen size: Medium
 

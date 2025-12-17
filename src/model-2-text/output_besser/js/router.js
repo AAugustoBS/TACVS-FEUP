@@ -3,12 +3,12 @@
  * Handles client-side routing for appName
  */
 
-import { paymentscreenPage } from './pages/paymentscreen.js';
-import { blankscreenPage } from './pages/blankscreen.js';
-import { ratingslistscreenPage } from './pages/ratingslistscreen.js';
-import { itemlistscreenPage } from './pages/itemlistscreen.js';
 import { subcommunityselectorscreenPage } from './pages/subcommunityselectorscreen.js';
+import { blankscreenPage } from './pages/blankscreen.js';
+import { itemlistscreenPage } from './pages/itemlistscreen.js';
 import { itemdetailsscreenPage } from './pages/itemdetailsscreen.js';
+import { paymentscreenPage } from './pages/paymentscreen.js';
+import { ratingslistscreenPage } from './pages/ratingslistscreen.js';
 
 export class Router {
     constructor() {
@@ -23,10 +23,10 @@ export class Router {
     setupRoutes() {
         this.routes = [
             {
-                path: '/paymentscreen',
-                name: 'PaymentScreen',
-                title: 'PaymentScreen',
-                handler: paymentscreenPage,
+                path: '/subcommunityselectorscreen',
+                name: 'SubcommunitySelectorScreen',
+                title: 'SubcommunitySelectorScreen',
+                handler: subcommunityselectorscreenPage,
                 params: {},
                 isMain: false
             },            {
@@ -37,13 +37,6 @@ export class Router {
                 params: {},
                 isMain: false
             },            {
-                path: '/ratingslistscreen',
-                name: 'RatingsListScreen',
-                title: 'RatingsListScreen',
-                handler: ratingslistscreenPage,
-                params: {},
-                isMain: false
-            },            {
                 path: '/itemlistscreen',
                 name: 'ItemListScreen',
                 title: 'ItemListScreen',
@@ -51,17 +44,24 @@ export class Router {
                 params: {},
                 isMain: true
             },            {
-                path: '/subcommunityselectorscreen',
-                name: 'SubcommunitySelectorScreen',
-                title: 'SubcommunitySelectorScreen',
-                handler: subcommunityselectorscreenPage,
-                params: {},
-                isMain: false
-            },            {
                 path: '/itemdetailsscreen',
                 name: 'ItemDetailsScreen',
                 title: 'ItemDetailsScreen',
                 handler: itemdetailsscreenPage,
+                params: {},
+                isMain: false
+            },            {
+                path: '/paymentscreen',
+                name: 'PaymentScreen',
+                title: 'PaymentScreen',
+                handler: paymentscreenPage,
+                params: {},
+                isMain: false
+            },            {
+                path: '/ratingslistscreen',
+                name: 'RatingsListScreen',
+                title: 'RatingsListScreen',
+                handler: ratingslistscreenPage,
                 params: {},
                 isMain: false
             }        ];
@@ -108,14 +108,23 @@ export class Router {
      * Match URL to route
      */
     matchRoute(url) {
+        const [path, queryString] = url.split('?');
+
         for (const route of this.routes) {
-            const params = this.extractParams(route.path, url);
+            const params = this.extractParams(route.path, path);
             if (params !== null) {
+                if (queryString) {
+                    const qs = new URLSearchParams(queryString);
+                    for (const [k, v] of qs.entries()) {
+                        params[k] = v;
+                    }
+                }
                 return { ...route, params };
             }
         }
         return null;
     }
+
     
     /**
      * Extract parameters from URL based on route pattern

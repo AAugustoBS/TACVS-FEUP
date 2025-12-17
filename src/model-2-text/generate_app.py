@@ -122,17 +122,10 @@ def main():
     # Defaults for features if missing
     if not gui_model.features:
         gui_model.features = {
-            'show_mbway': True,
-            'show_multibanco': True,
-            'show_logout': True,
-            'show_profile': True
-        }
+            'logged_in': False
+    }
     else:
-        # Fill in missing features
-        gui_model.features.setdefault('show_mbway', True)
-        gui_model.features.setdefault('show_multibanco', True)
-        gui_model.features.setdefault('show_logout', True)
-        gui_model.features.setdefault('show_profile', True)
+        gui_model.features.setdefault('logged_in', False)
     
     # Ensure theme dict exists
     if not hasattr(gui_model, 'theme'):
