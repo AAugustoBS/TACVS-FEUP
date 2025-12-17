@@ -1,0 +1,51 @@
+@startuml
+@startmindmap
+* Community Exchange App (DSML)
+
+** Accounts
+* Local Login (opt)
+* OAuth Login (opt)
+* Phone Verification (opt)
+* Moderators (opt)
+
+** Listings
+* Products (mandatory)
+* Services (opt)
+* Trade Modes (OR)
+** Price
+** Exchange
+** Donation
+* Expiry (opt)
+* Variants (opt)
+
+** Messaging
+* Chat (opt)
+* Images In Chat (opt)
+
+** Ratings
+* Simple (opt)
+* Bidirectional (opt)
+
+** Payments (XOR)
+* MB Way
+* Multibanco
+* PayPal
+* None
+
+** Logistics
+* In-person (opt)
+* Mail (opt)
+* Locker (opt)
+
+** Subcommunities (opt)
+
+** Theming & Branding (mandatory)
+* App Name (mandatory)
+* Colors (mandatory)
+* Logo (opt)
+
+** Access Policies
+* Anonymous Browse (opt)
+* Anonymous Messages (opt)
+@endmindmap
+@enduml

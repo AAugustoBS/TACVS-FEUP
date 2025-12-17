@@ -1,0 +1,7 @@
+-- Derived user reputation (generated)
+context User
+def: ratingCount : Integer = self.Rating->size()
+def: avgRating : Real =
+  if self.ratingCount = 0 then 0
+  else self.Rating->collect(stars)->sum().toReal() / self.ratingCount
+  endif

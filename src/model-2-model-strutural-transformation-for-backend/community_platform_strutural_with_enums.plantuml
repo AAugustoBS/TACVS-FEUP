@@ -1,0 +1,268 @@
+@startuml
+
+enum ItemState {
+  Draft
+  Active
+  Reserved
+  Completed
+  Archived
+}
+
+enum Condition {
+  New
+  LikeNew
+  Good
+  Fair
+  Poor
+}
+
+enum ItemKind {
+  Product
+  Service
+}
+
+enum ExchangeMode {
+  Price
+  Exchange
+  Donation
+}
+
+enum OfferType {
+  PriceOffer
+  ExchangeOffer
+  Request
+}
+
+enum OfferStatus {
+  Pending
+  Accepted
+  Rejected
+  Withdrawn
+  Expired
+}
+
+enum ReservationStatus {
+  Active
+  Released
+  Expired
+}
+
+enum TxMode {
+  Sale
+  Exchange
+  Donation
+}
+
+enum DeliveryMode {
+  InPerson
+  Mail
+  Locker
+}
+
+enum TxStatus {
+  Completed
+  Cancelled
+}
+
+enum MessageKind {
+  Text
+  Image
+  System
+}
+
+enum ReportReason {
+  Spam
+  Fraud
+  Offensive
+  Safety
+  Other
+}
+
+enum ReportStatus {
+  Open
+  UnderReview
+  Resolved
+  Ignored
+}
+
+enum PaymentMethod {
+  MBWay
+  Multibanco
+  PayPal
+  NoPayment
+}
+
+enum UserStatus {
+  Active
+  Suspended
+}
+
+class Community {
+  uid : str
+  name : str
+  description : str
+  logoUrl : str
+  rulesMarkdown : str
+  allowSubcommunities : bool
+}
+
+class SubCommunity {
+  uid : str
+  name : str
+  description : str
+}
+
+class User {
+  uid : str
+  username : str
+  fullName : str
+  email : str
+  phone : str
+  avatarUrl : str
+  createdAt : datetime
+  isAdmin : bool
+  isModerator : bool
+  avgRating : float
+  ratingCount : int
+  status : UserStatus
+}
+
+class Category {
+  uid : str
+  name : str
+  icon : str
+}
+
+class Location {
+  uid : str
+  label : str
+  address : str
+  lat : float
+  lon : float
+}
+
+class Money {
+  amount : float
+  currency : str
+}
+
+class Item {
+  uid : str
+  title : str
+  description : str
+  mediaUrls : str
+  tags : str
+  createdAt : datetime
+  updatedAt : datetime
+  state : ItemState
+  condition : Condition
+  kind : ItemKind
+  exchangeModes : ExchangeMode
+  quantity : int
+  unit : str
+  expiresAt : datetime
+}
+
+class ItemVariant {
+  name : str
+  value : str
+}
+
+class Offer {
+  uid : str
+  type : OfferType
+  message : str
+  createdAt : datetime
+  status : OfferStatus
+}
+
+class Reservation {
+  uid : str
+  reservedFrom : datetime
+  reservedUntil : datetime
+  status : ReservationStatus
+}
+
+class Transaction {
+  uid : str
+  closedAt : datetime
+  mode : TxMode
+  delivery : DeliveryMode
+  receiptUrl : str
+  paymentMethod : PaymentMethod
+  status : TxStatus
+}
+
+class Rating {
+  uid : str
+  stars : int
+  comment : str
+  createdAt : datetime
+}
+
+class Conversation {
+  uid : str
+  createdAt : datetime
+}
+
+class Message {
+  uid : str
+  content : str
+  sentAt : datetime
+  kind : MessageKind
+  attachments : str
+}
+
+class Report {
+  uid : str
+  reason : ReportReason
+  details : str
+  createdAt : datetime
+  status : ReportStatus
+}
+
+class PaymentProvider {
+  name : str
+  type : str
+  publicKey : str
+  secretRef : str
+}
+
+Item "1" --> "1" Money : minExchangeValue
+Offer "1" --> "1" Money : offer_amount
+Transaction "1" --> "1" Money : agreed_price
+
+Community "1" --> "*" SubCommunity : community_subs
+Community "1" --> "*" User : community_members
+Community "1" --> "*" Category : community_categories
+Community "1" --> "*" Location : community_locations
+Community "0..1" --> "1" PaymentProvider : payment_config
+
+SubCommunity "1" --> "*" User : sub_members
+SubCommunity "1" --> "*" Item : sub_items
+
+User "1" --> "*" Item : owned_items
+Category "1" --> "*" Item : category_items
+Location "1" --> "*" Item : location_items
+Item "1" --> "*" ItemVariant : variants
+
+Offer "*" --> "1" Item : target_item
+Offer "*" --> "1" User : buyer_user
+
+User "1" --> "*" Reservation : user_reservations
+Reservation "*" --> "1" Item : reserved_item
+
+Item "1" --> "*" Transaction : item_sold_in_tx
+User "1" --> "*" Transaction : seller_transactions
+
+User "1" --> "*" Rating : ratings_as_rated
+
+User "1" --> "*" Report : reports_against_user
+Report "*" --> "0..1" Item : target_r_item
+
+Item "1" --> "*" Conversation : item_conversations
+User "2..*" --> "*" Conversation : participated_chats
+Conversation "1" --> "*" Message : messages
+Message "*" --> "1" User : author
+
+@enduml

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<custom:AppConfig xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:custom="http://www.example.org/custom" appName="appName" shortName="shortName" logoUrl="logoUrl" primaryColor="#123456" secondaryColor="#654321">
+  <accounts localLogin="true" oauthLogin="false" phoneVerification="true" moderators="true"/>
+  <listings products="true" services="true" priceMode="true" exchangeMode="true" donationMode="true" expiry="true" variants="true" currency="EUR" minPrice="0" maxPrice="0"/>
+  <messaging chat="false" imagesInChat="false"/>
+  <ratings simple="true" bidirectional="false"/>
+  <payments mbway="true" multibanco="true" paypal="true" none="false" publicKey="publicKey" secretRef="secretRef"/>
+  <logistics inPerson="false" mail="false" locker="false"/>
+  <subcommunities enabled="false"/>
+  <accessPolicies anonymousBrowse="true" anonymousMessages="false"/>
+</custom:AppConfig>

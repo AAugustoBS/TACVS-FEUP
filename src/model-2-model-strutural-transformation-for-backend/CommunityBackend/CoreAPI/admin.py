@@ -1,0 +1,18 @@
+from django.contrib import admin
+from CoreAPI.models import *
+admin.site.register(Money)
+admin.site.register(Report)
+admin.site.register(Community)
+admin.site.register(Transaction)
+admin.site.register(Rating)
+admin.site.register(User)
+admin.site.register(Category)
+admin.site.register(ItemVariant)
+admin.site.register(Message)
+admin.site.register(SubCommunity)
+admin.site.register(Conversation)
+admin.site.register(Item)
+admin.site.register(Offer)
+admin.site.register(Location)
+admin.site.register(Reservation)
+admin.site.register(PaymentProvider)

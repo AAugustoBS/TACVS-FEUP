@@ -1,0 +1,38 @@
+context User inv UsernameUniqueInCommunity:
+  User.allInstances()->forAll(u1, u2 | u1 <> u2 and u1.community = u2.community implies u1.username <> u2.username)
+
+context Money inv NonNegative:
+  self.amount >= 0
+
+context Item inv PriceRequiredWhenForSale:
+  self.exchangeModes->includes(ExchangeMode::Price) implies self.price.oclIsDefined()
+
+context Item inv ExclusiveGiveawayPricing:
+  self.exchangeModes = Set{ExchangeMode::Giveaway} implies self.price.oclIsUndefined()
+
+context Item inv QuantityPositive:
+  self.quantity >= 1
+
+context Offer inv AmountRequiredForPriceOffer:
+  self.type = OfferType::PriceOffer implies self.amount.oclIsDefined() and self.amount.amount > 0
+
+context Reservation inv ValidPeriod:
+  self.reservedUntil > self.reservedFrom
+
+context ChatThread inv TwoOrMoreParticipants:
+  self.participants->size() >= 2
+
+context Rating inv StarsBetween1And5:
+  self.stars >= 1 and self.stars <= 5
+
+context Transaction inv ConsistentModeAndPrice:
+  (self.mode = TxMode::Sale implies self.agreedPrice.oclIsDefined()) and
+  (self.mode <> TxMode::Sale implies self.agreedPrice.oclIsUndefined() or self.agreedPrice.amount = 0)
+
+context Report inv AtLeastOneTarget:
+  not (self.reported.oclIsUndefined() and self.item.oclIsUndefined())
+
+-- Derived user reputation
+context User inv RatingAggregates:
+  self.ratingAvg = if self.ratingCount = 0 then 0 else
+    self.ratingsReceived->collect(stars)->sum().toReal() / self.ratingCount endif
