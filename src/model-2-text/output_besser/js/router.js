@@ -4,10 +4,10 @@
  */
 
 import { paymentscreenPage } from './pages/paymentscreen.js';
+import { subcommunityselectorscreenPage } from './pages/subcommunityselectorscreen.js';
 import { blankscreenPage } from './pages/blankscreen.js';
 import { ratingslistscreenPage } from './pages/ratingslistscreen.js';
 import { itemlistscreenPage } from './pages/itemlistscreen.js';
-import { subcommunityselectorscreenPage } from './pages/subcommunityselectorscreen.js';
 import { itemdetailsscreenPage } from './pages/itemdetailsscreen.js';
 
 export class Router {
@@ -27,6 +27,13 @@ export class Router {
                 name: 'PaymentScreen',
                 title: 'PaymentScreen',
                 handler: paymentscreenPage,
+                params: {},
+                isMain: false
+            },            {
+                path: '/subcommunityselectorscreen',
+                name: 'SubcommunitySelectorScreen',
+                title: 'SubcommunitySelectorScreen',
+                handler: subcommunityselectorscreenPage,
                 params: {},
                 isMain: false
             },            {
@@ -50,13 +57,6 @@ export class Router {
                 handler: itemlistscreenPage,
                 params: {},
                 isMain: true
-            },            {
-                path: '/subcommunityselectorscreen',
-                name: 'SubcommunitySelectorScreen',
-                title: 'SubcommunitySelectorScreen',
-                handler: subcommunityselectorscreenPage,
-                params: {},
-                isMain: false
             },            {
                 path: '/itemdetailsscreen',
                 name: 'ItemDetailsScreen',

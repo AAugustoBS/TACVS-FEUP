@@ -1,6 +1,0 @@
-# Core dependencies
-jinja2>=3.0.0
-
-# Optional: BESSER framework (if you want to use official BESSER models)
-# pip install git+https://github.com/BESSER-PEARL/BESSER.git
-# Note: BESSER has Django 5.1.5+ requirement which may cause conflicts

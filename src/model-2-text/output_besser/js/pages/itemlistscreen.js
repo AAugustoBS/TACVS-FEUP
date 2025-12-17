@@ -56,6 +56,23 @@ export class itemlistscreenPage {
                 <div class="page-content">
                     <div class="elements-container">
                         
+                        <div class="data-list" id="items-list">
+                            <h3>ItemsList</h3>
+                            <div class="list-items">
+                                <p class="placeholder-text">List of available items</p>
+                            </div>
+                        </div>
+                        
+                        
+                        <button 
+                            class="btn btn-primary" 
+                            data-action="ProfileButton"
+                        >
+                            Profile
+                        </button>
+                        
+                        
+                        
                         <button 
                             class="btn btn-primary" 
                             data-action="RegisterButton"
@@ -149,23 +166,6 @@ export class itemlistscreenPage {
                                 class="form-control"
                             />
                         </div>
-                        
-                        
-                        
-                        <div class="data-list" id="items-list">
-                            <h3>ItemsList</h3>
-                            <div class="list-items">
-                                <p class="placeholder-text">List of available items</p>
-                            </div>
-                        </div>
-                        
-                        
-                        <button 
-                            class="btn btn-primary" 
-                            data-action="ProfileButton"
-                        >
-                            Profile
-                        </button>
                         
                         
                     </div>

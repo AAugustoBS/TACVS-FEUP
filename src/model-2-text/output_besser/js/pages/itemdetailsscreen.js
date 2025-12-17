@@ -57,88 +57,6 @@ export class itemdetailsscreenPage {
                     <div class="elements-container">
                         
                         <div class="form-group">
-                            <label for="donation-badge">DonationBadge</label>
-                            <input 
-                                type="text" 
-                                id="donation-badge" 
-                                name="DonationBadge"
-                                placeholder="Donation"
-                                class="form-control"
-                            />
-                        </div>
-                        
-                        
-                        
-                        <div class="form-group">
-                            <label for="item-community-field">ItemCommunityField</label>
-                            <input 
-                                type="text" 
-                                id="item-community-field" 
-                                name="ItemCommunityField"
-                                placeholder="Community where the item is listed."
-                                class="form-control"
-                            />
-                        </div>
-                        
-                        
-                        
-                        <button 
-                            class="btn btn-primary" 
-                            data-action="ContactSellerButton"
-                        >
-                            Contact Seller
-                        </button>
-                        
-                        
-                        
-                        <div class="form-group">
-                            <label for="item-description-field">ItemDescriptionField</label>
-                            <input 
-                                type="text" 
-                                id="item-description-field" 
-                                name="ItemDescriptionField"
-                                placeholder="Detailed description of the item."
-                                class="form-control"
-                            />
-                        </div>
-                        
-                        
-                        
-                        <div class="form-group">
-                            <label for="item-price-field">ItemPriceField</label>
-                            <input 
-                                type="text" 
-                                id="item-price-field" 
-                                name="ItemPriceField"
-                                placeholder="Price of the item (for sale)."
-                                class="form-control"
-                            />
-                        </div>
-                        
-                        
-                        
-                        <div class="form-group">
-                            <label for="item-publication-date-field">ItemPublicationDateField</label>
-                            <input 
-                                type="text" 
-                                id="item-publication-date-field" 
-                                name="ItemPublicationDateField"
-                                placeholder="Date when the item was published."
-                                class="form-control"
-                            />
-                        </div>
-                        
-                        
-                        
-                        <div class="data-list" id="item-reviews-list">
-                            <h3>ItemReviewsList</h3>
-                            <div class="list-items">
-                                <p class="placeholder-text">Reviews for this item</p>
-                            </div>
-                        </div>
-                        
-                        
-                        <div class="form-group">
                             <label for="item-status-field">ItemStatusField</label>
                             <input 
                                 type="text" 
@@ -225,6 +143,19 @@ export class itemdetailsscreenPage {
                         
                         
                         
+                        <div class="form-group">
+                            <label for="donation-badge">DonationBadge</label>
+                            <input 
+                                type="text" 
+                                id="donation-badge" 
+                                name="DonationBadge"
+                                placeholder="Donation"
+                                class="form-control"
+                            />
+                        </div>
+                        
+                        
+                        
                         <button 
                             class="btn btn-primary" 
                             data-action="AddReviewButton"
@@ -232,6 +163,75 @@ export class itemdetailsscreenPage {
                             Add Review
                         </button>
                         
+                        
+                        
+                        <div class="form-group">
+                            <label for="item-community-field">ItemCommunityField</label>
+                            <input 
+                                type="text" 
+                                id="item-community-field" 
+                                name="ItemCommunityField"
+                                placeholder="Community where the item is listed."
+                                class="form-control"
+                            />
+                        </div>
+                        
+                        
+                        
+                        <button 
+                            class="btn btn-primary" 
+                            data-action="ContactSellerButton"
+                        >
+                            Contact Seller
+                        </button>
+                        
+                        
+                        
+                        <div class="form-group">
+                            <label for="item-description-field">ItemDescriptionField</label>
+                            <input 
+                                type="text" 
+                                id="item-description-field" 
+                                name="ItemDescriptionField"
+                                placeholder="Detailed description of the item."
+                                class="form-control"
+                            />
+                        </div>
+                        
+                        
+                        
+                        <div class="form-group">
+                            <label for="item-price-field">ItemPriceField</label>
+                            <input 
+                                type="text" 
+                                id="item-price-field" 
+                                name="ItemPriceField"
+                                placeholder="Price of the item (for sale)."
+                                class="form-control"
+                            />
+                        </div>
+                        
+                        
+                        
+                        <div class="form-group">
+                            <label for="item-publication-date-field">ItemPublicationDateField</label>
+                            <input 
+                                type="text" 
+                                id="item-publication-date-field" 
+                                name="ItemPublicationDateField"
+                                placeholder="Date when the item was published."
+                                class="form-control"
+                            />
+                        </div>
+                        
+                        
+                        
+                        <div class="data-list" id="item-reviews-list">
+                            <h3>ItemReviewsList</h3>
+                            <div class="list-items">
+                                <p class="placeholder-text">Reviews for this item</p>
+                            </div>
+                        </div>
                         
                     </div>
                 </div>
