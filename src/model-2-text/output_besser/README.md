@@ -11,19 +11,19 @@ appName is a Single Page Application (SPA) built with vanilla HTML, CSS, and Jav
 - **PaymentScreen** 
   - Main page: False
   - Screen size: Medium
-- **SubcommunitySelectorScreen** 
-  - Main page: False
-  - Screen size: Medium
-- **BlankScreen** 
-  - Main page: False
-  - Screen size: Medium
 - **RatingsListScreen** 
+  - Main page: False
+  - Screen size: Medium
+- **SubcommunitySelectorScreen** 
   - Main page: False
   - Screen size: Medium
 - **ItemListScreen** 
   - Main page: True
   - Screen size: Medium
 - **ItemDetailsScreen** 
+  - Main page: False
+  - Screen size: Medium
+- **BlankScreen** 
   - Main page: False
   - Screen size: Medium
 
