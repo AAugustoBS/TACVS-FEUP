@@ -1,9 +1,9 @@
 /**
  * BlankScreen Page
- * Generated from BlankScreen screen definition
  */
 
 import { ComponentRegistry } from '../components.js';
+import { ItemApi } from '../api.js';
 
 export class blankscreenPage {
     constructor(params = {}) {
@@ -11,68 +11,25 @@ export class blankscreenPage {
         this.components = new ComponentRegistry();
         this.data = {};
     }
-    
-    /**
-     * Initialize page after rendering
-     */
-    async init() {
-        console.log('Initializing BlankScreen page', this.params);
+
+    isLoggedIn() {
+        return localStorage.getItem("isLoggedIn") === "true";
     }
-    
-    /**
-     * Fetch page data
-     */
+
     async fetchData() {
-        try {
-            // Data loading logic will be implemented by the application
-        } catch (error) {
-            console.error('Error fetching data:', error);
-            this.data.error = 'Failed to load data';
-        }
     }
-    
-    /**
-     * Render page content
-     */
+
     async render() {
-        // Fetch data before rendering
+        // ---------- AUTH GUARD ----------
+
+        // ---------- ITEM DETAILS GUARD ----------
+
         await this.fetchData();
-        
-        if (this.data.error) {
-            return `
-                <div class="error">
-                    <h3>Error</h3>
-                    <p>${this.data.error}</p>
-                </div>
-            `;
-        }
-        
+
         return `
-            <div class="page page-blank-screen">
-                <div class="page-header">
-                    <h1 class="page-title">BlankScreen</h1>
-                </div>
-            
-                <div class="page-content">
-                    <div class="placeholder-content">
-                        <p>This screen has no UI elements defined in the model.</p>
-                    </div>
-                </div>
-            </div>
+            <h1>BlankScreen</h1>
         `;
     }
-    
-    /**
-     * Setup action button handlers
-     */
-    setupActionHandlers() {
-        // Action handlers will be implemented by the application
-    }
-    
-    /**
-     * Setup chat functionality
-     */
-    setupChat() {
-        // Chat handlers will be implemented by the application
-    }
+
+    init() {}
 }

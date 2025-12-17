@@ -1,9 +1,9 @@
 /**
  * RatingsListScreen Page
- * Generated from RatingsListScreen screen definition
  */
 
 import { ComponentRegistry } from '../components.js';
+import { ItemApi } from '../api.js';
 
 export class ratingslistscreenPage {
     constructor(params = {}) {
@@ -11,75 +11,25 @@ export class ratingslistscreenPage {
         this.components = new ComponentRegistry();
         this.data = {};
     }
-    
-    /**
-     * Initialize page after rendering
-     */
-    async init() {
-        console.log('Initializing RatingsListScreen page', this.params);
+
+    isLoggedIn() {
+        return localStorage.getItem("isLoggedIn") === "true";
     }
-    
-    /**
-     * Fetch page data
-     */
+
     async fetchData() {
-        try {
-            // Data loading logic will be implemented by the application
-        } catch (error) {
-            console.error('Error fetching data:', error);
-            this.data.error = 'Failed to load data';
-        }
     }
-    
-    /**
-     * Render page content
-     */
+
     async render() {
-        // Fetch data before rendering
+        // ---------- AUTH GUARD ----------
+
+        // ---------- ITEM DETAILS GUARD ----------
+
         await this.fetchData();
-        
-        if (this.data.error) {
-            return `
-                <div class="error">
-                    <h3>Error</h3>
-                    <p>${this.data.error}</p>
-                </div>
-            `;
-        }
-        
+
         return `
-            <div class="page page-ratings-list-screen">
-                <div class="page-header">
-                    <h1 class="page-title">RatingsListScreen</h1>
-                </div>
-            
-                <div class="page-content">
-                    <div class="elements-container">
-                        
-                        <div class="data-list" id="item-reviews-list">
-                            <h3>ItemReviewsList</h3>
-                            <div class="list-items">
-                                <p class="placeholder-text">Reviews for this item</p>
-                            </div>
-                        </div>
-                        
-                    </div>
-                </div>
-            </div>
+            <h1>RatingsListScreen</h1>
         `;
     }
-    
-    /**
-     * Setup action button handlers
-     */
-    setupActionHandlers() {
-        // Action handlers will be implemented by the application
-    }
-    
-    /**
-     * Setup chat functionality
-     */
-    setupChat() {
-        // Chat handlers will be implemented by the application
-    }
+
+    init() {}
 }

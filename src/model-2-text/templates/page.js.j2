@@ -1,9 +1,9 @@
 /**
  * {{ screen.name }} Page
- * Generated from {{ screen.name }} screen definition
  */
 
 import { ComponentRegistry } from '../components.js';
+import { ItemApi } from '../api.js';
 
 export class {{ screen.name | camel_case }}Page {
     constructor(params = {}) {
@@ -11,106 +11,78 @@ export class {{ screen.name | camel_case }}Page {
         this.components = new ComponentRegistry();
         this.data = {};
     }
-    
-    /**
-     * Initialize page after rendering
-     */
-    async init() {
-        console.log('Initializing {{ screen.name }} page', this.params);
+
+    isLoggedIn() {
+        return localStorage.getItem("isLoggedIn") === "true";
     }
-    
-    /**
-     * Fetch page data
-     */
+
     async fetchData() {
-        try {
-            // Data loading logic will be implemented by the application
-        } catch (error) {
-            console.error('Error fetching data:', error);
-            this.data.error = 'Failed to load data';
-        }
+        {% if screen.name == 'ItemListScreen' %}
+        this.data.items = await ItemApi.getAll();
+        {% elif screen.name == 'ItemDetailsScreen' %}
+        if (!this.params.id) return;
+        this.data.item = await ItemApi.getById(this.params.id);
+        {% endif %}
     }
-    
-    /**
-     * Render page content
-     */
+
     async render() {
-        // Fetch data before rendering
-        await this.fetchData();
-        
-        if (this.data.error) {
-            return `
-                <div class="error">
-                    <h3>Error</h3>
-                    <p>${this.data.error}</p>
-                </div>
-            `;
+        // ---------- AUTH GUARD ----------
+        {% if screen.name in ['PaymentScreen', 'CheckoutScreen'] %} 
+        if (!this.isLoggedIn()) {
+            if (window.location.hash.toLowerCase() !== '#/loginscreen') {
+                window.location.hash = '#/loginscreen';
+            }
+            return '';
         }
-        
+        {% endif %}
+
+        // ---------- ITEM DETAILS GUARD ----------
+        {% if screen.name == 'ItemDetailsScreen' %}
+        if (!this.params.id) {
+            if (window.location.hash.toLowerCase() !== '#/itemlistscreen') {
+                window.location.hash = '#/itemlistscreen';
+            }
+            return '';
+        }
+        {% endif %}
+
+        await this.fetchData();
+
+        {% if screen.name == 'ItemListScreen' %}
         return `
-            <div class="page page-{{ screen.name | kebab_case }}">
-                <div class="page-header">
-                    <h1 class="page-title">{{ screen.name }}</h1>
-                </div>
-            
-                <div class="page-content">
-                    {% if screen.view_elements %}
-                    <div class="elements-container">
-                        {% for element in screen.view_elements %}
-                        {% set element_type = element.__class__.__name__ %}
-                        
-                        {% if element_type == 'InputField' %}
-                        <div class="form-group">
-                            <label for="{{ element.name | kebab_case }}">{{ element.name }}</label>
-                            <input 
-                                type="text" 
-                                id="{{ element.name | kebab_case }}" 
-                                name="{{ element.name }}"
-                                placeholder="{{ element.description if element.description is defined else element.name }}"
-                                class="form-control"
-                            />
-                        </div>
-                        
-                        {% elif element_type == 'Button' %}
-                        <button 
-                            class="btn btn-primary" 
-                            data-action="{{ element.name }}"
-                        >
-                            {{ element.label if element.label is defined else element.name }}
-                        </button>
-                        
-                        {% elif element_type == 'DataList' %}
-                        <div class="data-list" id="{{ element.name | kebab_case }}">
-                            <h3>{{ element.name }}</h3>
-                            <div class="list-items">
-                                <p class="placeholder-text">{{ element.description if element.description is defined else 'Loading...' }}</p>
-                            </div>
-                        </div>
-                        {% endif %}
-                        
-                        {% endfor %}
+            <h1>Items</h1>
+            <div class="list-items">
+                ${this.data.items.map(item => `
+                    <div class="item-card">
+                        <h3>${item.title}</h3>
+                        <p>${item.price} €</p>
+                        <a href="#/itemdetailsscreen?id=${item.id}">
+                            View details
+                        </a>
                     </div>
-                    {% else %}
-                    <div class="placeholder-content">
-                        <p>This screen has no UI elements defined in the model.</p>
-                    </div>
-                    {% endif %}
-                </div>
+                `).join('')}
             </div>
         `;
+        {% elif screen.name == 'ItemDetailsScreen' %}
+        if (!this.data.item) {
+            if (window.location.hash.toLowerCase() !== '#/itemlistscreen') {
+                window.location.hash = '#/itemlistscreen';
+            }
+            return '';
+        }
+
+        return `
+            <h1>${this.data.item.title}</h1>
+            <p>${this.data.item.description}</p>
+            <p>Price: ${this.data.item.price} €</p>
+            <a href="#/itemlistscreen">Back to list</a>
+        `;
+        {% else %}
+        return `
+            <h1>{{ screen.name }}</h1>
+        `;
+        {% endif %}
     }
-    
-    /**
-     * Setup action button handlers
-     */
-    setupActionHandlers() {
-        // Action handlers will be implemented by the application
-    }
-    
-    /**
-     * Setup chat functionality
-     */
-    setupChat() {
-        // Chat handlers will be implemented by the application
-    }
+
+    init() {}
 }

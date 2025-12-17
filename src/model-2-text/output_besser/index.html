@@ -22,15 +22,13 @@
                 </div>
                 
                 <div class="navbar-menu" id="navbar-menu">
-                    <a href="#/paymentscreen" class="navbar-link" data-route="/paymentscreen">PaymentScreen</a>
-                    <a href="#/subcommunityselectorscreen" class="navbar-link" data-route="/subcommunityselectorscreen">SubcommunitySelectorScreen</a>
-                    <a href="#/blankscreen" class="navbar-link" data-route="/blankscreen">BlankScreen</a>
-                    <a href="#/ratingslistscreen" class="navbar-link" data-route="/ratingslistscreen">RatingsListScreen</a>
-                    <a href="#/itemlistscreen" class="navbar-link" data-route="/itemlistscreen">ItemListScreen</a>
-                    <a href="#/itemdetailsscreen" class="navbar-link" data-route="/itemdetailsscreen">ItemDetailsScreen</a>
-                    <button id="logout-btn" class="navbar-link">Logout</button>
+                    <!-- Always show Items List -->
+                    <a href="#/itemlistscreen" class="navbar-link">Items List</a>
+
+                    <!-- Auth links container -->
+                    <span id="auth-links"></span>
                 </div>
-                
+
                 <button class="navbar-toggle" id="navbar-toggle" aria-label="Toggle menu">
                     <span></span>
                     <span></span>
@@ -41,7 +39,6 @@
         
         <!-- Main Content Area -->
         <main id="main-content" class="main-content">
-            <!-- Dynamic content loaded here by router -->
             <div class="loading">
                 <div class="spinner"></div>
                 <p>Loading...</p>
@@ -58,5 +55,38 @@
     
     <!-- JavaScript Modules -->
     <script type="module" src="js/app.js"></script>
+
+    <!-- Navbar Auth Logic -->
+    <script>
+        function updateAuthLinks() {
+            const authContainer = document.getElementById("auth-links");
+            authContainer.innerHTML = ''; // Clear old links
+            const loggedIn = localStorage.getItem("isLoggedIn") === "true";
+
+            if (loggedIn) {
+                // Show Logout
+                const logoutBtn = document.createElement("button");
+                logoutBtn.textContent = "Logout";
+                logoutBtn.className = "navbar-link";
+                logoutBtn.addEventListener("click", () => {
+                    localStorage.setItem("isLoggedIn", "false");
+                    window.location.hash = "#/loginscreen";
+                    updateAuthLinks();
+                });
+                authContainer.appendChild(logoutBtn);
+            } else {
+                // Show Login
+                const loginLink = document.createElement("a");
+                loginLink.href = "#/loginscreen";
+                loginLink.textContent = "Login";
+                loginLink.className = "navbar-link";
+                authContainer.appendChild(loginLink);
+            }
+        }
+
+        // Initialize auth links on page load
+        document.addEventListener("DOMContentLoaded", updateAuthLinks);
+        window.addEventListener("hashchange", updateAuthLinks);
+    </script>
 </body>
 </html>
