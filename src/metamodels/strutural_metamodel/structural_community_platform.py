@@ -1,281 +1,285 @@
-####################
-# STRUCTURAL MODEL #
-####################
-
-# mypy: ignore-errors
-
-from besser.BUML.metamodel.structural import (  
-    Class, Property, Method, Parameter,
-    BinaryAssociation, Generalization, DomainModel,
+from besser.BUML.metamodel.structural import (
+    Class, Property, BinaryAssociation, DomainModel,
     Enumeration, EnumerationLiteral, Multiplicity,
     StringType, IntegerType, FloatType, BooleanType,
-    TimeType, DateType, DateTimeType, TimeDeltaType,
-    AnyType, Constraint, AssociationClass, Metadata
+    DateTimeType
 )
 
-# Enumerations
-TransactionType: Enumeration = Enumeration(
-    name="TransactionType",
-    literals={
-            EnumerationLiteral(name="Donation"),
-			EnumerationLiteral(name="Sale"),
-			EnumerationLiteral(name="Exchange")
-    }
-)
+# 1. ENUMERATIONS
+ItemState = Enumeration(name='ItemState', literals={
+    EnumerationLiteral("Draft"), EnumerationLiteral("Active"), 
+    EnumerationLiteral("Reserved"), EnumerationLiteral("Completed"), 
+    EnumerationLiteral("Archived")
+})
 
-OrderStatus: Enumeration = Enumeration(
-    name="OrderStatus",
-    literals={
-            EnumerationLiteral(name="Donated"),
-			EnumerationLiteral(name="Exchanged"),
-			EnumerationLiteral(name="Pending"),
-			EnumerationLiteral(name="Delivered"),
-			EnumerationLiteral(name="Canceled")
-    }
-)
+Condition = Enumeration(name='Condition', literals={
+    EnumerationLiteral("New"), EnumerationLiteral("LikeNew"), 
+    EnumerationLiteral("Good"), EnumerationLiteral("Fair"), 
+    EnumerationLiteral("Poor")
+})
 
-ItemStatus: Enumeration = Enumeration(
-    name="ItemStatus",
-    literals={
-            EnumerationLiteral(name="Exchanged"),
-			EnumerationLiteral(name="Paused"),
-			EnumerationLiteral(name="Donated"),
-			EnumerationLiteral(name="Sold"),
-			EnumerationLiteral(name="Available")
-    }
-)
+ItemKind = Enumeration(name='ItemKind', literals={
+    EnumerationLiteral("Product"), EnumerationLiteral("Service")
+})
 
-# Classes
-Community = Class(name="Community")
-Tag = Class(name="Tag")
-OrderItem = Class(name="OrderItem")
-User = Class(name="User")
-Conversation = Class(name="Conversation")
-ExchangeSuggestion = Class(name="ExchangeSuggestion")
-Item = Class(name="Item")
-Message = Class(name="Message")
-CommunityConfiguration = Class(name="CommunityConfiguration")
-Review = Class(name="Review")
-Order = Class(name="Order")
+ExchangeMode = Enumeration(name='ExchangeMode', literals={
+    EnumerationLiteral("Price"), EnumerationLiteral("Exchange"), 
+    EnumerationLiteral("Donation")
+})
 
-# Community class attributes and methods
-Community_name: Property = Property(name="name", type=StringType)
-Community_color: Property = Property(name="color", type=StringType)
-Community_description: Property = Property(name="description", type=StringType)
-Community_faculty: Property = Property(name="faculty", type=StringType)
-Community_id: Property = Property(name="id", type=StringType)
-Community_creationDate: Property = Property(name="creationDate", type=DateType)
-Community.attributes={Community_faculty, Community_id, Community_color, Community_name, Community_creationDate, Community_description}
+OfferType = Enumeration(name='OfferType', literals={
+    EnumerationLiteral("PriceOffer"), EnumerationLiteral("ExchangeOffer"), 
+    EnumerationLiteral("Request")
+})
 
-# Tag class attributes and methods
-Tag_id: Property = Property(name="id", type=StringType)
-Tag_name: Property = Property(name="name", type=StringType)
-Tag.attributes={Tag_name, Tag_id}
+OfferStatus = Enumeration(name='OfferStatus', literals={
+    EnumerationLiteral("Pending"), EnumerationLiteral("Accepted"), 
+    EnumerationLiteral("Rejected"), EnumerationLiteral("Withdrawn"), 
+    EnumerationLiteral("Expired")
+})
 
-# OrderItem class attributes and methods
-OrderItem_id: Property = Property(name="id", type=StringType)
-OrderItem.attributes={OrderItem_id}
+ReservationStatus = Enumeration(name='ReservationStatus', literals={
+    EnumerationLiteral("Active"), EnumerationLiteral("Released"), 
+    EnumerationLiteral("Expired")
+})
 
-# User class attributes and methods
-User_birthDay: Property = Property(name="birthDay", type=DateType)
-User_email: Property = Property(name="email", type=StringType)
-User_name: Property = Property(name="name", type=StringType)
-User_password: Property = Property(name="password", type=StringType)
-User_biography: Property = Property(name="biography", type=StringType)
-User_contactNumber: Property = Property(name="contactNumber", type=StringType)
-User_onlineStatus: Property = Property(name="onlineStatus", type=BooleanType)
-User_averageRating: Property = Property(name="averageRating", type=FloatType)
-User_id: Property = Property(name="id", type=StringType)
-User_faculty: Property = Property(name="faculty", type=StringType)
-User.attributes={User_email, User_name, User_onlineStatus, User_faculty, User_birthDay, User_contactNumber, User_password, User_averageRating, User_biography, User_id}
+TxMode = Enumeration(name='TxMode', literals={
+    EnumerationLiteral("Sale"), EnumerationLiteral("Exchange"), 
+    EnumerationLiteral("Donation")
+})
 
-# Conversation class attributes and methods
-Conversation_subject: Property = Property(name="subject", type=StringType)
-Conversation_id: Property = Property(name="id", type=StringType)
-Conversation_lastMessageDate: Property = Property(name="lastMessageDate", type=DateType)
-Conversation.attributes={Conversation_lastMessageDate, Conversation_subject, Conversation_id}
+DeliveryMode = Enumeration(name='DeliveryMode', literals={
+    EnumerationLiteral("InPerson"), EnumerationLiteral("Mail"), 
+    EnumerationLiteral("Locker")
+})
 
-# ExchangeSuggestion class attributes and methods
-ExchangeSuggestion_description: Property = Property(name="description", type=StringType)
-ExchangeSuggestion.attributes={ExchangeSuggestion_description}
+TxStatus = Enumeration(name='TxStatus', literals={
+    EnumerationLiteral("Completed"), EnumerationLiteral("Cancelled")
+})
 
-# Item class attributes and methods
-Item_description: Property = Property(name="description", type=StringType)
-Item_status: Property = Property(name="status", type=ItemStatus)
-Item_price: Property = Property(name="price", type=FloatType)
-Item_title: Property = Property(name="title", type=StringType)
-Item_id: Property = Property(name="id", type=StringType)
-Item_publicationDate: Property = Property(name="publicationDate", type=DateType)
-Item_transactionType: Property = Property(name="transactionType", type=TransactionType)
-Item.attributes={Item_id, Item_title, Item_price, Item_status, Item_publicationDate, Item_description, Item_transactionType}
+MessageKind = Enumeration(name='MessageKind', literals={
+    EnumerationLiteral("Text"), EnumerationLiteral("Image"), 
+    EnumerationLiteral("System")
+})
 
-# Message class attributes and methods
-Message_content: Property = Property(name="content", type=StringType)
-Message_isRead: Property = Property(name="isRead", type=BooleanType)
-Message_id: Property = Property(name="id", type=StringType)
-Message_sendDate: Property = Property(name="sendDate", type=DateType)
-Message.attributes={Message_content, Message_isRead, Message_id, Message_sendDate}
+ReportReason = Enumeration(name='ReportReason', literals={
+    EnumerationLiteral("Spam"), EnumerationLiteral("Fraud"), 
+    EnumerationLiteral("Offensive"), EnumerationLiteral("Safety"), 
+    EnumerationLiteral("Other")
+})
 
-# CommunityConfiguration class attributes and methods
-CommunityConfiguration_requiresItemApproval: Property = Property(name="requiresItemApproval", type=BooleanType)
-CommunityConfiguration_allowStudentOutsideFaculty: Property = Property(name="allowStudentOutsideFaculty", type=BooleanType)
-CommunityConfiguration_id: Property = Property(name="id", type=StringType)
-CommunityConfiguration_allowOnlinePayment: Property = Property(name="allowOnlinePayment", type=BooleanType)
-CommunityConfiguration_allowsDonating: Property = Property(name="allowsDonating", type=BooleanType)
-CommunityConfiguration_allowsServicesOffer: Property = Property(name="allowsServicesOffer", type=BooleanType)
-CommunityConfiguration_allowsSelling: Property = Property(name="allowsSelling", type=BooleanType)
-CommunityConfiguration_allowsExchanging: Property = Property(name="allowsExchanging", type=BooleanType)
-CommunityConfiguration.attributes={CommunityConfiguration_allowsSelling, CommunityConfiguration_allowsExchanging, CommunityConfiguration_id, CommunityConfiguration_requiresItemApproval, CommunityConfiguration_allowsDonating, CommunityConfiguration_allowOnlinePayment, CommunityConfiguration_allowsServicesOffer, CommunityConfiguration_allowStudentOutsideFaculty}
+ReportStatus = Enumeration(name='ReportStatus', literals={
+    EnumerationLiteral("Open"), EnumerationLiteral("UnderReview"), 
+    EnumerationLiteral("Resolved"), EnumerationLiteral("Ignored")
+})
 
-# Review class attributes and methods
-Review_id: Property = Property(name="id", type=StringType)
-Review_reviewDate: Property = Property(name="reviewDate", type=DateType)
-Review_comment: Property = Property(name="comment", type=StringType)
-Review_rating: Property = Property(name="rating", type=IntegerType)
-Review.attributes={Review_rating, Review_id, Review_comment, Review_reviewDate}
+PaymentMethod = Enumeration(name='PaymentMethod', literals={
+    EnumerationLiteral("MBWay"), EnumerationLiteral("Multibanco"), 
+    EnumerationLiteral("PayPal"), EnumerationLiteral("NoPayment")
+})
 
-# Order class attributes and methods
-Order_id: Property = Property(name="id", type=StringType)
-Order_status: Property = Property(name="status", type=OrderStatus)
-Order_orderDate: Property = Property(name="orderDate", type=DateType)
-Order_deliveryAddress: Property = Property(name="deliveryAddress", type=StringType)
-Order_transactionType: Property = Property(name="transactionType", type=TransactionType)
-Order.attributes={Order_id, Order_deliveryAddress, Order_status, Order_transactionType, Order_orderDate}
+UserStatus = Enumeration(name='UserStatus', literals={
+    EnumerationLiteral("Active"), EnumerationLiteral("Suspended")
+})
 
-# Relationships
-user_publishes_item: BinaryAssociation = BinaryAssociation(
-    name="user_publishes_item",
-    ends={
-        Property(name="publishedItems", type=Item, multiplicity=Multiplicity(0, 9999)),
-        Property(name="publisher", type=User, multiplicity=Multiplicity(1, 1))
-    }
-)
-item_has_order_items: BinaryAssociation = BinaryAssociation(
-    name="item_has_order_items",
-    ends={
-        Property(name="item", type=Item, multiplicity=Multiplicity(1, 1)),
-        Property(name="orderItems", type=OrderItem, multiplicity=Multiplicity(0, 9999))
-    }
-)
-community_members: BinaryAssociation = BinaryAssociation(
-    name="community_members",
-    ends={
-        Property(name="communities", type=Community, multiplicity=Multiplicity(1, 9999)),
-        Property(name="members", type=User, multiplicity=Multiplicity(0, 9999))
-    }
-)
-community_contains_item: BinaryAssociation = BinaryAssociation(
-    name="community_contains_item",
-    ends={
-        Property(name="publishedIn", type=Community, multiplicity=Multiplicity(1, 1)),
-        Property(name="items", type=Item, multiplicity=Multiplicity(0, 9999))
-    }
-)
-user_sends_message: BinaryAssociation = BinaryAssociation(
-    name="user_sends_message",
-    ends={
-        Property(name="sender", type=User, multiplicity=Multiplicity(1, 1)),
-        Property(name="sentMessages", type=Message, multiplicity=Multiplicity(0, 9999))
-    }
-)
-order_associated_with_community: BinaryAssociation = BinaryAssociation(
-    name="order_associated_with_community",
-    ends={
-        Property(name="communityOrders", type=Order, multiplicity=Multiplicity(0, 9999)),
-        Property(name="communityForOrder", type=Community, multiplicity=Multiplicity(1, 1))
-    }
-)
-user_participates_conversation: BinaryAssociation = BinaryAssociation(
-    name="user_participates_conversation",
-    ends={
-        Property(name="conversations", type=Conversation, multiplicity=Multiplicity(0, 9999)),
-        Property(name="participants", type=User, multiplicity=Multiplicity(2, 2))
-    }
-)
-order_contains_order_items: BinaryAssociation = BinaryAssociation(
-    name="order_contains_order_items",
-    ends={
-        Property(name="order", type=Order, multiplicity=Multiplicity(1, 1)),
-        Property(name="containsItems", type=OrderItem, multiplicity=Multiplicity(0, 9999))
-    }
-)
-user_gives_review: BinaryAssociation = BinaryAssociation(
-    name="user_gives_review",
-    ends={
-        Property(name="reviewer", type=User, multiplicity=Multiplicity(1, 1)),
-        Property(name="givenReviews", type=Review, multiplicity=Multiplicity(0, 9999))
-    }
-)
-community_has_configuration: BinaryAssociation = BinaryAssociation(
-    name="community_has_configuration",
-    ends={
-        Property(name="community", type=Community, multiplicity=Multiplicity(1, 1)),
-        Property(name="configuration", type=CommunityConfiguration, multiplicity=Multiplicity(1, 1))
-    }
-)
-message_belongs_to_conversation: BinaryAssociation = BinaryAssociation(
-    name="message_belongs_to_conversation",
-    ends={
-        Property(name="messages", type=Message, multiplicity=Multiplicity(0, 9999)),
-        Property(name="conversation", type=Conversation, multiplicity=Multiplicity(1, 1))
-    }
-)
-item_has_exchange_suggestion: BinaryAssociation = BinaryAssociation(
-    name="item_has_exchange_suggestion",
-    ends={
-        Property(name="exchangeSuggestion", type=ExchangeSuggestion, multiplicity=Multiplicity(0, 1)),
-        Property(name="itemWithSuggestion", type=Item, multiplicity=Multiplicity(1, 1))
-    }
-)
-item_receives_review: BinaryAssociation = BinaryAssociation(
-    name="item_receives_review",
-    ends={
-        Property(name="itemReviews", type=Review, multiplicity=Multiplicity(0, 9999)),
-        Property(name="reviewedItem", type=Item, multiplicity=Multiplicity(1, 1))
-    }
-)
-user_places_order: BinaryAssociation = BinaryAssociation(
-    name="user_places_order",
-    ends={
-        Property(name="placedOrders", type=Order, multiplicity=Multiplicity(0, 9999)),
-        Property(name="buyer", type=User, multiplicity=Multiplicity(1, 1))
-    }
-)
-item_associated_with_tag: BinaryAssociation = BinaryAssociation(
-    name="item_associated_with_tag",
-    ends={
-        Property(name="taggedItems", type=Item, multiplicity=Multiplicity(0, 9999)),
-        Property(name="tags", type=Tag, multiplicity=Multiplicity(0, 9999))
-    }
-)
-community_subcommunities: BinaryAssociation = BinaryAssociation(
-    name="community_subcommunities",
-    ends={
-        Property(name="subcommunities", type=Community, multiplicity=Multiplicity(0, 9999)),
-        Property(name="parentCommunity", type=Community, multiplicity=Multiplicity(0, 1))
-    }
-)
+# 2. CLASSES
+Community = Class(name='Community')
+SubCommunity = Class(name='SubCommunity')
+User = Class(name='User')
+Category = Class(name='Category')
+Location = Class(name='Location')
+Money = Class(name='Money')
+Item = Class(name='Item')
+ItemVariant = Class(name='ItemVariant')
+Offer = Class(name='Offer')
+Reservation = Class(name='Reservation')
+Transaction = Class(name='Transaction')
+Rating = Class(name='Rating')
+Conversation = Class(name='Conversation')
+Message = Class(name='Message')
+Report = Class(name='Report')
+PaymentProvider = Class(name='PaymentProvider')
 
-# Domain Model
-domain_model = DomainModel(
-    name="Class_Diagram",
-    types={Community, Tag, OrderItem, User, Conversation, ExchangeSuggestion, Item, Message, CommunityConfiguration, Review, Order, TransactionType, OrderStatus, ItemStatus},
-    associations={user_publishes_item, item_has_order_items, community_members, community_contains_item, user_sends_message, order_associated_with_community, user_participates_conversation, order_contains_order_items, user_gives_review, community_has_configuration, message_belongs_to_conversation, item_has_exchange_suggestion, item_receives_review, user_places_order, item_associated_with_tag, community_subcommunities},
-    generalizations=set()
-)
+# 3. ATTRIBUTES
+Community.attributes = {
+    Property(name='uid', type=StringType), Property(name='name', type=StringType),
+    Property(name='description', type=StringType), Property(name='logoUrl', type=StringType),
+    Property(name='rulesMarkdown', type=StringType), Property(name='allowSubcommunities', type=BooleanType)
+}
+SubCommunity.attributes = {
+    Property(name='uid', type=StringType), Property(name='name', type=StringType), Property(name='description', type=StringType)
+}
+User.attributes = {
+    Property(name='uid', type=StringType), Property(name='username', type=StringType),
+    Property(name='fullName', type=StringType), Property(name='email', type=StringType),
+    Property(name='phone', type=StringType), Property(name='avatarUrl', type=StringType),
+    Property(name='createdAt', type=DateTimeType), Property(name='isAdmin', type=BooleanType),
+    Property(name='isModerator', type=BooleanType), Property(name='avgRating', type=FloatType),
+    Property(name='ratingCount', type=IntegerType), Property(name='status', type=UserStatus)
+}
+Category.attributes = {
+    Property(name='uid', type=StringType), Property(name='name', type=StringType), Property(name='icon', type=StringType)
+}
+Location.attributes = {
+    Property(name='uid', type=StringType), Property(name='label', type=StringType),
+    Property(name='address', type=StringType), Property(name='lat', type=FloatType), Property(name='lon', type=FloatType)
+}
+Money.attributes = { Property(name='amount', type=FloatType), Property(name='currency', type=StringType) }
+Item.attributes = {
+    Property(name='uid', type=StringType), Property(name='title', type=StringType),
+    Property(name='description', type=StringType), Property(name='mediaUrls', type=StringType),
+    Property(name='tags', type=StringType), Property(name='createdAt', type=DateTimeType),
+    Property(name='updatedAt', type=DateTimeType), Property(name='state', type=ItemState),
+    Property(name='condition', type=Condition), Property(name='kind', type=ItemKind),
+    Property(name='exchangeModes', type=ExchangeMode), Property(name='quantity', type=IntegerType),
+    Property(name='unit', type=StringType), Property(name='expiresAt', type=DateTimeType)
+}
+ItemVariant.attributes = { Property(name='name', type=StringType), Property(name='value', type=StringType) }
+Offer.attributes = {
+    Property(name='uid', type=StringType), Property(name='type', type=OfferType),
+    Property(name='message', type=StringType), Property(name='createdAt', type=DateTimeType), Property(name='status', type=OfferStatus)
+}
+Reservation.attributes = {
+    Property(name='uid', type=StringType), Property(name='reservedFrom', type=DateTimeType),
+    Property(name='reservedUntil', type=DateTimeType), Property(name='status', type=ReservationStatus)
+}
+Transaction.attributes = {
+    Property(name='uid', type=StringType), Property(name='closedAt', type=DateTimeType),
+    Property(name='mode', type=TxMode), Property(name='delivery', type=DeliveryMode),
+    Property(name='receiptUrl', type=StringType), Property(name='paymentMethod', type=PaymentMethod), Property(name='status', type=TxStatus)
+}
+Rating.attributes = {
+    Property(name='uid', type=StringType), Property(name='stars', type=IntegerType),
+    Property(name='comment', type=StringType), Property(name='createdAt', type=DateTimeType)
+}
+Conversation.attributes = { Property(name='uid', type=StringType), Property(name='createdAt', type=DateTimeType) }
+Message.attributes = {
+    Property(name='uid', type=StringType), Property(name='content', type=StringType),
+    Property(name='sentAt', type=DateTimeType), Property(name='kind', type=MessageKind), Property(name='attachments', type=StringType)
+}
+Report.attributes = {
+    Property(name='uid', type=StringType), Property(name='reason', type=ReportReason),
+    Property(name='details', type=StringType), Property(name='createdAt', type=DateTimeType), Property(name='status', type=ReportStatus)
+}
+PaymentProvider.attributes = {
+    Property(name='name', type=StringType), Property(name='type', type=StringType),
+    Property(name='publicKey', type=StringType), Property(name='secretRef', type=StringType)
+}
 
+# 4. ASSOCIATIONS (Following PlantUML names)
+minExchangeValue = BinaryAssociation(name='minExchangeValue', ends={
+    Property(name='Money', type=Money, multiplicity=Multiplicity(1, 1)),
+    Property(name='Item', type=Item, multiplicity=Multiplicity(1, 1))
+})
+offer_amount = BinaryAssociation(name='offer_amount', ends={
+    Property(name='Money', type=Money, multiplicity=Multiplicity(1, 1)),
+    Property(name='Offer', type=Offer, multiplicity=Multiplicity(1, 1))
+})
+agreed_price = BinaryAssociation(name='agreed_price', ends={
+    Property(name='Money', type=Money, multiplicity=Multiplicity(1, 1)),
+    Property(name='Transaction', type=Transaction, multiplicity=Multiplicity(1, 1))
+})
+community_subs = BinaryAssociation(name='community_subs', ends={
+    Property(name='Community', type=Community, multiplicity=Multiplicity(1, 1)),
+    Property(name='SubCommunity', type=SubCommunity, multiplicity=Multiplicity(0, 9999))
+})
+community_members = BinaryAssociation(name='community_members', ends={
+    Property(name='Community', type=Community, multiplicity=Multiplicity(1, 1)),
+    Property(name='User', type=User, multiplicity=Multiplicity(0, 9999))
+})
+community_categories = BinaryAssociation(name='community_categories', ends={
+    Property(name='Community', type=Community, multiplicity=Multiplicity(1, 1)),
+    Property(name='Category', type=Category, multiplicity=Multiplicity(0, 9999))
+})
+community_locations = BinaryAssociation(name='community_locations', ends={
+    Property(name='Community', type=Community, multiplicity=Multiplicity(1, 1)),
+    Property(name='Location', type=Location, multiplicity=Multiplicity(0, 9999))
+})
+payment_config = BinaryAssociation(name='payment_config', ends={
+    Property(name='Community', type=Community, multiplicity=Multiplicity(0, 1)),
+    Property(name='PaymentProvider', type=PaymentProvider, multiplicity=Multiplicity(1, 1))
+})
+sub_members = BinaryAssociation(name='sub_members', ends={
+    Property(name='SubCommunity', type=SubCommunity, multiplicity=Multiplicity(1, 1)),
+    Property(name='User', type=User, multiplicity=Multiplicity(0, 9999))
+})
+sub_items = BinaryAssociation(name='sub_items', ends={
+    Property(name='SubCommunity', type=SubCommunity, multiplicity=Multiplicity(1, 1)),
+    Property(name='Item', type=Item, multiplicity=Multiplicity(0, 9999))
+})
+owned_items = BinaryAssociation(name='owned_items', ends={
+    Property(name='User', type=User, multiplicity=Multiplicity(1, 1)),
+    Property(name='Item', type=Item, multiplicity=Multiplicity(0, 9999))
+})
+category_items = BinaryAssociation(name='category_items', ends={
+    Property(name='Category', type=Category, multiplicity=Multiplicity(1, 1)),
+    Property(name='Item', type=Item, multiplicity=Multiplicity(0, 9999))
+})
+location_items = BinaryAssociation(name='location_items', ends={
+    Property(name='Location', type=Location, multiplicity=Multiplicity(1, 1)),
+    Property(name='Item', type=Item, multiplicity=Multiplicity(0, 9999))
+})
+variants = BinaryAssociation(name='variants', ends={
+    Property(name='Item', type=Item, multiplicity=Multiplicity(1, 1)),
+    Property(name='ItemVariant', type=ItemVariant, multiplicity=Multiplicity(0, 9999))
+})
+target_item = BinaryAssociation(name='target_item', ends={
+    Property(name='Offer', type=Offer, multiplicity=Multiplicity(0, 9999)),
+    Property(name='Item', type=Item, multiplicity=Multiplicity(1, 1))
+})
+buyer_user = BinaryAssociation(name='buyer_user', ends={
+    Property(name='Offer', type=Offer, multiplicity=Multiplicity(0, 9999)),
+    Property(name='User', type=User, multiplicity=Multiplicity(1, 1))
+})
+user_reservations = BinaryAssociation(name='user_reservations', ends={
+    Property(name='User', type=User, multiplicity=Multiplicity(1, 1)),
+    Property(name='Reservation', type=Reservation, multiplicity=Multiplicity(0, 9999))
+})
+reserved_item = BinaryAssociation(name='reserved_item', ends={
+    Property(name='Reservation', type=Reservation, multiplicity=Multiplicity(0, 9999)),
+    Property(name='Item', type=Item, multiplicity=Multiplicity(1, 1))
+})
+item_sold_in_tx = BinaryAssociation(name='item_sold_in_tx', ends={
+    Property(name='Item', type=Item, multiplicity=Multiplicity(1, 1)),
+    Property(name='Transaction', type=Transaction, multiplicity=Multiplicity(0, 9999))
+})
+seller_transactions = BinaryAssociation(name='seller_transactions', ends={
+    Property(name='User', type=User, multiplicity=Multiplicity(1, 1)),
+    Property(name='Transaction', type=Transaction, multiplicity=Multiplicity(0, 9999))
+})
+ratings_as_rated = BinaryAssociation(name='ratings_as_rated', ends={
+    Property(name='User', type=User, multiplicity=Multiplicity(1, 1)),
+    Property(name='Rating', type=Rating, multiplicity=Multiplicity(0, 9999))
+})
+reports_against_user = BinaryAssociation(name='reports_against_user', ends={
+    Property(name='User', type=User, multiplicity=Multiplicity(1, 1)),
+    Property(name='Report', type=Report, multiplicity=Multiplicity(0, 9999))
+})
+target_r_item = BinaryAssociation(name='target_r_item', ends={
+    Property(name='Report', type=Report, multiplicity=Multiplicity(0, 9999)),
+    Property(name='Item', type=Item, multiplicity=Multiplicity(0, 1))
+})
+item_conversations = BinaryAssociation(name='item_conversations', ends={
+    Property(name='Item', type=Item, multiplicity=Multiplicity(1, 1)),
+    Property(name='Conversation', type=Conversation, multiplicity=Multiplicity(0, 9999))
+})
+participated_chats = BinaryAssociation(name='participated_chats', ends={
+    Property(name='User', type=User, multiplicity=Multiplicity(2, 9999)),
+    Property(name='Conversation', type=Conversation, multiplicity=Multiplicity(0, 9999))
+})
+messages = BinaryAssociation(name='messages', ends={
+    Property(name='Conversation', type=Conversation, multiplicity=Multiplicity(1, 1)),
+    Property(name='Message', type=Message, multiplicity=Multiplicity(0, 9999))
+})
+author = BinaryAssociation(name='author', ends={
+    Property(name='Message', type=Message, multiplicity=Multiplicity(0, 9999)),
+    Property(name='User', type=User, multiplicity=Multiplicity(1, 1))
+})
 
-######################
-# PROJECT DEFINITION #
-######################
-
-from besser.BUML.metamodel.project import Project
-from besser.BUML.metamodel.structural.structural import Metadata 
-
-metadata = Metadata(description="Community Platform B-UML Model")
-project = Project(
-    name="community_platform",
-    models=[domain_model],
-    owner="User",
-    metadata=metadata
-)
+# 5. DOMAIN MODEL
+domain_model = DomainModel(name='CustomModel', types={
+    Community, SubCommunity, User, Category, Location, Money, Item, ItemVariant, Offer, Reservation, Transaction, Rating, Conversation, Message, Report, PaymentProvider,
+    ItemState, Condition, ItemKind, ExchangeMode, OfferType, OfferStatus, ReservationStatus, TxMode, DeliveryMode, TxStatus, MessageKind, ReportReason, ReportStatus, PaymentMethod, UserStatus
+}, associations={
+    minExchangeValue, offer_amount, agreed_price, community_subs, community_members, community_categories, community_locations, payment_config, sub_members, sub_items, owned_items, category_items, location_items, variants, target_item, buyer_user, user_reservations, reserved_item, item_sold_in_tx, seller_transactions, ratings_as_rated, reports_against_user, target_r_item, item_conversations, participated_chats, messages, author
+})
