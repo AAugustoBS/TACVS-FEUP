@@ -13,7 +13,7 @@ Place the following files in the same folder (or update paths accordingly):
 - `gui_community_platform.py` — **FULL baseline GUI model** (canonical template)
 - `structural_community_platform.py` — **Structural domain model** (classes, attributes, associations)
 - `dsml_metamodel.ecore` — DSML metamodel (Ecore)
-- `test_custom.xmi` — DSML instance (feature selection)
+- `test_custom.xmi` — DSML instance (feature selection) generated via dsml customization (blockly)
 - `m2m_dsml_to_gui_pruning_only_with_py_export.py` — M2M transformer + Python exporter
 
 ---
