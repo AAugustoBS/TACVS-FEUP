@@ -15,7 +15,6 @@ import logging
 #import custom_dsml
 
 # XMI loader (pyecore) - used only to read AppConfig XMI.
-# If you parse XMI differently in your environment, replace this loader.
 try:
     from pyecore.resources import ResourceSet
 except Exception:
@@ -34,7 +33,6 @@ from besser.BUML.metamodel.structural import (Property, NamedElement, PrimitiveD
     FloatType, 
     BooleanType)
 
-# Attempts to import the BESSER XMI exporter (optional)
 try:
     from besser.BUML.export.xmi_export import XMIExporter
     have_xmi_exporter = True
@@ -69,73 +67,18 @@ def load_dsml_appconfig(xmi_path: str, ecore_path: str):
     
     rset = ResourceSet()
 
-    # r = rset.get_resource(xmi_path)
-
-    # root = r.contents[0]
-
-    # 1) Load metamodel
+    # Load metamodel
     ecore_resource = rset.get_resource(ecore_path)
     metamodel_root = ecore_resource.contents[0]
 
     # Register metamodel by its nsURI
     rset.metamodel_registry[metamodel_root.nsURI] = metamodel_root
 
-    # 2) Load XMI instance
+    # Load XMI instance
     xmi_resource = rset.get_resource(xmi_path)
     root = xmi_resource.contents[0]
 
     return root
-
-
-    # # The loaded object is likely an EMF proxy; access attributes directly.
-    # # We will build a simple namespace-less python object to be used by the transformer.
-    # class Simple:
-    #     pass
-
-    # cfg = Simple()
-    # # direct attributes
-    # cfg.appName = getattr(root, "appName", None)
-    # cfg.shortName = getattr(root, "shortName", None)
-    # cfg.logoUrl = getattr(root, "logoUrl", None)
-    # cfg.primaryColor = getattr(root, "primaryColor", None)
-    # cfg.secondaryColor = getattr(root, "secondaryColor", None)
-
-    # # helper to convert child element (may be None)
-    # def child_as_simple(attr_name):
-    #     ch = getattr(root, attr_name, None)
-    #     if ch is None:
-    #         return None
-    #     s = Simple()
-    #     # copy all attributes (EAttributes) present on child
-    #     for k, v in ch.eClass.eAllStructuralFeatures():
-    #         # skip; we use getattr dynamic approach below
-    #         pass
-    #     # easier: iterate over feature names known for DSML
-    #     for field in ch.eClass.eAllStructuralFeatures():
-    #         fname = field.name
-    #         setattr(s, fname, getattr(ch, fname, None))
-    #     return s
-
-    # # But the above may be clumsy; simpler: use attribute names known from your Ecore:
-    # def load_child_generic(name, fields):
-    #     ch = getattr(root, name, None)
-    #     if ch is None:
-    #         return None
-    #     s = Simple()
-    #     for f in fields:
-    #         setattr(s, f, getattr(ch, f, None))
-    #     return s
-
-    # cfg.accounts = load_child_generic("accounts", ["localLogin", "oauthLogin", "phoneVerification", "moderators"])
-    # cfg.listings = load_child_generic("listings", ["products", "services", "priceMode", "exchangeMode", "donationMode", "expiry", "variants", "currency", "minPrice", "maxPrice"])
-    # cfg.messaging = load_child_generic("messaging", ["chat", "imagesInChat"])
-    # cfg.ratings = load_child_generic("ratings", ["simple", "bidirectional"])
-    # cfg.payments = load_child_generic("payments", ["mbway", "multibanco", "paypal", "none", "publicKey", "secretRef"])
-    # cfg.logistics = load_child_generic("logistics", ["inPerson", "mail", "locker"])
-    # cfg.subcommunities = load_child_generic("subcommunities", ["enabled"])
-    # cfg.accessPolicies = load_child_generic("accessPolicies", ["anonymousBrowse", "anonymousMessages"])
-
-    # return cfg
 
 
 # ----------------------------
@@ -297,35 +240,7 @@ def generate_gui_from_dsml(
             is_main_page=False
         )
 
-    # ============================
-    # Build reusable view elements
-    # ============================
-
-
-    # STRING = PrimitiveDataType.STRING
-    # INTEGER = PrimitiveDataType.INTEGER
-    # REAL = PrimitiveDataType.REAL
-
-    # # Define dummy properties for the DataSources
-    # # Note: Property now requires 'name' AND 'type'
-    # item_fields = {
-    #     Property(name="title", type=STRING),
-    #     Property(name="description", type=STRING),
-    #     Property(name="price", type=REAL),
-    #     Property(name="status", type=STRING),
-    #     Property(name="publicationDate", type=STRING),
-    #     Property(name="transactionType", type=STRING),
-    # }
-
-    # tag_fields = {
-    #     Property(name="name", type=STRING)
-    # }
-
-    # review_fields = {
-    #     Property(name="rating", type=INTEGER),
-    #     Property(name="comment", type=STRING),
-    #     Property(name="reviewDate", type=STRING)
-    # }
+    # ======= Build reusable view elements =======
 
     item_fields = {
         Property(name="title", type=StringType),
@@ -377,17 +292,17 @@ def generate_gui_from_dsml(
     ItemReviewsList = DataList(name="ItemReviewsList", description="Reviews for this item", list_sources={ReviewsDataSource})
 
     # Buttons for details
-    ContactSellerButton = Button(name="ContactSellerButton", description="Start a conversation", label="Contact Seller", buttonType=ButtonType.RaisedButton, actionType=ButtonActionType.Navigate)
+    ContactSellerButton = Button(name="ContactSellerButton", description="Start a conversation", label="Contact Seller", buttonType=ButtonType.RaisedButton, actionType=ButtonActionType.Cancel)
     StartOrderButton = Button(name="StartOrderButton", description="Create an order", label="Start Order", buttonType=ButtonType.RaisedButton, actionType=ButtonActionType.OpenForm)
     SuggestExchangeButton = Button(name="SuggestExchangeButton", description="Suggest an exchange", label="Suggest Exchange", buttonType=ButtonType.TextButton, actionType=ButtonActionType.OpenForm)
     AddReviewButton = Button(name="AddReviewButton", description="Write a review", label="Add Review", buttonType=ButtonType.TextButton, actionType=ButtonActionType.OpenForm)
-    BackToItemListButton = Button(name="BackToItemListButton", description="Back to items list", label="Back to Items", buttonType=ButtonType.TextButton, actionType=ButtonActionType.Navigate)
+    BackToItemListButton = Button(name="BackToItemListButton", description="Back to items list", label="Back to Items", buttonType=ButtonType.TextButton, actionType=ButtonActionType.Cancel)
 
     # --- Item list elements ---
     ItemsList = DataList(name="ItemsList", description="List of available items", list_sources={ItemsDataSource})
-    ViewItemDetailsButton = Button(name="ViewItemDetailsButton", description="Open selected item details", label="View Details", buttonType=ButtonType.TextButton, actionType=ButtonActionType.Navigate, target=ItemDetailsScreen)
-    ProfileButton = Button(name="ProfileButton", description="Open user profile", label="Profile", buttonType=ButtonType.IconButton, actionType=ButtonActionType.Navigate, target=BlankScreen)
-    RegisterButton = Button(name="RegisterButton", description="Go to registration", label="Sign up", buttonType=ButtonType.TextButton, actionType=ButtonActionType.Navigate, target=BlankScreen)
+    ViewItemDetailsButton = Button(name="ViewItemDetailsButton", description="Open selected item details", label="View Details", buttonType=ButtonType.TextButton, actionType=ButtonActionType.Navigate, targetScreen=ItemDetailsScreen)
+    ProfileButton = Button(name="ProfileButton", description="Open user profile", label="Profile", buttonType=ButtonType.IconButton, actionType=ButtonActionType.Navigate, targetScreen=BlankScreen)
+    RegisterButton = Button(name="RegisterButton", description="Go to registration", label="Sign up", buttonType=ButtonType.TextButton, actionType=ButtonActionType.Navigate, targetScreen=BlankScreen)
 
     SearchItemsField = make_input_field("SearchItemsField", "Search items", InputFieldType.Search)
     CommunityFilterField = make_input_field("CommunityFilterField", "Filter items by community", InputFieldType.Text)
@@ -396,24 +311,22 @@ def generate_gui_from_dsml(
     TransactionTypeFilterField = make_input_field("TransactionTypeFilterField", "Filter by transaction type", InputFieldType.Text)
 
     # --- Login elements ---
-    PhoneLoginButton = Button(name="PhoneLoginButton", description="Sign in with phone", label="Sign in with phone", buttonType=ButtonType.IconButton, actionType=ButtonActionType.Navigate, target=BlankScreen)
-    OAuthLoginButton = Button(name="OAuthLoginButton", description="Sign in with Google", label="Sign in with Google", buttonType=ButtonType.IconButton, actionType=ButtonActionType.Navigate, target=BlankScreen)
+    PhoneLoginButton = Button(name="PhoneLoginButton", description="Sign in with phone", label="Sign in with phone", buttonType=ButtonType.IconButton, actionType=ButtonActionType.Navigate, targetScreen=BlankScreen)
+    OAuthLoginButton = Button(name="OAuthLoginButton", description="Sign in with Google", label="Sign in with Google", buttonType=ButtonType.IconButton, actionType=ButtonActionType.Navigate, targetScreen=BlankScreen)
     SubmitLoginButton = Button(name="SubmitLoginButton", description="Submit login", label="Sign in", buttonType=ButtonType.RaisedButton, actionType=ButtonActionType.OpenForm)
     EmailFieldLogin = make_input_field("EmailFieldLogin", "Email address used for authentication.", InputFieldType.Email, "required;format:email")
     PasswordFieldLogin = make_input_field("PasswordFieldLogin", "Password", InputFieldType.Password, "required;minLength:8")
 
     # --- Chat elements ---
     SendImageButton = Button(name="SendImageButton", description="Send image in chat", label="Send Image", buttonType=ButtonType.IconButton, actionType=ButtonActionType.OpenForm)
-    OpenChatButton = Button(name="OpenChatButton", description="Open chat with seller", label="Chat", buttonType=ButtonType.TextButton, actionType=ButtonActionType.Navigate, target=ChatScreen)
+    OpenChatButton = None
 
     # --- Payment buttons (created conditionally) ---
     MBWayButton = Button(name="MBWayButton", description="Pay with MBWay", label="Pay with MBWay", buttonType=ButtonType.RaisedButton, actionType=ButtonActionType.OpenForm)
     MultibancoButton = Button(name="MultibancoButton", description="Pay with Multibanco", label="Pay with Multibanco", buttonType=ButtonType.RaisedButton, actionType=ButtonActionType.OpenForm)
     PayPalButton = Button(name="PayPalButton", description="Pay with PayPal", label="Pay with PayPal", buttonType=ButtonType.RaisedButton, actionType=ButtonActionType.OpenForm)
 
-    # ============================
-    # Apply DSML rules (add elements to screens)
-    # ============================
+    # ====== Apply DSML rules (add elements to screens) ========
     # Base: ItemDetailsScreen always has title/desc; add price only if priceMode true
     ItemDetailsScreen.view_elements.update({
         ItemTitleField, ItemDescriptionField, ItemStatusField, ItemCommunityField, ItemPublicationDateField, ItemTransactionTypeField,
@@ -479,6 +392,8 @@ def generate_gui_from_dsml(
         ContactSellerButton.targetScreen = ChatScreen
         ContactSellerButton.actionType = ButtonActionType.Navigate
 
+        OpenChatButton = Button(name="OpenChatButton", description="Open chat with seller", label="Chat", buttonType=ButtonType.TextButton, actionType=ButtonActionType.Navigate, targetScreen=ChatScreen)
+
         # Add OpenChatButton to ItemDetails as well
         ItemDetailsScreen.view_elements.add(OpenChatButton)
 
@@ -500,13 +415,13 @@ def generate_gui_from_dsml(
         if dsml.accounts.phoneVerification:
             LoginScreen.view_elements.add(PhoneLoginButton)
         # Add LoginButton to item list navigation
-        LoginButton = Button(name="LoginButton", description="Open login screen", label="Login", buttonType=ButtonType.TextButton, actionType=ButtonActionType.Navigate, target=LoginScreen)
+        LoginButton = Button(name="LoginButton", description="Open login screen", label="Login", buttonType=ButtonType.TextButton, actionType=ButtonActionType.Navigate, targetScreen=LoginScreen)
         ItemListScreen.view_elements.add(LoginButton)
     else:
         # no login methods: if anonymousBrowse false, we still create login? We follow DSML: if anonymousBrowse true -> don't add login
         if not getattr(dsml.accessPolicies, "anonymousBrowse", False):
             # create minimal login if required
-            LoginButton = Button(name="LoginButton", description="Open login screen", label="Login", buttonType=ButtonType.TextButton, actionType=ButtonActionType.Navigate, target=BlankScreen)
+            LoginButton = Button(name="LoginButton", description="Open login screen", label="Login", buttonType=ButtonType.TextButton, actionType=ButtonActionType.Navigate, targetScreen=BlankScreen)
             ItemListScreen.view_elements.add(LoginButton)
 
     # Payments: add PaymentScreen and buttons if payment methods enabled
@@ -519,7 +434,7 @@ def generate_gui_from_dsml(
             PaymentScreen.view_elements.add(PayPalButton)
         # Add a "Pay" button in item details if priceMode true and any payment enabled
         if dsml.listings and getattr(dsml.listings, "priceMode", False):
-            ItemDetailsScreen.view_elements.add(Button(name="PayNowButton", description="Pay now", label="Pay Now", buttonType=ButtonType.RaisedButton, actionType=ButtonActionType.Navigate, target=PaymentScreen))
+            ItemDetailsScreen.view_elements.add(Button(name="PayNowButton", description="Pay now", label="Pay Now", buttonType=ButtonType.RaisedButton, actionType=ButtonActionType.Navigate, targetScreen=PaymentScreen))
 
     # Logistics options (represent as InputField choices in ItemDetails)
     if dsml.logistics:
@@ -554,9 +469,7 @@ def generate_gui_from_dsml(
             ThemeNote = make_input_field("ThemeNote", f"Theme: primary={dsml.primaryColor} secondary={dsml.secondaryColor}", InputFieldType.Text)
             ItemListScreen.view_elements.add(ThemeNote)
 
-    # ============================
     # Add screens to module (in appropriate order)
-    # ============================
     main_module.screens.add(ItemListScreen)
     main_module.screens.add(ItemDetailsScreen)
     main_module.screens.add(BlankScreen)
@@ -571,16 +484,6 @@ def generate_gui_from_dsml(
     if SubcommunityScreen:
         main_module.screens.add(SubcommunityScreen)
 
-    # ============================
-    # Link navigation targets (make sure objects reference screens)
-    # ============================
-    # update any Button.targetScreen attributes that were created earlier without concrete target object
-    # (We earlier set Buttons that reference variables possibly None; ensure they point to created screen instances)
-    # Example: ViewItemDetailsButton already had target=ItemDetailsScreen variable, it's fine.
-    # ContactSellerButton target was set above.
-
-    # Final sanity: ensure all screens have unique names (optional)
-    # (skipped for brevity)
 
     # 3) Optionally write to XMI (using BESSER exporter if present)
     if write_xmi:
@@ -606,22 +509,54 @@ def generate_gui_from_dsml(
 
     return gui_model
 
+def write_gui_model_as_python(gui_model: GUIModel, output_path: str):
+    """
+    Writes a Python file that reconstructs the GUIModel.
+    """
+    with open(output_path, "w") as f:
+        f.write("# Auto-generated GUI model (temporary M2T)\n")
+        f.write("from besser.BUML.metamodel.gui import *\n\n")
 
-# ----------------------------
-# Usage example (for your environment)
-# ----------------------------
+        f.write(f'gui = GUIModel(\n')
+        f.write(f'    name="{gui_model.name}",\n')
+        f.write(f'    package="{gui_model.package}",\n')
+        f.write(f'    versionCode="{gui_model.versionCode}",\n')
+        f.write(f'    versionName="{gui_model.versionName}",\n')
+        f.write(f'    description="{gui_model.description}",\n')
+        f.write(f'    screenCompatibility={gui_model.screenCompatibility},\n')
+        f.write(f'    modules=set()\n')
+        f.write(")\n\n")
+
+        for module in gui_model.modules:
+            f.write(f'{module.name} = Module(name="{module.name}", screens=set())\n')
+            f.write(f'gui.modules.add({module.name})\n\n')
+
+            for screen in module.screens:
+                f.write(
+                    f'{screen.name} = Screen('
+                    f'name="{screen.name}", '
+                    f'x_dpi="{screen.x_dpi}", '
+                    f'y_dpi="{screen.y_dpi}", '
+                    f'screen_size="{screen.screen_size}", '
+                    f'view_elements=set(), '
+                    f'is_main_page={screen.is_main_page}'
+                    f')\n'
+                )
+                f.write(f'{module.name}.screens.add({screen.name})\n')
+
+                for element in screen.view_elements:
+                    f.write(f'# Element: {element}\n')
+
+                f.write("\n")
+
+        f.write("\n# End of generated model\n")
+
+
+
 if __name__ == "__main__":
     import sys
-        # dsml_path = "test_custom.xmi"  # replace with your XMI path
-        # gui = generate_gui_from_dsml(dsml_xmi_path=dsml_path, output_xmi_path="generated_gui_balletswap.xmi", write_xmi=True)
     dsml_ecore = "dsml_metamodel.ecore"
     dsml_xmi = "test_custom.xmi"
-
-    print("ECORE PATH =", repr(dsml_ecore))
-    print("XMI PATH   =", repr(dsml_xmi))
-    import os
-    print("Ecore Exists?", os.path.exists(dsml_ecore))
-
 
     dsml_obj = load_dsml_appconfig(dsml_xmi, dsml_ecore)
 
@@ -629,5 +564,10 @@ if __name__ == "__main__":
         dsml_obj=dsml_obj,
         write_xmi=True
     )
+
+    write_gui_model_as_python(gui, "generated_gui.py")
+    print("generated_gui.py written successfully")
+
+    print(gui)
 
     print("Generated GUIModel:", gui.name)
