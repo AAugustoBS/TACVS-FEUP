@@ -29,7 +29,7 @@ This file contains a **runnable Python GUIModel** that:
 1. **Starts from the baseline GUI template** (screens, UI elements, datasources).
 2. **Applies DSML pruning-only rules** (removes disabled screens/elements).
 3. **Binds datasources to real structural classes and properties** (using `Class.attributes`).
-4. **Exports the final GUIModel to Python** so it can be consumed by your downstream generator.
+4. **Exports the final GUIModel to Python** so it can be consumed by the custom generator.
 
 ---
 
@@ -133,16 +133,3 @@ Before feeding the model into your own generator, validate:
 2. **Navigation targets are correct** (e.g., Details → Payment only if payment enabled).
 3. **DataSources point to real structural classes** (no missing bindings).
 4. **DataSource fields correspond to existing structural attributes**.
-
----
-
-## Notes for Custom Generators
-
-If you are not using BESSER for code generation and instead building your own generator, treat `generated_gui_model.py` as a structured specification:
-
-- Use `Screen.view_elements` to render the layout.
-- Use `Button.actionType` + `targetScreen` to build navigation.
-- Use `DataList` sources and `InputField.description` as your binding keys.
-
-The model is intentionally version-tolerant and exportable, so your generator can remain stable while you evolve DSML feature logic.
-
