@@ -65,321 +65,6 @@ export class itemlistscreenPage {
         if ('InputField' === 'InputField') {
             elementsHtml += `
                 <div class="form-group">
-                    <label for="community-filter-field">CommunityFilterField</label>
-                    <input type="text" id="community-filter-field" name="CommunityFilterField"
-                        placeholder="Filter items by community"
-                        class="form-control"/>
-                </div>`;
-        } else if ('InputField' === 'Button') {
-            elementsHtml += `<button class="btn btn-primary" data-action="CommunityFilterField">CommunityFilterField</button>`;
-        } else if ('InputField' === 'DataList') {
-            elementsHtml += `<div class="data-list" id="community-filter-field">
-                <h3>CommunityFilterField</h3>
-                <div class="list-items">`;
-
-            // Inject dynamic item data if it's the item list screen
-            if ('ItemListScreen' === 'ItemListScreen') {
-                elementsHtml += this.data.items.map(item => `
-                    <div class="item-card">
-                        <h3>${item.title}</h3>
-                        <p>${item.price} €</p>
-                        <a href="#/itemdetailsscreen?id=${item.id}">View details</a>
-                    </div>
-                `).join('');
-            }
-
-            // Inject dynamic item data if it's the item details screen
-            if ('ItemListScreen' === 'ItemDetailsScreen') {
-                if (this.data.item) {
-                    elementsHtml += `
-                        <div class="item-card">
-                            <h3>${this.data.item.title}</h3>
-                            <p>${this.data.item.description}</p>
-                            <p>Price: ${this.data.item.price} €</p>
-                            <a href="#/itemlistscreen">Back to list</a>
-                        </div>
-                    `;
-                } else {
-                    elementsHtml += `<p class="placeholder-text">Item not found.</p>`;
-                }
-            }
-
-            elementsHtml += `</div></div>`;
-        }
-
-        if ('InputField' === 'InputField') {
-            elementsHtml += `
-                <div class="form-group">
-                    <label for="expiry-filter-field">ExpiryFilterField</label>
-                    <input type="text" id="expiry-filter-field" name="ExpiryFilterField"
-                        placeholder="Filter by expiry"
-                        class="form-control"/>
-                </div>`;
-        } else if ('InputField' === 'Button') {
-            elementsHtml += `<button class="btn btn-primary" data-action="ExpiryFilterField">ExpiryFilterField</button>`;
-        } else if ('InputField' === 'DataList') {
-            elementsHtml += `<div class="data-list" id="expiry-filter-field">
-                <h3>ExpiryFilterField</h3>
-                <div class="list-items">`;
-
-            // Inject dynamic item data if it's the item list screen
-            if ('ItemListScreen' === 'ItemListScreen') {
-                elementsHtml += this.data.items.map(item => `
-                    <div class="item-card">
-                        <h3>${item.title}</h3>
-                        <p>${item.price} €</p>
-                        <a href="#/itemdetailsscreen?id=${item.id}">View details</a>
-                    </div>
-                `).join('');
-            }
-
-            // Inject dynamic item data if it's the item details screen
-            if ('ItemListScreen' === 'ItemDetailsScreen') {
-                if (this.data.item) {
-                    elementsHtml += `
-                        <div class="item-card">
-                            <h3>${this.data.item.title}</h3>
-                            <p>${this.data.item.description}</p>
-                            <p>Price: ${this.data.item.price} €</p>
-                            <a href="#/itemlistscreen">Back to list</a>
-                        </div>
-                    `;
-                } else {
-                    elementsHtml += `<p class="placeholder-text">Item not found.</p>`;
-                }
-            }
-
-            elementsHtml += `</div></div>`;
-        }
-
-        if ('Button' === 'InputField') {
-            elementsHtml += `
-                <div class="form-group">
-                    <label for="profile-button">ProfileButton</label>
-                    <input type="text" id="profile-button" name="ProfileButton"
-                        placeholder="Open user profile"
-                        class="form-control"/>
-                </div>`;
-        } else if ('Button' === 'Button') {
-            elementsHtml += `<button class="btn btn-primary" data-action="ProfileButton">Profile</button>`;
-        } else if ('Button' === 'DataList') {
-            elementsHtml += `<div class="data-list" id="profile-button">
-                <h3>ProfileButton</h3>
-                <div class="list-items">`;
-
-            // Inject dynamic item data if it's the item list screen
-            if ('ItemListScreen' === 'ItemListScreen') {
-                elementsHtml += this.data.items.map(item => `
-                    <div class="item-card">
-                        <h3>${item.title}</h3>
-                        <p>${item.price} €</p>
-                        <a href="#/itemdetailsscreen?id=${item.id}">View details</a>
-                    </div>
-                `).join('');
-            }
-
-            // Inject dynamic item data if it's the item details screen
-            if ('ItemListScreen' === 'ItemDetailsScreen') {
-                if (this.data.item) {
-                    elementsHtml += `
-                        <div class="item-card">
-                            <h3>${this.data.item.title}</h3>
-                            <p>${this.data.item.description}</p>
-                            <p>Price: ${this.data.item.price} €</p>
-                            <a href="#/itemlistscreen">Back to list</a>
-                        </div>
-                    `;
-                } else {
-                    elementsHtml += `<p class="placeholder-text">Item not found.</p>`;
-                }
-            }
-
-            elementsHtml += `</div></div>`;
-        }
-
-        if ('DataList' === 'InputField') {
-            elementsHtml += `
-                <div class="form-group">
-                    <label for="items-list">ItemsList</label>
-                    <input type="text" id="items-list" name="ItemsList"
-                        placeholder="List of available items"
-                        class="form-control"/>
-                </div>`;
-        } else if ('DataList' === 'Button') {
-            elementsHtml += `<button class="btn btn-primary" data-action="ItemsList">ItemsList</button>`;
-        } else if ('DataList' === 'DataList') {
-            elementsHtml += `<div class="data-list" id="items-list">
-                <h3>ItemsList</h3>
-                <div class="list-items">`;
-
-            // Inject dynamic item data if it's the item list screen
-            if ('ItemListScreen' === 'ItemListScreen') {
-                elementsHtml += this.data.items.map(item => `
-                    <div class="item-card">
-                        <h3>${item.title}</h3>
-                        <p>${item.price} €</p>
-                        <a href="#/itemdetailsscreen?id=${item.id}">View details</a>
-                    </div>
-                `).join('');
-            }
-
-            // Inject dynamic item data if it's the item details screen
-            if ('ItemListScreen' === 'ItemDetailsScreen') {
-                if (this.data.item) {
-                    elementsHtml += `
-                        <div class="item-card">
-                            <h3>${this.data.item.title}</h3>
-                            <p>${this.data.item.description}</p>
-                            <p>Price: ${this.data.item.price} €</p>
-                            <a href="#/itemlistscreen">Back to list</a>
-                        </div>
-                    `;
-                } else {
-                    elementsHtml += `<p class="placeholder-text">Item not found.</p>`;
-                }
-            }
-
-            elementsHtml += `</div></div>`;
-        }
-
-        if ('InputField' === 'InputField') {
-            elementsHtml += `
-                <div class="form-group">
-                    <label for="search-items-field">SearchItemsField</label>
-                    <input type="text" id="search-items-field" name="SearchItemsField"
-                        placeholder="Search items"
-                        class="form-control"/>
-                </div>`;
-        } else if ('InputField' === 'Button') {
-            elementsHtml += `<button class="btn btn-primary" data-action="SearchItemsField">SearchItemsField</button>`;
-        } else if ('InputField' === 'DataList') {
-            elementsHtml += `<div class="data-list" id="search-items-field">
-                <h3>SearchItemsField</h3>
-                <div class="list-items">`;
-
-            // Inject dynamic item data if it's the item list screen
-            if ('ItemListScreen' === 'ItemListScreen') {
-                elementsHtml += this.data.items.map(item => `
-                    <div class="item-card">
-                        <h3>${item.title}</h3>
-                        <p>${item.price} €</p>
-                        <a href="#/itemdetailsscreen?id=${item.id}">View details</a>
-                    </div>
-                `).join('');
-            }
-
-            // Inject dynamic item data if it's the item details screen
-            if ('ItemListScreen' === 'ItemDetailsScreen') {
-                if (this.data.item) {
-                    elementsHtml += `
-                        <div class="item-card">
-                            <h3>${this.data.item.title}</h3>
-                            <p>${this.data.item.description}</p>
-                            <p>Price: ${this.data.item.price} €</p>
-                            <a href="#/itemlistscreen">Back to list</a>
-                        </div>
-                    `;
-                } else {
-                    elementsHtml += `<p class="placeholder-text">Item not found.</p>`;
-                }
-            }
-
-            elementsHtml += `</div></div>`;
-        }
-
-        if ('InputField' === 'InputField') {
-            elementsHtml += `
-                <div class="form-group">
-                    <label for="status-filter-field">StatusFilterField</label>
-                    <input type="text" id="status-filter-field" name="StatusFilterField"
-                        placeholder="Filter items by status"
-                        class="form-control"/>
-                </div>`;
-        } else if ('InputField' === 'Button') {
-            elementsHtml += `<button class="btn btn-primary" data-action="StatusFilterField">StatusFilterField</button>`;
-        } else if ('InputField' === 'DataList') {
-            elementsHtml += `<div class="data-list" id="status-filter-field">
-                <h3>StatusFilterField</h3>
-                <div class="list-items">`;
-
-            // Inject dynamic item data if it's the item list screen
-            if ('ItemListScreen' === 'ItemListScreen') {
-                elementsHtml += this.data.items.map(item => `
-                    <div class="item-card">
-                        <h3>${item.title}</h3>
-                        <p>${item.price} €</p>
-                        <a href="#/itemdetailsscreen?id=${item.id}">View details</a>
-                    </div>
-                `).join('');
-            }
-
-            // Inject dynamic item data if it's the item details screen
-            if ('ItemListScreen' === 'ItemDetailsScreen') {
-                if (this.data.item) {
-                    elementsHtml += `
-                        <div class="item-card">
-                            <h3>${this.data.item.title}</h3>
-                            <p>${this.data.item.description}</p>
-                            <p>Price: ${this.data.item.price} €</p>
-                            <a href="#/itemlistscreen">Back to list</a>
-                        </div>
-                    `;
-                } else {
-                    elementsHtml += `<p class="placeholder-text">Item not found.</p>`;
-                }
-            }
-
-            elementsHtml += `</div></div>`;
-        }
-
-        if ('Button' === 'InputField') {
-            elementsHtml += `
-                <div class="form-group">
-                    <label for="register-button">RegisterButton</label>
-                    <input type="text" id="register-button" name="RegisterButton"
-                        placeholder="Go to registration"
-                        class="form-control"/>
-                </div>`;
-        } else if ('Button' === 'Button') {
-            elementsHtml += `<button class="btn btn-primary" data-action="RegisterButton">Sign up</button>`;
-        } else if ('Button' === 'DataList') {
-            elementsHtml += `<div class="data-list" id="register-button">
-                <h3>RegisterButton</h3>
-                <div class="list-items">`;
-
-            // Inject dynamic item data if it's the item list screen
-            if ('ItemListScreen' === 'ItemListScreen') {
-                elementsHtml += this.data.items.map(item => `
-                    <div class="item-card">
-                        <h3>${item.title}</h3>
-                        <p>${item.price} €</p>
-                        <a href="#/itemdetailsscreen?id=${item.id}">View details</a>
-                    </div>
-                `).join('');
-            }
-
-            // Inject dynamic item data if it's the item details screen
-            if ('ItemListScreen' === 'ItemDetailsScreen') {
-                if (this.data.item) {
-                    elementsHtml += `
-                        <div class="item-card">
-                            <h3>${this.data.item.title}</h3>
-                            <p>${this.data.item.description}</p>
-                            <p>Price: ${this.data.item.price} €</p>
-                            <a href="#/itemlistscreen">Back to list</a>
-                        </div>
-                    `;
-                } else {
-                    elementsHtml += `<p class="placeholder-text">Item not found.</p>`;
-                }
-            }
-
-            elementsHtml += `</div></div>`;
-        }
-
-        if ('InputField' === 'InputField') {
-            elementsHtml += `
-                <div class="form-group">
                     <label for="tag-filter-field">TagFilterField</label>
                     <input type="text" id="tag-filter-field" name="TagFilterField"
                         placeholder="Filter items by tag"
@@ -480,6 +165,321 @@ export class itemlistscreenPage {
         } else if ('Button' === 'DataList') {
             elementsHtml += `<div class="data-list" id="view-item-details-button">
                 <h3>ViewItemDetailsButton</h3>
+                <div class="list-items">`;
+
+            // Inject dynamic item data if it's the item list screen
+            if ('ItemListScreen' === 'ItemListScreen') {
+                elementsHtml += this.data.items.map(item => `
+                    <div class="item-card">
+                        <h3>${item.title}</h3>
+                        <p>${item.price} €</p>
+                        <a href="#/itemdetailsscreen?id=${item.id}">View details</a>
+                    </div>
+                `).join('');
+            }
+
+            // Inject dynamic item data if it's the item details screen
+            if ('ItemListScreen' === 'ItemDetailsScreen') {
+                if (this.data.item) {
+                    elementsHtml += `
+                        <div class="item-card">
+                            <h3>${this.data.item.title}</h3>
+                            <p>${this.data.item.description}</p>
+                            <p>Price: ${this.data.item.price} €</p>
+                            <a href="#/itemlistscreen">Back to list</a>
+                        </div>
+                    `;
+                } else {
+                    elementsHtml += `<p class="placeholder-text">Item not found.</p>`;
+                }
+            }
+
+            elementsHtml += `</div></div>`;
+        }
+
+        if ('InputField' === 'InputField') {
+            elementsHtml += `
+                <div class="form-group">
+                    <label for="community-filter-field">CommunityFilterField</label>
+                    <input type="text" id="community-filter-field" name="CommunityFilterField"
+                        placeholder="Filter items by community"
+                        class="form-control"/>
+                </div>`;
+        } else if ('InputField' === 'Button') {
+            elementsHtml += `<button class="btn btn-primary" data-action="CommunityFilterField">CommunityFilterField</button>`;
+        } else if ('InputField' === 'DataList') {
+            elementsHtml += `<div class="data-list" id="community-filter-field">
+                <h3>CommunityFilterField</h3>
+                <div class="list-items">`;
+
+            // Inject dynamic item data if it's the item list screen
+            if ('ItemListScreen' === 'ItemListScreen') {
+                elementsHtml += this.data.items.map(item => `
+                    <div class="item-card">
+                        <h3>${item.title}</h3>
+                        <p>${item.price} €</p>
+                        <a href="#/itemdetailsscreen?id=${item.id}">View details</a>
+                    </div>
+                `).join('');
+            }
+
+            // Inject dynamic item data if it's the item details screen
+            if ('ItemListScreen' === 'ItemDetailsScreen') {
+                if (this.data.item) {
+                    elementsHtml += `
+                        <div class="item-card">
+                            <h3>${this.data.item.title}</h3>
+                            <p>${this.data.item.description}</p>
+                            <p>Price: ${this.data.item.price} €</p>
+                            <a href="#/itemlistscreen">Back to list</a>
+                        </div>
+                    `;
+                } else {
+                    elementsHtml += `<p class="placeholder-text">Item not found.</p>`;
+                }
+            }
+
+            elementsHtml += `</div></div>`;
+        }
+
+        if ('InputField' === 'InputField') {
+            elementsHtml += `
+                <div class="form-group">
+                    <label for="expiry-filter-field">ExpiryFilterField</label>
+                    <input type="text" id="expiry-filter-field" name="ExpiryFilterField"
+                        placeholder="Filter by expiry"
+                        class="form-control"/>
+                </div>`;
+        } else if ('InputField' === 'Button') {
+            elementsHtml += `<button class="btn btn-primary" data-action="ExpiryFilterField">ExpiryFilterField</button>`;
+        } else if ('InputField' === 'DataList') {
+            elementsHtml += `<div class="data-list" id="expiry-filter-field">
+                <h3>ExpiryFilterField</h3>
+                <div class="list-items">`;
+
+            // Inject dynamic item data if it's the item list screen
+            if ('ItemListScreen' === 'ItemListScreen') {
+                elementsHtml += this.data.items.map(item => `
+                    <div class="item-card">
+                        <h3>${item.title}</h3>
+                        <p>${item.price} €</p>
+                        <a href="#/itemdetailsscreen?id=${item.id}">View details</a>
+                    </div>
+                `).join('');
+            }
+
+            // Inject dynamic item data if it's the item details screen
+            if ('ItemListScreen' === 'ItemDetailsScreen') {
+                if (this.data.item) {
+                    elementsHtml += `
+                        <div class="item-card">
+                            <h3>${this.data.item.title}</h3>
+                            <p>${this.data.item.description}</p>
+                            <p>Price: ${this.data.item.price} €</p>
+                            <a href="#/itemlistscreen">Back to list</a>
+                        </div>
+                    `;
+                } else {
+                    elementsHtml += `<p class="placeholder-text">Item not found.</p>`;
+                }
+            }
+
+            elementsHtml += `</div></div>`;
+        }
+
+        if ('DataList' === 'InputField') {
+            elementsHtml += `
+                <div class="form-group">
+                    <label for="items-list">ItemsList</label>
+                    <input type="text" id="items-list" name="ItemsList"
+                        placeholder="List of available items"
+                        class="form-control"/>
+                </div>`;
+        } else if ('DataList' === 'Button') {
+            elementsHtml += `<button class="btn btn-primary" data-action="ItemsList">ItemsList</button>`;
+        } else if ('DataList' === 'DataList') {
+            elementsHtml += `<div class="data-list" id="items-list">
+                <h3>ItemsList</h3>
+                <div class="list-items">`;
+
+            // Inject dynamic item data if it's the item list screen
+            if ('ItemListScreen' === 'ItemListScreen') {
+                elementsHtml += this.data.items.map(item => `
+                    <div class="item-card">
+                        <h3>${item.title}</h3>
+                        <p>${item.price} €</p>
+                        <a href="#/itemdetailsscreen?id=${item.id}">View details</a>
+                    </div>
+                `).join('');
+            }
+
+            // Inject dynamic item data if it's the item details screen
+            if ('ItemListScreen' === 'ItemDetailsScreen') {
+                if (this.data.item) {
+                    elementsHtml += `
+                        <div class="item-card">
+                            <h3>${this.data.item.title}</h3>
+                            <p>${this.data.item.description}</p>
+                            <p>Price: ${this.data.item.price} €</p>
+                            <a href="#/itemlistscreen">Back to list</a>
+                        </div>
+                    `;
+                } else {
+                    elementsHtml += `<p class="placeholder-text">Item not found.</p>`;
+                }
+            }
+
+            elementsHtml += `</div></div>`;
+        }
+
+        if ('Button' === 'InputField') {
+            elementsHtml += `
+                <div class="form-group">
+                    <label for="profile-button">ProfileButton</label>
+                    <input type="text" id="profile-button" name="ProfileButton"
+                        placeholder="Open user profile"
+                        class="form-control"/>
+                </div>`;
+        } else if ('Button' === 'Button') {
+            elementsHtml += `<button class="btn btn-primary" data-action="ProfileButton">Profile</button>`;
+        } else if ('Button' === 'DataList') {
+            elementsHtml += `<div class="data-list" id="profile-button">
+                <h3>ProfileButton</h3>
+                <div class="list-items">`;
+
+            // Inject dynamic item data if it's the item list screen
+            if ('ItemListScreen' === 'ItemListScreen') {
+                elementsHtml += this.data.items.map(item => `
+                    <div class="item-card">
+                        <h3>${item.title}</h3>
+                        <p>${item.price} €</p>
+                        <a href="#/itemdetailsscreen?id=${item.id}">View details</a>
+                    </div>
+                `).join('');
+            }
+
+            // Inject dynamic item data if it's the item details screen
+            if ('ItemListScreen' === 'ItemDetailsScreen') {
+                if (this.data.item) {
+                    elementsHtml += `
+                        <div class="item-card">
+                            <h3>${this.data.item.title}</h3>
+                            <p>${this.data.item.description}</p>
+                            <p>Price: ${this.data.item.price} €</p>
+                            <a href="#/itemlistscreen">Back to list</a>
+                        </div>
+                    `;
+                } else {
+                    elementsHtml += `<p class="placeholder-text">Item not found.</p>`;
+                }
+            }
+
+            elementsHtml += `</div></div>`;
+        }
+
+        if ('Button' === 'InputField') {
+            elementsHtml += `
+                <div class="form-group">
+                    <label for="register-button">RegisterButton</label>
+                    <input type="text" id="register-button" name="RegisterButton"
+                        placeholder="Go to registration"
+                        class="form-control"/>
+                </div>`;
+        } else if ('Button' === 'Button') {
+            elementsHtml += `<button class="btn btn-primary" data-action="RegisterButton">Sign up</button>`;
+        } else if ('Button' === 'DataList') {
+            elementsHtml += `<div class="data-list" id="register-button">
+                <h3>RegisterButton</h3>
+                <div class="list-items">`;
+
+            // Inject dynamic item data if it's the item list screen
+            if ('ItemListScreen' === 'ItemListScreen') {
+                elementsHtml += this.data.items.map(item => `
+                    <div class="item-card">
+                        <h3>${item.title}</h3>
+                        <p>${item.price} €</p>
+                        <a href="#/itemdetailsscreen?id=${item.id}">View details</a>
+                    </div>
+                `).join('');
+            }
+
+            // Inject dynamic item data if it's the item details screen
+            if ('ItemListScreen' === 'ItemDetailsScreen') {
+                if (this.data.item) {
+                    elementsHtml += `
+                        <div class="item-card">
+                            <h3>${this.data.item.title}</h3>
+                            <p>${this.data.item.description}</p>
+                            <p>Price: ${this.data.item.price} €</p>
+                            <a href="#/itemlistscreen">Back to list</a>
+                        </div>
+                    `;
+                } else {
+                    elementsHtml += `<p class="placeholder-text">Item not found.</p>`;
+                }
+            }
+
+            elementsHtml += `</div></div>`;
+        }
+
+        if ('InputField' === 'InputField') {
+            elementsHtml += `
+                <div class="form-group">
+                    <label for="search-items-field">SearchItemsField</label>
+                    <input type="text" id="search-items-field" name="SearchItemsField"
+                        placeholder="Search items"
+                        class="form-control"/>
+                </div>`;
+        } else if ('InputField' === 'Button') {
+            elementsHtml += `<button class="btn btn-primary" data-action="SearchItemsField">SearchItemsField</button>`;
+        } else if ('InputField' === 'DataList') {
+            elementsHtml += `<div class="data-list" id="search-items-field">
+                <h3>SearchItemsField</h3>
+                <div class="list-items">`;
+
+            // Inject dynamic item data if it's the item list screen
+            if ('ItemListScreen' === 'ItemListScreen') {
+                elementsHtml += this.data.items.map(item => `
+                    <div class="item-card">
+                        <h3>${item.title}</h3>
+                        <p>${item.price} €</p>
+                        <a href="#/itemdetailsscreen?id=${item.id}">View details</a>
+                    </div>
+                `).join('');
+            }
+
+            // Inject dynamic item data if it's the item details screen
+            if ('ItemListScreen' === 'ItemDetailsScreen') {
+                if (this.data.item) {
+                    elementsHtml += `
+                        <div class="item-card">
+                            <h3>${this.data.item.title}</h3>
+                            <p>${this.data.item.description}</p>
+                            <p>Price: ${this.data.item.price} €</p>
+                            <a href="#/itemlistscreen">Back to list</a>
+                        </div>
+                    `;
+                } else {
+                    elementsHtml += `<p class="placeholder-text">Item not found.</p>`;
+                }
+            }
+
+            elementsHtml += `</div></div>`;
+        }
+
+        if ('InputField' === 'InputField') {
+            elementsHtml += `
+                <div class="form-group">
+                    <label for="status-filter-field">StatusFilterField</label>
+                    <input type="text" id="status-filter-field" name="StatusFilterField"
+                        placeholder="Filter items by status"
+                        class="form-control"/>
+                </div>`;
+        } else if ('InputField' === 'Button') {
+            elementsHtml += `<button class="btn btn-primary" data-action="StatusFilterField">StatusFilterField</button>`;
+        } else if ('InputField' === 'DataList') {
+            elementsHtml += `<div class="data-list" id="status-filter-field">
+                <h3>StatusFilterField</h3>
                 <div class="list-items">`;
 
             // Inject dynamic item data if it's the item list screen

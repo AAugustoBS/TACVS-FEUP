@@ -3,12 +3,12 @@
  * Handles client-side routing for appName
  */
 
-import { subcommunityselectorscreenPage } from './pages/subcommunityselectorscreen.js';
-import { blankscreenPage } from './pages/blankscreen.js';
-import { itemdetailsscreenPage } from './pages/itemdetailsscreen.js';
-import { itemlistscreenPage } from './pages/itemlistscreen.js';
 import { paymentscreenPage } from './pages/paymentscreen.js';
 import { ratingslistscreenPage } from './pages/ratingslistscreen.js';
+import { itemdetailsscreenPage } from './pages/itemdetailsscreen.js';
+import { itemlistscreenPage } from './pages/itemlistscreen.js';
+import { blankscreenPage } from './pages/blankscreen.js';
+import { subcommunityselectorscreenPage } from './pages/subcommunityselectorscreen.js';
 
 export class Router {
     constructor() {
@@ -20,17 +20,17 @@ export class Router {
     setupRoutes() {
         this.routes = [
             {
-                path: '/subcommunityselectorscreen',
-                name: 'SubcommunitySelectorScreen',
-                title: 'SubcommunitySelectorScreen',
-                handler: subcommunityselectorscreenPage,
+                path: '/paymentscreen',
+                name: 'PaymentScreen',
+                title: 'PaymentScreen',
+                handler: paymentscreenPage,
                 params: {},
                 isMain: false
             },            {
-                path: '/blankscreen',
-                name: 'BlankScreen',
-                title: 'BlankScreen',
-                handler: blankscreenPage,
+                path: '/ratingslistscreen',
+                name: 'RatingsListScreen',
+                title: 'RatingsListScreen',
+                handler: ratingslistscreenPage,
                 params: {},
                 isMain: false
             },            {
@@ -48,17 +48,17 @@ export class Router {
                 params: {},
                 isMain: true
             },            {
-                path: '/paymentscreen',
-                name: 'PaymentScreen',
-                title: 'PaymentScreen',
-                handler: paymentscreenPage,
+                path: '/blankscreen',
+                name: 'BlankScreen',
+                title: 'BlankScreen',
+                handler: blankscreenPage,
                 params: {},
                 isMain: false
             },            {
-                path: '/ratingslistscreen',
-                name: 'RatingsListScreen',
-                title: 'RatingsListScreen',
-                handler: ratingslistscreenPage,
+                path: '/subcommunityselectorscreen',
+                name: 'SubcommunitySelectorScreen',
+                title: 'SubcommunitySelectorScreen',
+                handler: subcommunityselectorscreenPage,
                 params: {},
                 isMain: false
             }        ];
