@@ -14,7 +14,7 @@ PART II
 
 - Antonio Augusto Brito de Sousa - 202000705 - M2T GUI Transformer 
 - Álvaro Siqueira Galvão - 202502639 - DSML Customization, M2M GUI Transformer, Slides presentation
-- Justino Orlando Sachilombo - 202302527 - Report, DSML Customization, M2M GUI Adjustments, M2M Structural Transformer, Native Besser M2T Generator (Django Full Backoffice),                                             Slides presentation
+- Justino Orlando Sachilombo - 202302527 - Report, DSML Customization, M2M GUI Adjustments, M2M Structural Transformer, Native Besser M2T Generator (Django Backoffice),                                             Slides presentation
 - Krsto Kustudic - 202509015 - M2M GUI Transformer
 - Hugo Castro - 202403131 - M2M GUI  Transformer
 - Maria Leonor Beirão - 201806798 - M2T GUI Transformer
