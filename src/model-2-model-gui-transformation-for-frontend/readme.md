@@ -1,135 +1,69 @@
-# Frontend Modeling Flow — From Baseline GUI + DSML to `generated_gui_model.py`
+# Digital Twin OT Advanced
 
-This document describes the **step-by-step frontend pipeline** that produces the final **customized GUI model** (`generated_gui_model.py`) from the canonical templates and DSML configuration.
+Advanced dissertation-oriented scaffold for a hybrid OT cybersecurity Digital Twin based on Mininet + Docker.
 
-The output (`generated_gui_model.py`) is intended to be a **deterministic, pruned GUI specification** that reflects the enabled features in the DSML (e.g., payments on/off, chat on/off) while remaining consistent with the structural domain model.
+## What is included
+- Hybrid architecture: Mininet for network emulation, Docker for services
+- OT/DMZ/IT segmented topology
+- OT protocol service stubs (Modbus, DNP3, IEC 104, IEC 61850)
+- Monitoring stack (Zeek, Suricata, OpenSearch, Grafana)
+- Attack modules (replay, spoofing, fuzzing, MITM)
+- Compliance mapper aligned with IEC 62443 / NIS2
+- Experiment scenarios and result folders
+- Dissertation assets (LaTeX section + architecture notes)
 
----
+## Status
+This project is a strong implementation scaffold rather than a production-ready ICS lab. Some protocol services are simplified stubs intended for extension.
 
-## Inputs (What You Need)
+## High-level execution flow
+1. Build and start containers with Docker Compose.
+2. Start the Mininet topology.
+3. Attach selected containers to Mininet switches using veth pairs.
+4. Apply netem rules to selected links.
+5. Run baseline traffic.
+6. Execute attack scenarios.
+7. Collect pcaps, alerts, logs, metrics.
+8. Run the compliance mapper.
 
-Place the following files in the same folder (or update paths accordingly):
+## Prerequisites
+- Linux host
+- Docker + Docker Compose plugin
+- Python 3.10+
+- Mininet + Open vSwitch installed on host
+- Root privileges for Mininet / veth / tc operations
 
-- `gui_community_platform.py` — **FULL baseline GUI model** (canonical template)
-- `structural_community_platform.py` — **Structural domain model** (classes, attributes, associations)
-- `dsml_metamodel.ecore` — DSML metamodel (Ecore)
-- `test_custom.xmi` — DSML instance (feature selection) generated via dsml customization (blockly)
-- `m2m_dsml_to_gui_pruning_only_with_py_export.py` — M2M transformer + Python exporter
-
----
-
-## Goal of the Pipeline
-
-The pipeline produces:
-
-- `generated_gui_model.py`
-
-This file contains a **runnable Python GUIModel** that:
-
-1. **Starts from the baseline GUI template** (screens, UI elements, datasources).
-2. **Applies DSML pruning-only rules** (removes disabled screens/elements).
-3. **Binds datasources to real structural classes and properties** (using `Class.attributes`).
-4. **Exports the final GUIModel to Python** so it can be consumed by the custom generator.
-
----
-
-## Step 1 — Maintain a Canonical Baseline GUI Template
-
-The baseline GUI model (`gui_community_platform.py`) represents the **maximum-capability frontend** (all screens and features), for example:
-
-- Screens: `ItemListScreen`, `ItemDetailsScreen`, `LoginScreen`, `ChatScreen`, `PaymentScreen`, etc.
-- DataSources: `ItemsDataSource`, `RatingsDataSource`, `MessagesDataSource`, `OffersDataSource`, etc.
-- Elements: buttons, inputs, lists, and navigation targets.
-
-This baseline is the stable template that guarantees **consistency and completeness** before feature pruning.
-
----
-
-## Step 2 — Define Feature Selection with DSML (XMI)
-
-Your DSML instance (`test_custom.xmi`) is the feature-selection layer.
-
-Typical examples:
-
-- `messaging.chat = false` → remove Chat screen and Contact button
-- `listings.priceMode = false` → remove price fields and payment flow
-- `payments.mbway/multibanco/paypal = true/false` → keep only selected payment methods
-- `subcommunities.enabled = false` → remove subcommunity selector
-
-The DSML is treated as a **pure configuration source** (no UI augmentation), used only to decide what stays and what is removed.
-
----
-
-## Step 3 — Run the M2M Transformer (Pruning-Only)
-
-Execute the transformer script:
-
+## Quick start
 ```bash
-python m2m_dsml_to_gui_pruning_only_with_py_export.py
+cd orchestration
+docker compose up -d --build
+cd ../network/topology
+sudo python3 full_topology.py
 ```
 
-What happens internally:
-
-### 3.1 Load DSML
-- Loads `dsml_metamodel.ecore` and `test_custom.xmi` (via PyEcore).
-- Extracts feature flags (accounts, listings, messaging, payments, ratings, subcommunities, access policies).
-
-### 3.2 Import and Clone the Baseline GUI
-- Imports `community_gui_model` from `gui_community_platform.py`.
-- Deep clones screens and view elements to create an independent working copy.
-
-### 3.3 Bind GUI DataSources to Structural Model
-- Imports `structural_community_platform.py`.
-- Ensures each GUI DataSource references a **real structural class** (e.g., `Item`, `Community`, `Rating`, `Offer`).
-- Populates DataSource fields by looking up properties inside `Class.attributes`.
-
-This step is the structural integrity layer: it prevents GUI artifacts from referencing classes that do not exist.
-
-### 3.4 Apply DSML Pruning Rules
-Typical pruning actions include:
-
-- Remove `ChatScreen` and `ContactBtn` when chat is disabled.
-- Remove `PaymentScreen` and `PayBtn` when price/payment is disabled.
-- Remove individual payment method buttons if only some methods are enabled.
-- Remove `LoginScreen` when login is not required.
-
-The transformer must **only prune and retarget**, keeping the baseline’s structure whenever features remain enabled.
-
----
-
-## Step 4 — Export the Final GUI as Python (`generated_gui_model.py`)
-
-After pruning + binding, the script exports a fully runnable Python module:
-
-- Defines all required screens
-- Defines datasources with correct structural class references
-- Defines all screen elements (inputs, datalists, buttons)
-- Reconnects navigation targets
-- Builds the final `community_gui_model` object
-
-This is the file your custom frontend generator should consume.
-
----
-
-## Output
-
-After running the transformer, you should obtain:
-
-- `generated_gui_model.py`
-
-A typical verification is to import it in Python:
-
+In another terminal:
 ```bash
-python -c "import generated_gui_model; print(type(generated_gui_model.community_gui_model))"
+cd orchestration
+sudo ./connect_all.sh
+sudo ../network/scripts/apply_netem.sh
 ```
 
----
+## Suggested phased validation
+1. Validate Docker services alone.
+2. Validate Mininet topology alone.
+3. Connect one OT node and one HMI.
+4. Add Zeek and Suricata on span switch.
+5. Execute replay and spoofing scenarios.
+6. Map alerts to IEC 62443 requirements.
 
-## Practical Validation Checklist
+## Main folders
+- `orchestration/`: compose and lifecycle scripts
+- `network/`: Mininet topology and traffic control scripts
+- `containers/`: Dockerfiles and service code
+- `experiments/`: scenarios, metrics, and outputs
+- `analysis/`: notebooks and post-processing scripts
+- `docs/`: architecture, dissertation sections, figures
 
-Before feeding the model into your own generator, validate:
-
-1. **The expected screens exist** (and disabled ones are removed).
-2. **Navigation targets are correct** (e.g., Details → Payment only if payment enabled).
-3. **DataSources point to real structural classes** (no missing bindings).
-4. **DataSource fields correspond to existing structural attributes**.
+## Notes
+- Containers are attached to Mininet externally through veth pairs.
+- Monitoring sensors use `network_mode: none` to allow manual attachment to the span switch.
+- Replace the simplified protocol servers with full implementations as your dissertation evolves.
