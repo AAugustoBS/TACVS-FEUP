@@ -1,4 +1,4 @@
-# TACVS-FEUP
+# TACVS-FEUP (G8)
 
 PART I
 
